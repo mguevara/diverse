@@ -58,29 +58,10 @@
 #' diversity(data, type="rao-stirling", method="cosine")
 #' diversity(data, type="all", method="jaccard")
 #' @export
-diversity <- function(data, type="all", method=NULL, agg_type=NULL, q=0, alpha=1, beta=1){
-  if (is.data.frame(data)) {
-    if(!is.null(agg_type)) {
-      diversity <- data.frame(row.names=levels(data[,2]))
-      X <- matrix(0, nrow=nlevels(data[,2]), ncol=nlevels(data[,1]), dimnames=list(levels(data[,2]),levels(data[,1])))
-      X[cbind(data[,2], data[,1])] <- data[,3]
-    }
-    else {
-      diversity <- data.frame(row.names=levels(data[,1]))
-      X <- matrix(0, nrow=nlevels(data[,1]), ncol=nlevels(data[,2]), dimnames=list(levels(data[,1]),levels(data[,2])))
-      X[cbind(data[,1], data[,2])] <- data[,3]
-    }
-  }
-  else {
-    if (!is.null(agg_type)) {
-      X <- t(data)
-      diversity <- data.frame(row.names=rownames(X))
-    }
-    else {
-      X <- data
-      diversity <- data.frame(row.names=rownames(X))
-    }  
-  }
+diversity <- function(data, type="all", method='euclidean', agg_type=NULL, q=0, alpha=1, beta=1){
+  X <- get_data(data, agg_type)
+	diversity <- data.frame(row.names=rownames(X))
+	
   if (type == 'variety' || type =='v' || type== 'all') {
     m_d <- as.data.frame(rowSums(X>0, na.rm=TRUE))
     colnames(m_d) <- c('variety')
@@ -158,7 +139,7 @@ diversity <- function(data, type="all", method=NULL, agg_type=NULL, q=0, alpha=1
     }
   }
   else {
-    disX <- as.matrix(dist(t(X), method="cosine"), diag=1)
+    disX <- as.matrix(dist(t(X), method="euclidean"), diag=1)
   }
   if(type == 'rao-stirling' || type=='rs' || type == 'all') {
       m_d <- as.data.frame(rowSums(propX^beta %*% disX^alpha * propX^beta))
@@ -173,6 +154,59 @@ diversity <- function(data, type="all", method=NULL, agg_type=NULL, q=0, alpha=1
     #  rownames(diversity) <- diversity$Row.names; diversity$Row.names <- NULL
   #}
   return(diversity)
+}
+
+#' @title Get Data
+#' @description It takes data as dataframe (edges) or as matrix (table) to be exported in proper form to be used by the diversity function.
+#' @param data Data to be processed as dataframe or as matrix. 
+#' @param data_agg Diferent of NULL if column analysis is needed.
+#' @examples 
+#' X <- get_data(data=d, agg_type=NULL)
+#' @export
+get_data <- function(data, agg_type)
+{
+	if (is.data.frame(data)) {
+		if(!is.null(agg_type)) {
+			#diversity <- data.frame(row.names=levels(data[,2]))
+			X <- matrix(0, nrow=nlevels(data[,2]), ncol=nlevels(data[,1]), dimnames=list(levels(data[,2]),levels(data[,1])))
+			X[cbind(data[,2], data[,1])] <- data[,3]
+		}
+		else {
+			#diversity <- data.frame(row.names=levels(data[,1]))
+			X <- matrix(0, nrow=nlevels(data[,1]), ncol=nlevels(data[,2]), dimnames=list(levels(data[,1]),levels(data[,2])))
+			X[cbind(data[,1], data[,2])] <- data[,3]
+		}
+	}
+	else {
+		if (!is.null(agg_type)) {
+			X <- t(data)
+			#diversity <- data.frame(row.names=rownames(X))
+		}
+		else {
+			X <- data
+			#diversity <- data.frame(row.names=rownames(X))
+		}  
+	}
+	return(X)
+	
+}
+
+#' @title Ubiquity
+#' @description It computes the ubiquity or the rearnes of the categories
+#' @param data Data to be processed as dataframe or as matrix. 
+#' @param data_agg Diferent of NULL if column analysis is needed.
+#' @examples 
+#' ub <- ubiquity(data=d)
+#' @return a dataframe with values of frequency per category. Decreasing order
+#' @export
+ubiquity <- function(data)
+{
+	ubiq <- diversity(data, type='v', method='euclidean' , agg_type='col')
+	colnames(ubiq) <- 'ubiquity'
+	ubiq['category'] <- row.names(ubiq)
+	ubiq <- ubiq[order(ubiq$ubiquity, decreasing = TRUE), ]
+	ubiq['category'] <- NULL
+	return(ubiq)
 }
 
 #' @title A procedure to read a matrix from a file
