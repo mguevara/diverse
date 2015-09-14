@@ -1,11 +1,17 @@
-Package: diversity
-Title: Diversity Measures Package
-Version: 0.1
-Authors: Miguel Guevara <miguel.guevara@upla.cl>, Dominik Hartmann
+Package: diveR
+Title: An R Package to Compute Diversity Measures
+Version: 0.4
+Author: Miguel R. Guevara <miguel.guevara@upla.cl>, Dominik Hartmann
         <d.hartmann@uni-hohenheim.de>, Marcelo Mendoza
         <marcelo.mendoza@usm.cl>
-Description: It implements a number of diversity measures for data analysis
-Depends: proxy
-License: GPL
+Maintainer: Miguel R. Guevara <miguel.guevara@upla.cl>
+Description: It implements a number of diversity measures for data analysis considering three dimensions: Variety, Balance and Disparity. 
+Depends: proxy,pheatmap,reshape2,foreign
+URL: https://github.com/mguevara/diveR
+Repository: CRAN
+Date: 2015-09-18 16:34:12
+BugReports: https://github.com/mguevara/diveR/issues
+License: MIT
+LazyData: true
 NeedsCompilation: no
-Packaged: 2015-08-17 21:26:31 UTC; mmendoza
+Packaged: 2015-09-13 21:26:31 UTC; mmendoza
