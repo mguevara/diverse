@@ -4,14 +4,16 @@
 \alias{readCSV}
 \title{A procedure to read a data frame from a csv file}
 \usage{
-readCSV(path, sepr, we = TRUE)
+readCSV(path, we = TRUE, type = "csv", sepr = ",")
 }
 \arguments{
 \item{path}{A string representing the path to a csv file. Rows and columns are described by strings (Ex.: "asind" "0010" 216000).}
 
-\item{sepr}{Separator field used in the file to separate columns}
-
 \item{we}{It indicates if the list of edges includes weights or not. Default is TRUE}
+
+\item{type}{It indicates the type of data to be read. This parameter facilitate the input of diverse type of data files, as spss or stata Posible options are the names of the mentioned softwares. Default value is csv.}
+
+\item{sepr}{Separator field used in the file to separate columns}
 }
 \value{
 A data frame with objects as rows and categories as cols

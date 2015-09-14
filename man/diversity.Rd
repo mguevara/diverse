@@ -4,8 +4,8 @@
 \alias{diversity}
 \title{Diversity measures}
 \usage{
-diversity(data, type = "all", method = NULL, agg_type = NULL, q = 0,
-  alpha = 1, beta = 1)
+diversity(data, type = "all", method = "euclidean", agg_type = NULL,
+  q = 0, alpha = 1, beta = 1)
 }
 \arguments{
 \item{data}{A numeric matrix or data frame with objects as rows and categories as columns}
