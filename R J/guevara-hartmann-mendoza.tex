@@ -1,0 +1,361 @@
+% !TeX root = RJwrapper.tex
+\title{diveR: An R Package to Keep Diversity Simple}
+\author{by Miguel R. Guevara, Dominik Hartmann and Marcelo Mendoza}
+
+\maketitle
+
+\abstract{
+This article describes the R package \pkg{diveR} which provides an easy-to-use interface to deal with high volumes of data used in different areas of Social Sciences. Since most of R packages working with diversity measures are oriented to Life and Biological Sciences, \pkg{diveR} package presents an interesting alternative for social scientists that need to analyse diversity within several social systems or social activities, as Economics or Science. The package includes several measures of diversity and options to import/export data in a simple manner.
+}
+
+
+\section{Introduction}
+Diversity measures are used in many different fields of science. For example ecologists calculate the diversity of species \citep{forey_systematics_1994}, sociologists community diversity \citep{haughton_economic_1995}, economists diversification of financial assets \citep{hidalgo_product_2007}, scientometrists the diversity of research portfolios \citep{rafols_knowledge_2014}, or computer scientists the diversity of ensambles of algorithms \citep{kuncheva_measures_2003}. While diversity measurement has been a natural topic in biology, the rise of complexity research and big data has also implied new opportunities for researchers from any field to understand the structure, complexity and evolution of socioeconomic or natural systems.A constituent property of complex systems is the diversity of a system’s elements and interactions. Here we focus on the measurement of diversity of different elements in a complex system, other packages (like \CRANpkg{igraph}) allow exploring in more detail the patterns of interactions. Different fields of science have explored different dimensions of diversity and created a set of specialised packages, as for example for Biodiversity, \CRANpkg{vegan} and \CRANpkg{BiodiversityR}; for social distance \CRANpkg{Blaunet}, for diversity in genetics \CRANpkg{diveRsity}, for biological systems \CRANpkg{divo}, for especies and communities \CRANpkg{entropart}, for functional ecology \CRANpkg{FD}, for species complexity \CRANpkg{hierDiversity}, for bootstrapping diversity indices \CRANpkg{simboot}, for disparity of phylogenetic trees \href{https://github.com/thibautjombart/treescape}{treescape} or for phylogenetic patterns \CRANpkg{SYNCSA}. However, each discipline uses its particular language and terminology.
+
+The differences in language than hampers the mutual understanding and adoption of existing measures/knowledge/packages from different disciplines. As we point, the main packages to work with diversity come from Life and Biological Sciences --which is natural, however there is a lack for a package useful for other disciplines in their own codes, language, protocols and oriented to their kind of data. Here we propose to accomplish this lack by providing an easy-to-use package that computes the main measures of diversity.%say something about all packages are related to biological sciences instead of social sciences 
+The \CRANpkg{diveR} package allows calculating a large set of diversity used in different disciplines and explains them in simple understandable way to promote interdisciplinary communication.The \pkg{diveR} package allows researcher from any discipline to 
+\begin{enumerate}
+  \item import object/categories matrices in different formats (matrices and edge lists), 
+  \item calculate a large set of diversity measures, and 
+  \item export the results in different file formats (EXCEL, SPSS, STATA). 
+\end{enumerate}%The next section explains first different diversity and similarity measures in a non-technical way. Subsequently we introduce the different functions of the package and their corresponding mathematical formula.
+%This section may contain a figure such as Figure~\ref{figure:rlogo}.
+
+\section{Install and requirements}
+\pkg{diveR} package requieres R version 3.1.1 or further. 
+Source code is available in \url{https://github.com/mguevara/diveR} and issues and requirements can be submitted via the \href{https://github.com/mguevara/diveR/issues}{git repository}.
+
+\section{Example data}
+As a self explanatory data example, we will use data from MIT's Pantheon which maps out cultural and historical exportations of countries proxied by the number of people globally known\citep{macroconnections_mit_medialab_pantheon_2014}. To make the example straightforward, we extracted information only of ten countries from different regions that export up to 150 people globally know.
+
+In our data, the \dfn{entities} correspond to the countries, and the \dfn{categories} are the occupations .  Note that other common name for entity is \emph{system} and for categories \emph{species}, we will use indistinctly both nominations.
+
+To let the user be familiar with the example data, Figure \ref{figure:pantheon} presents treemaps that visualise the data on global cultural production for three countries with quit different type of exportations. Uruguay's globally know people are mainly soccer players, while for Latvia, the main exportations are politicians, and Canada is dominated by people related to the Arts.
+
+\begin{widefigure}[htbp]
+  \centering
+ \includegraphics[width=5.6cm]{imgPantheonUR} 
+ \includegraphics[width=5.6cm]{imgPantheonLV} 
+   \includegraphics[width=5.6cm]{imgPantheonCA} 
+  \caption{Globally known people for Uruguay, Latvia and Canada. Size of the boxes is proportional (within the country) to the number of people assigned to each occupation and born in that country. Color according to main domains of occupations. Source \url{http://pantheon.media.mit.edu}}
+  \label{figure:pantheon}
+\end{widefigure}
+
+
+
+\section{Reading data}
+%A problem with which many researchers --especially from social sciences-- struggle is different file and shape formats. We try to simplify this technical problem as far as possible by implementing different import and export options. In this section we present the possibility to import two different shapes of datasets:To simplify the input of data, we provide the function \code{read.data()} which detects automatically if the data file is in one of these two shapes: matrix or edges.\subsection{Matrix or table shape}
+ $M_{ij}$, where $i$ represents the entities (e.g. countries) to which we want to measure diversity, and $j$ the categories (e.g. exports, species) which produces the diversity of the entities. We name this shape of the data as \emph{matrix} or \emph{table}. Each cell $c_{ij}$ of this table provides a value of presence, intensity or production of the category $j$ in the entity $i$. The Table \ref{tab:dataPantheon} shows an example of this type of data input. 
+  
+  \input{tables/dataPantheon.tex}
+  
+  The function returns the data reshaped as a data frame of three columns. That is, the \emph{panel} shape without null values.
+  
+  The user can provide her own paths to data files, as an example we provide raw data files attached to the package. These files are accesible by using the function of the system \code{file()}. 
+  
+  \begin{example}
+ path_to_file <- system.file("extdata", "PantheonMatrix.csv", package = "diveR")
+ read.data(path = path_to_file)
+ Using Country as id variables
+         Country            variable value
+1        Vietnam          Politician     6
+2    New Zealand          Politician     2
+3         Latvia          Politician     8
+4        Uruguay          Politician     5
+5          Chile          Politician    10
+...
+\end{example}
+
+Note that as the original data comes in a matrix shape, the function \code{read.data()} is reshaping (\dfn{melting}) the matrix into a panel shape, that is why the message \code{Using Country as id variables} is printed. This functionality uses the package \CRANpkg{reshape2}.
+
+  \subsection{Edges or panel shape}
+  The second option that we provide is the \emph{panel} or \emph{edges} shape. This way of understand the data is based in columns and should include the ordered columns entity, category, and value. These three concepts are the same defined in the previous point. See Table \ref{tab:dataPantheonPanel} for an example of this type of input.
+
+\input{tables/dataPantheonPanel.tex}
+
+Here an example, reading a data file with this configuration.
+
+\begin{example}
+ path_to_file <- system.file("extdata", "PantheonEdges.csv", package = "diveR")
+ read.data(path = path_to_file)
+         Country          Occupation Export
+1        Vietnam          Politician      6
+2     New Zeland          Politician      2
+3         Latvia          Politician      8
+4        Uruguay          Politician      5
+5          Chile          Politician     10
+...
+\end{example}
+
+\subsection{Files in other formats}To facilitate the import of data, we provide a parameter \code{type} which can be used to indicate if the data file is of type Stata or SPSS. This functionality depends on the package \CRANpkg{foreign}.
+
+\begin{example}
+     path_to_file <- system.file("extdata", "PantheonEdges.sps", package = "diveR")
+     pantheon <-  read.data(path = path_to_file, type='spss')
+     
+     path_to_file <- system.file("extdata", "PantheonEdges.dta", package = "diveR")
+     pantheon <- read.data(path = path_to_file, type = 'stata')
+\end{example}
+ 
+\subsection{Data included}
+
+Finally, to let the user experiment with the package and to conduct the examples in this article, we include a data frame in the edges shape, that is the preferred input format for \pkg{diveR}. The user can call this data frame by using the \code{data()} function. 
+
+\begin{example}
+  data(pantheon)
+  pantheon
+         Country          Occupation Export
+1        Vietnam          Politician      6
+2    New Zealand          Politician      2
+3         Latvia          Politician      8
+4        Uruguay          Politician      5
+...
+#characteristics of the example data
+str(pantheon)
+'data.frame':	119 obs. of  3 variables:
+ $ Country   : Factor w/ 10 levels "Canada","Chile",..: 10 5 4 9 2 8 7 6 3 1 ...
+ $ Occupation: Factor w/ 52 levels "Actor","Architect",..: 40 40 40 40 40 40 40 40 40 40 ...
+ $ Export    : int  6 2 8 5 10 9 17 36 38 10 ...
+\end{example}
+
+
+For the rest of the document, we will use the variable \code{pantheon} as the data frame that contains the input dataframe to be used with the package.
+
+Note that if the user wants to provide her own object data, she should provide whether a matrix with names in rows and columns, or a data frame with three columns in this order: entity, category and value.
+%[In a next step we should also include the option of including nested matrices: e.g. Scimago areas and categories; or countries exports at 1,2,3,4 digit level. Therefore the categories need to be numerically classified in a hierarchical way, e.g. like SITC] %[Also we should put an example here. I think that scientific disciplines might be a good example, because then more disciplines can identify with it]
+
+%\begin{example}
+  %d <- readDiver(dataPantheon)
+%\end{example}
+
+\section{Computing the dimensions of diversity}
+The two most intuitive dimensions of diversity are the number of categories present in a system, and the distribution of elements over the categories \citep{mcdonald_conceptualization_2003}. 
+%A system that has a high number of species but this species are biased only to a few, not necessarily is quite diverse. In the same way, a system that   
+\citet{stirling_general_2007} introduced a third dimension related to how different are the categories, this proxied by the distance between categories. 
+These three dimensions are defined by Stirling as \dfn{variety}, \dfn{balance} and \dfn{disparity}. 
+In this section we detail the functions to compute the measures associated to each dimension. We also provide a generic function that allows the user to compute measures that combine several dimensions and others that are more complex or parametrised.
+
+\subsection{Variety}
+Variety measures the number of species $N$ present in a system. This dimension measures \emph{how many types the entity has}. The function \code{variety}, returns a data frame with the values of variety and with the entities in the names of the rows. If the parameter \code{sort} is not set to false, the variety is ordered in decreasing order.
+
+
+\begin{example}
+data(pantheon)
+variety(data = pantheon)
+             variety
+Canada            27
+China             24
+South Africa      16
+Portugal          11
+Latvia            10
+New Zealand        9
+Chile              7
+Saudi Arabia       7
+Uruguay            4
+Vietnam            4
+
+\end{example}
+
+In our example Chile exported in total 26 people while Latvia only 18, however the variety of Latvia is greater than Chile's variety, 10 against 8 which allows us to conclude that Latvia is more diverse (considering only the dimension variety) than Chile if measured by global cultural production --as defined by Pantheon MIT \cite{macroconnections_mit_medialab_pantheon_2014}. In ecology, this measure is also called \dfn{richness} of the system.
+
+If the variety is considered from the point of view of the species, then we obtain a measure of the abundance/rareness of the specie. This measure in some cases is called \dfn{ubiquity} as in the case of the Economic Complexity \cite[p. 21]{hausmann_atlas_2011}. 
+We include the measure of rareness of the species through the function \code{ubiquity()} that returns the number of systems where the specie has presence in descending order from the most common to the less one.
+In our example the occupation of politician, writer or soccer player is more common (ubiquitous) than the occupation of referee, sculptor or wrestler. 
+
+\begin{example}
+   ubiquity(data = pantheon)
+                    ubiquity
+Politician                10
+Writer                     8
+Soccer.Player              6
+Singer                     5
+Actor                      4
+...
+Referee                    1
+Sculptor                   1
+Wrestler                   1
+\end{example}
+
+\subsection{Balance}
+Measures associated to the dimension of Balance are those that measure \emph{how much of each type the entity has}. These measures could be understood as statistical dispersion and are mainly a function of the proportion present of the category $i$ in the entity. While some of them measure the \dfn{evenness} of the distribution as the Entropy, other ones measure the \dfn{concentration}, as the Gini Index. The dimension balance is also known as \dfn{abundance}, mainly in ecological oriented sciences. Table \ref{tab:balance} summarises the main measures of balance included in \pkg{diveR} package.
+
+The function \code{balance()} retrieves six of the most common measures to estimate the dimension balance of the diversity. 
+
+\begin{example}
+  balance(data = pantheon)
+              entropy      gini   simpson berger-parker inverse-simpson  evenness
+Canada       2.559899 0.8608372 0.1391628     0.3162393        7.185827 0.7767069
+Chile        1.626709 0.7603550 0.2396450     0.3846154        4.172840 0.8359632
+China        2.340469 0.8168554 0.1831446     0.3838384        5.460167 0.7364472
+Latvia       1.889159 0.7654321 0.2345679     0.4444444        4.263158 0.8204514
+New Zealand  2.106577 0.8673469 0.1326531     0.2142857        7.538462 0.9587447
+Portugal     1.610050 0.7100340 0.2899660     0.4285714        3.448680 0.6714431
+Saudi Arabia 1.331425 0.6546939 0.3453061     0.4857143        2.895981 0.6842170
+South Africa 2.440072 0.8788927 0.1211073     0.2647059        8.257143 0.8800700
+Uruguay      1.135551 0.6260388 0.3739612     0.5263158        2.674074 0.8191267
+Vietnam      1.168518 0.6280992 0.3719008     0.5454545        2.688889 0.8429079
+\end{example}
+
+In our --toy-- example, it is interesting to note the case of New Zealand which Gini-Index is high, that means, less concentrated than other countries. It is also comparable with Canada's Gini-Index, even when variety is 27 for Canada and only 9 for New Zealand. 
+
+\begin{table}[htdp]
+\begin{center}
+\begin{tabular}{l>{$}l<{$}l} 
+  \toprule
+  Measure & \text{Formula} & Reference \\
+  \midrule
+ Entropy & - \sum\left(p_i \log p_i\right) & \cite{shannon_mathematical_1948} \\
+  Gini-Index &  1 - \sum\left(p_i^2\right)  & \cite{gini_variabilita_1912,ceriani_origins_2011} \\ 
+ Simpson & \sum\left(p_i^2\right)  &  \cite{simpson_measurement_1949} \\ 
+ Eveness & -\sum\left(p_i \log p_i\right)/\log{N}  & \cite{pielou_introduction_1970}\\ 
+ Inverse-Simpson &  \left(\sum\left(p_i^2\right)\right)^{-1} & \cite{simpson_measurement_1949} \\
+   Berger-Parker & \max{\left(p_i\right)} & \cite{berger_diversity_1970} \\ 
+ 
+ \bottomrule
+\end{tabular}
+\end{center}
+\caption{Summary of measures computed by balance function. $p_i$ denotes the proportion of the $i$th category in the entity $j$. $N$ is the number of categories. $log$ is the natural logarithm.}
+\label{tab:balance}
+\end{table}
+
+There are other balance measures, that are not included in the function \code{balance()} that the user might want to use, these other functions can be computed by using the function \code{diversity()} that is described in the Subsection \ref{sec:diversity}.
+
+%TODO: more discussion about the balance measures, mainly Entropy is needed
+
+\subsection{Disparity}
+Any diversity indicator also depends upon the classification of species into different main categories; or in other words the disparity or dis-similarity between species. For example an artist and a singer are more similar than an chemist and a biologist. Therefore, diversity measures are also closely related to distance and similarity measures like Euclidean distances, cosine similarities, Jaccard-Index or expert classifications of different categories. In consequence we implement in our package the option to calculate different distance matrices to measure the difference between species based in the input data. For this purpose we draw on the package \CRANpkg{proxy} which contains a variety of different measures. 
+
+Before computing diversity, in order to let the user visualise the distance matrix to use in the calculation of disparity, we provide the function \code{distances()} that includes the argument 'method' that is the one that signes the method used to compute the distance, as Euclidean, Cosine or Jaccard. Note that, even when Cosine is a measure of similarity, the proper transformation into a distance is performed by the \pkg{proxy} package. Cosine 'distance' is used as default method.
+
+\begin{example}
+ distances(pantheon)
+                          Actor Architect    Artist  Astronaut Astronomer   Athlete
+Actor               1.000000000 0.3535401 0.9057442 0.86670221 1.00000000 0.2648050
+Architect           0.353540065 1.0000000 0.5917517 0.42264973 1.00000000 0.5917517
+Artist              0.905744227 0.5917517 1.0000000 0.29289322 1.00000000 1.0000000
+Astronaut           0.866702208 0.4226497 0.2928932 1.00000000 1.00000000 1.0000000
+Astronomer          1.000000000 1.0000000 1.0000000 1.00000000 1.00000000 1.0000000
+Athlete             0.264804973 0.5917517 1.0000000 1.00000000 1.00000000 1.0000000
+...
+\end{example}
+
+Note that the distance matrix is a square matrix ($N \times N$) of categories, however for the disparity computation, only the upper triangle will be used, since the distance is considered symmetric, so the number of distances to be used is actually $\left(N^2 - N\right)/2$.
+ 
+To compute the disparity, we provide the function \code{disparity()} that calls internally to the function \code{distance()} and measures the disparity according to the distance measure set by the parameter \code{method}.
+
+%TODO: clean this function to include in diversity function as a especial binary case of RaoStirling diversity
+\begin{example}
+   disparity(pantheon, method='cosine')
+\end{example}
+
+
+In some cases, the user might want also to determine the distance between entities. This also can be performed using the function \code{distances()} but applying the argument \code{agg\_type='col'}. Then a matrix of distances between systems is retrieved. Note again that further uses of this matrix should only consider the upper or lower triangular matrix.
+
+\begin{example}
+  distances(data = pantheon, agg_type = 'col')
+                Canada     Chile      China     Latvia New Zealand  Portugal Saudi Arabia
+Canada       1.0000000 0.7137852 0.62523975 0.73193144   0.2361383 0.7715579    0.8061653
+Chile        0.7137852 1.0000000 0.17848785 0.14383139   0.5993832 0.1072028    0.3505866
+China        0.6252398 0.1784878 1.00000000 0.07134351   0.4815593 0.2522419    0.2219146
+Latvia       0.7319314 0.1438314 0.07134351 1.00000000   0.5275827 0.1834247    0.2359116
+New Zealand  0.2361383 0.5993832 0.48155926 0.52758267   1.0000000 0.6618144    0.6757932
+Portugal     0.7715579 0.1072028 0.25224186 0.18342466   0.6618144 1.0000000    0.3131248
+Saudi Arabia 0.8061653 0.3505866 0.22191457 0.23591163   0.6757932 0.3131248    1.0000000
+\end{example}
+
+In our example, according to the data, countries like Canada and New Zealand seem to be closer. It is also the case of  Portugal and Chile.
+
+\subsection{Diversity}\label{sec:diversity}
+In order to provide to the user with the possibility of choosing her preferred measure, \pkg{diveR} provides the function \code{diversity()} which uses the parameter \code{type} to indicate the measure of diversity that the user wants to compute. This parameter accepts either the complete name of the diversity or just the initial, one letter or two letters, depending of the name. 
+
+This function also allows to calculate measures that combine several dimensions of diversity, such as \dfn{rao} diversity or \dfn{rao-stirling} diversity. Also some parametric measures can be computed using this functions, as \dfn{true diversity} or \dfn{Rényi entropy}. Table XX shows the other measures included through this function.
+
+If the user want to compute all the posible measures included in the package, the parameter \code{type} should be set to \code{all}.
+
+\begin{example}
+  diversity(data = pantheon, type = 'all')
+    variety  entropy      gini   simpson true-diversity berger-parker inverse-simpson
+Canada            27 2.559899 0.8608372 0.1391628             52     0.3162393        7.185827
+Chile              7 1.626709 0.7603550 0.2396450             52     0.3846154        4.172840
+China             24 2.340469 0.8168554 0.1831446             52     0.3838384        5.460167
+Latvia            10 1.889159 0.7654321 0.2345679             52     0.4444444        4.263158
+New Zealand        9 2.106577 0.8673469 0.1326531             52     0.2142857        7.538462
+Portugal          11 1.610050 0.7100340 0.2899660             52     0.4285714        3.448680
+Saudi Arabia       7 1.331425 0.6546939 0.3453061             52     0.4857143        2.895981
+South Africa      16 2.440072 0.8788927 0.1211073             52     0.2647059        8.257143
+Uruguay            4 1.135551 0.6260388 0.3739612             52     0.5263158        2.674074
+Vietnam            4 1.168518 0.6280992 0.3719008             52     0.5454545        2.688889
+             rényi-entropy  evenness rao-stirling
+Canada           1.9721106 0.7767069     12.01241
+Chile            1.4285967 0.8359632     14.91499
+China            1.6974794 0.7364472     15.06282
+Latvia           1.4500102 0.8204514     14.96385
+New Zealand      2.0200181 0.9587447     12.94902
+Portugal         1.2379917 0.6714431     14.54679
+Saudi Arabia     1.0633239 0.6842170     14.40618
+South Africa     2.1110786 0.8800700     15.07070
+Uruguay          0.9836032 0.8191267     12.17966
+Vietnam          0.9891281 0.8429079     14.55674
+\end{example}
+
+The user can also modify the parameters used by some of the diversity measures, as in the case of the Rao-Stirling diversity, where the user can define the parameters $\alpha$ or $\beta$ that are the exponents of the multiplication of the proportions of systems $i$ and $j$ and their correspondent distance (See table XX).
+
+\begin{example}
+  #if alpha = 0 and beta = 0 then RS diversity equals to disparity
+  diversity(data=pantheon, type='rs', alpha = 1, beta=0)
+               rao-stirling
+Canada           11551.94
+Chile            11551.94
+China            11551.94
+Latvia           11551.94
+New Zealand      11551.94
+...
+
+  #if alpha = 0 and beta = 1 then RS diversity equals to balance
+  diversity(data=pantheon, type='rs', alpha = 0, beta=1)
+rao-stirling
+Canada          0.4304186
+Chile           0.3801775
+China           0.4084277
+Latvia          0.3827160
+New Zealand     0.4336735
+Portugal        0.3550170
+Saudi Arabia    0.3273469
+South Africa    0.4394464
+Uruguay         0.3130194
+Vietnam         0.3140496
+\end{example}
+
+It is also the case of the true diversity, where the parameter \code{q} can be set according to the user needs.
+%There cite \cite{stirling_general_2007} citep \citep{stirling_general_2007}, citet \citet{stirling_general_2007} will likely be several sections, perhaps including code snippets, such as:
+
+%\section{Data export}
+%Researcher form different fields work with different statistical programs and tools. Therefore it is important to provide a set of different simple export options for the results. This is especially important to facilitate interdisciplinary communication.
+
+%\begin{example}
+  %x <- 1:10
+  %result <- myFunction(x)
+%\end{example}
+
+
+\bibliography{guevara-hartmann-mendoza}
+
+\address{Miguel R. Guevara\\
+  Universidad de Playa Ancha and Universidad Federico Santa María\\
+  Valparaíso\\
+  Chile\\}
+\email{miguel.guevara@upla.cl}
+
+\address{Dominik Hartmann\\
+  Chair for Economics of Innovation, University of Hohenheim\\
+  Wollgrasweg 23, 70599, Stuttgart\\
+  Germany\\}
+\email{hartmado@mit.edu}
+
+\address{Marcelo Mendoza\\
+  Universidad Federico Santa María\\
+  Av. Vicuna Mackenna 3939, San Joaquin, Santiago\\
+  Chile\\}
+\email{mmendoza@inf.utfsm.cl}
+
+
