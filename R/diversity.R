@@ -1,13 +1,14 @@
 #' @title  Diversity measures
-#' @description It takes an object x category matrix and calculates a number of diversity measures
+#' @description It takes an object x, a category matrix and calculates a number of diversity measures   [!We need to consistent with the naming, e.g. either entitity or object!!]
 #' @param data A numeric matrix or data frame with objects as rows and categories as columns
 #' @param type A mnemonic string referencing the diversity measure. List of available measures: "variety", "entropy", "gini", "simpson", "true", "inverse-simpson", "herfindahl–hirschman", "renyi", "evenness", "rao-stirling". A list of short mnemonics for each measure: 'v', 'e', 'g', 's', 't', 'inv', 'hh', 're', ev', and 'rs'. The default for type is "all". More information for each measure in details and examples. 
-#' @param method "rao-stirling" uses a disparity function between objects. List of available disparity methods: "cosine", "jaccard", "euclidean". The default for method is cosine.
-#' @param agg_type aggregation type for diversity analysis. The analysis is conducted per row but it can also be performed by column setting agg_type = "col". Default is NULL. 
+#' @param method "rao-stirling" uses a disparity function to measure the distance/similarity between objects. List of available disparity methods in the package: "cosine", "jaccard", "euclidean". The default for method is cosine.
+#' @param agg_type aggregation type for diversity analysis. The analysis is conducted per row, but it can also be conducted by column via setting agg_type = "col". Default is NULL. 
 #' @param q parameter for true diversity index measure. This parameter is also used for the Rényi entropy. Default is 0.
 #' @param alpha parameter for Rao-Stirling diversity measure. As default we consider alpha=1.
 #' @param beta parameter for Rao-Stirling diversity measure. As default we consider beta=1.
 #' @details Available diversity measures are (written for an object x category matrix): 
+#' [!! the expression "object x caegory matrix" is hardly understandable. Moroever I think you could delete the parenthesis after are ( ...!!]
 #' 
 #' Variables: N (category count), p_i (proportion of system comprises category i), d_ij (disparity between i and j).
 #' 
@@ -151,7 +152,7 @@ diversity <- function(data, type="all", method='euclidean', agg_type=NULL, q=0, 
   			p_ij_mask[upper.tri(p_ij_mask)] <- 1
   		  diag(p_ij_mask) <- 0
   		  p_ij_mask[lower.tri(p_ij_mask)] <- 0
-  	  	rs_entity <- ((disX^alpha)*disX_mask) * ((p_ij^beta)*p_ij_mask)  #deleting proportions or distances inexistent that might become 1, because of potentia of zero.	
+  	  	rs_entity <- ((disX^alpha)*disX_mask) * ((p_ij^beta)*p_ij_mask)  #deleting proportions or distances inexistent that might become 1, because of potentia zero. [!!This sentence is unclear. You probably meand potential zero, but then still it is not clear what you precisely mean!??]	
   		  m_d[entity, 'rao-stirling'] <- sum(rs_entity)
   		  print(entity)
   		  print(p_ij)
@@ -219,7 +220,7 @@ get_data <- function(data, agg_type)
 
 
 #' @title Variety
-#' @description It computes the variety or simple diversity of a system. Number of types
+#' @description It computes the variety or simple diversity of a system. Number of types [!?? What do you mean here with "Number of types"? It seems to be an unfinished sentence!?]
 #' @param data Data to be processed as dataframe or as matrix. 
 #' @examples 
 #' vari <- varity(data=d)
@@ -298,9 +299,9 @@ readEdges <- function(path,sepr,we=TRUE){
 
 #' @title A procedure to read data of a data file in formats csv, dta or spss
 #' @description It reads a file with data shaped as a matrix or as edges list. Several types of formats are allowed.
-#' @param path A string representing the path to data file. If it is shpaed as a matrix, first column must include proper names of the categories. If it is shaped as edges list, it must contain three columns, these are entity, category, value. 
+#' @param path A string representing the path to data file. If it is shaped as a matrix, the first column must include proper names of the categories. If it is shaped as edges list, it must contain three columns, which are entity, category, value. 
 #' @param sep Separator field used in the file to separate columns, if it is a CSV file. Default value is comma.
-#' @param type It indicates the type of data to be read. This parameter facilitate the input of diverse type of data files, as spss or stata Posible options are the names of the mentioned softwares. Default value is csv.
+#' @param type It indicates the type of data to be read. This parameter facilitate the input of diverse type of data files, such as spss or stata. Posible options are the names of the mentioned softwares. Default value is csv.
 #' @return A data frame with three columns, even when the input file is shaped as a matrix.
 #' @examples 
 #' path <-  path_to_matrix_file <- system.file("extdata", "PantheonMatrix.csv", package = "diveR")
