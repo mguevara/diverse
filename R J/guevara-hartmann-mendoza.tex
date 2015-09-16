@@ -5,20 +5,33 @@
 \maketitle
 
 \abstract{
-This article describes the R package \pkg{diveR} which provides an easy-to-use interface to deal with high volumes of data used in different areas of Social Sciences. Since most of R packages working with diversity measures are oriented to Life and Biological Sciences, \pkg{diveR} package presents an interesting alternative for social scientists that need to analyse diversity within several social systems or social activities, as Economics or Science. The package includes several measures of diversity and options to import/export data in a simple manner.
+This article describes the R package \pkg{diveR} which provides an easy-to-use interface to deal with high volumes of data used in different areas of Social Sciences. Since most of R packages working with diversity measures are oriented to Life and Biological Sciences, \pkg{diveR} package presents an interesting alternative for social scientists that need to analyze diversity within several social systems or social activities, as Economics or Science. The package includes several measures of diversity and options to import/export data in a simple manner.
 }
 
 
 \section{Introduction}
-Diversity measures are used in many different fields of science. For example ecologists calculate the diversity of species \citep{forey_systematics_1994}, sociologists community diversity \citep{haughton_economic_1995}, economists diversification of financial assets \citep{hidalgo_product_2007}, scientometrists the diversity of research portfolios \citep{rafols_knowledge_2014}, or computer scientists the diversity of ensambles of algorithms \citep{kuncheva_measures_2003}. While diversity measurement has been a natural topic in biology, the rise of complexity research and big data has also implied new opportunities for researchers from any field to understand the structure, complexity and evolution of socioeconomic or natural systems.A constituent property of complex systems is the diversity of a system’s elements and interactions. Here we focus on the measurement of diversity of different elements in a complex system, other packages (like \CRANpkg{igraph}) allow exploring in more detail the patterns of interactions. Different fields of science have explored different dimensions of diversity and created a set of specialised packages, as for example for Biodiversity, \CRANpkg{vegan} and \CRANpkg{BiodiversityR}; for social distance \CRANpkg{Blaunet}, for diversity in genetics \CRANpkg{diveRsity}, for biological systems \CRANpkg{divo}, for especies and communities \CRANpkg{entropart}, for functional ecology \CRANpkg{FD}, for species complexity \CRANpkg{hierDiversity}, for bootstrapping diversity indices \CRANpkg{simboot}, for disparity of phylogenetic trees \href{https://github.com/thibautjombart/treescape}{treescape} or for phylogenetic patterns \CRANpkg{SYNCSA}. However, each discipline uses its particular language and terminology.
+Diversity measures are used in many different fields of science. For example ecologists calculate the diversity of species \citep{forey_systematics_1994}, sociologists community diversity \citep{haughton_economic_1995}, economists diversification of financial assets \citep{hidalgo_product_2007}, scientometrists the diversity of research portfolios \citep{rafols_knowledge_2014}, or computer scientists the diversity of ensambles of algorithms \citep{kuncheva_measures_2003}. While diversity measurement has been a natural topic in biology, the rise of complexity research and big data has also implied new opportunities for researchers from any field to understand the structure, complexity and evolution of socioeconomic or natural systems.
 
-The differences in language than hampers the mutual understanding and adoption of existing measures/knowledge/packages from different disciplines. As we point, the main packages to work with diversity come from Life and Biological Sciences --which is natural, however there is a lack for a package useful for other disciplines in their own codes, language, protocols and oriented to their kind of data. Here we propose to accomplish this lack by providing an easy-to-use package that computes the main measures of diversity.%say something about all packages are related to biological sciences instead of social sciences 
-The \CRANpkg{diveR} package allows calculating a large set of diversity used in different disciplines and explains them in simple understandable way to promote interdisciplinary communication.The \pkg{diveR} package allows researcher from any discipline to 
+A constituent property of complex systems is the diversity of a system’s elements and interactions. Here we focus on the measurement of diversity of different elements in a complex system, other packages (like \CRANpkg{igraph}) allow exploring in more detail the patterns of interactions. 
+
+Different fields of science have explored different dimensions of diversity and created a set of specialised packages, as for example for Biodiversity, \CRANpkg{vegan} and \CRANpkg{BiodiversityR}; for social distance \CRANpkg{Blaunet}, for diversity in genetics \CRANpkg{diveRsity}, for biological systems \CRANpkg{divo}, for especies and communities \CRANpkg{entropart}, for functional ecology \CRANpkg{FD}, for species complexity \CRANpkg{hierDiversity}, for bootstrapping diversity indices \CRANpkg{simboot}, for disparity of phylogenetic trees \href{https://github.com/thibautjombart/treescape}{treescape} or for phylogenetic patterns \CRANpkg{SYNCSA}. However, each discipline uses its particular language and terminology.
+
+The differences in language than hampers the mutual understanding and adoption of existing measures/knowledge/packages from different disciplines. As we point, the main packages to work with diversity come from Life and Biological Sciences --which is natural, however there is a lack for a package useful for other disciplines in their own codes, language, protocols and oriented to their kind of data. Here we propose to accomplish this lack by providing an easy-to-use package that computes the main measures of diversity.
+
+%say something about all packages are related to biological sciences instead of social sciences 
+
+The \CRANpkg{diveR} package allows calculating a large set of diversity used in different disciplines and explains them in simple understandable way to promote interdisciplinary communication.
+
+The \pkg{diveR} package allows researcher from any discipline to 
 \begin{enumerate}
   \item import object/categories matrices in different formats (matrices and edge lists), 
   \item calculate a large set of diversity measures, and 
   \item export the results in different file formats (EXCEL, SPSS, STATA). 
-\end{enumerate}%The next section explains first different diversity and similarity measures in a non-technical way. Subsequently we introduce the different functions of the package and their corresponding mathematical formula.
+\end{enumerate}
+
+%The next section explains first different diversity and similarity measures in a non-technical way. Subsequently we introduce the different functions of the package and their corresponding mathematical formula.
+
+
 %This section may contain a figure such as Figure~\ref{figure:rlogo}.
 
 \section{Install and requirements}
@@ -44,7 +57,12 @@ To let the user be familiar with the example data, Figure \ref{figure:pantheon} 
 
 
 \section{Reading data}
-%A problem with which many researchers --especially from social sciences-- struggle is different file and shape formats. We try to simplify this technical problem as far as possible by implementing different import and export options. In this section we present the possibility to import two different shapes of datasets:To simplify the input of data, we provide the function \code{read.data()} which detects automatically if the data file is in one of these two shapes: matrix or edges.\subsection{Matrix or table shape}
+%A problem with which many researchers --especially from social sciences-- struggle is different file and shape formats. We try to simplify this technical problem as far as possible by implementing different import and export options. In this section we present the possibility to import two different shapes of datasets:
+
+To simplify the input of data, we provide the function \code{read.data()} which detects automatically if the data file is in one of these two shapes: matrix or edges.
+
+
+\subsection{Matrix or table shape}
  $M_{ij}$, where $i$ represents the entities (e.g. countries) to which we want to measure diversity, and $j$ the categories (e.g. exports, species) which produces the diversity of the entities. We name this shape of the data as \emph{matrix} or \emph{table}. Each cell $c_{ij}$ of this table provides a value of presence, intensity or production of the category $j$ in the entity $i$. The Table \ref{tab:dataPantheon} shows an example of this type of data input. 
   
   \input{tables/dataPantheon.tex}
@@ -68,7 +86,8 @@ To let the user be familiar with the example data, Figure \ref{figure:pantheon} 
 
 Note that as the original data comes in a matrix shape, the function \code{read.data()} is reshaping (\dfn{melting}) the matrix into a panel shape, that is why the message \code{Using Country as id variables} is printed. This functionality uses the package \CRANpkg{reshape2}.
 
-  \subsection{Edges or panel shape}
+
+  \subsection{Edges or panel shape}
   The second option that we provide is the \emph{panel} or \emph{edges} shape. This way of understand the data is based in columns and should include the ordered columns entity, category, and value. These three concepts are the same defined in the previous point. See Table \ref{tab:dataPantheonPanel} for an example of this type of input.
 
 \input{tables/dataPantheonPanel.tex}
@@ -85,9 +104,11 @@ Here an example, reading a data file with this configuration.
 4        Uruguay          Politician      5
 5          Chile          Politician     10
 ...
-\end{example}
+\end{example}
 
-\subsection{Files in other formats}To facilitate the import of data, we provide a parameter \code{type} which can be used to indicate if the data file is of type Stata or SPSS. This functionality depends on the package \CRANpkg{foreign}.
+
+\subsection{Files in other formats}
+To facilitate the import of data, we provide a parameter \code{type} which can be used to indicate if the data file is of type Stata or SPSS. This functionality depends on the package \CRANpkg{foreign}.
 
 \begin{example}
      path_to_file <- system.file("extdata", "PantheonEdges.sps", package = "diveR")
@@ -122,7 +143,10 @@ str(pantheon)
 For the rest of the document, we will use the variable \code{pantheon} as the data frame that contains the input dataframe to be used with the package.
 
 Note that if the user wants to provide her own object data, she should provide whether a matrix with names in rows and columns, or a data frame with three columns in this order: entity, category and value.
-%[In a next step we should also include the option of including nested matrices: e.g. Scimago areas and categories; or countries exports at 1,2,3,4 digit level. Therefore the categories need to be numerically classified in a hierarchical way, e.g. like SITC] %[Also we should put an example here. I think that scientific disciplines might be a good example, because then more disciplines can identify with it]
+
+%[In a next step we should also include the option of including nested matrices: e.g. Scimago areas and categories; or countries exports at 1,2,3,4 digit level. Therefore the categories need to be numerically classified in a hierarchical way, e.g. like SITC] 
+
+%[Also we should put an example here. I think that scientific disciplines might be a good example, because then more disciplines can identify with it]
 
 %\begin{example}
   %d <- readDiver(dataPantheon)
