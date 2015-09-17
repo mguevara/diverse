@@ -5,20 +5,33 @@
 \maketitle
 
 \abstract{
-This article describes the R package \pkg{diveR} which provides an easy-to-use interface to deal with high volumes of data used in different areas of Social Sciences. Since most of R packages working with diversity measures are oriented to Life and Biological Sciences, \pkg{diveR} package presents an interesting alternative for social scientists that need to analyse diversity within several social systems or social activities, as Economics or Science. The package includes several measures of diversity and options to import/export data in a simple manner.
+This article describes the R package \pkg{diveR} which provides an easy-to-use interface to deal with high volumes of data used in different areas of Social Sciences. Most R packages on Diversity are specialized on the demands and terminology of Life and Biological Sciences. The \pkg{diveR} package presents an useful alternative for social scientists to translate useful concepts from natural science into social science language, and making use of recent large dataset to analyzing the evolution of diversity within social, economic and political systems. The package includes several measures of diversity --like variety, disparity and balance-- and allows to import/export data in a simple manner.
 }
 
 
 \section{Introduction}
-Diversity measures are used in many different fields of science. For example ecologists calculate the diversity of species \citep{forey_systematics_1994}, sociologists community diversity \citep{haughton_economic_1995}, economists diversification of financial assets \citep{hidalgo_product_2007}, scientometrists the diversity of research portfolios \citep{rafols_knowledge_2014}, or computer scientists the diversity of ensambles of algorithms \citep{kuncheva_measures_2003}. While diversity measurement has been a natural topic in biology, the rise of complexity research and big data has also implied new opportunities for researchers from any field to understand the structure, complexity and evolution of socioeconomic or natural systems.A constituent property of complex systems is the diversity of a system’s elements and interactions. Here we focus on the measurement of diversity of different elements in a complex system, other packages (like \CRANpkg{igraph}) allow exploring in more detail the patterns of interactions. Different fields of science have explored different dimensions of diversity and created a set of specialised packages, as for example for Biodiversity, \CRANpkg{vegan} and \CRANpkg{BiodiversityR}; for social distance \CRANpkg{Blaunet}, for diversity in genetics \CRANpkg{diveRsity}, for biological systems \CRANpkg{divo}, for especies and communities \CRANpkg{entropart}, for functional ecology \CRANpkg{FD}, for species complexity \CRANpkg{hierDiversity}, for bootstrapping diversity indices \CRANpkg{simboot}, for disparity of phylogenetic trees \href{https://github.com/thibautjombart/treescape}{treescape} or for phylogenetic patterns \CRANpkg{SYNCSA}. However, each discipline uses its particular language and terminology.
+Diversity measures are used in many different fields of science. For example ecologists calculate the diversity of species \citep{forey_systematics_1994}, sociologists the community structure and diversity \citep{haughton_economic_1995}, economists the diversification of exports or financial assets \citep{hidalgo_product_2007}, scientometrists the diversity of research portfolios \citep{rafols_knowledge_2014}, or computer scientists the diversity of ensembles of algorithms \citep{kuncheva_measures_2003}. While diversity measurement has been a natural topic in biology, the rise of complexity research and big data has also implied new opportunities for researchers from social sciences to understand the evolution of diversity in social, economic and political systems or the interaction between social and natural systems
 
-The differences in language than hampers the mutual understanding and adoption of existing measures/knowledge/packages from different disciplines. As we point, the main packages to work with diversity come from Life and Biological Sciences --which is natural, however there is a lack for a package useful for other disciplines in their own codes, language, protocols and oriented to their kind of data. Here we propose to accomplish this lack by providing an easy-to-use package that computes the main measures of diversity.%say something about all packages are related to biological sciences instead of social sciences 
-The \CRANpkg{diveR} package allows calculating a large set of diversity used in different disciplines and explains them in simple understandable way to promote interdisciplinary communication.The \pkg{diveR} package allows researcher from any discipline to 
+A constituent property of complex systems is the diversity of a system’s elements and interactions. Here we focus on the measurement of diversity of different elements in a complex system, other packages (like \CRANpkg{igraph}) allow exploring in more detail the patterns of interactions and network structure. 
+
+Different fields of science created a set of specialized packages on diversity, exploring for instance  Biodiversity, \CRANpkg{vegan} and \CRANpkg{BiodiversityR}; social distances \CRANpkg{Blaunet}, genetics \CRANpkg{diveRsity}, biological systems \CRANpkg{divo}, species and communities \CRANpkg{entropart}, functional ecology \CRANpkg{FD}, species complexity \CRANpkg{hierDiversity}, bootstrapping diversity indices \CRANpkg{simboot}, disparity of phylogenetic trees \href{https://github.com/thibautjombart/treescape}{treescape} or phylogenetic patterns \CRANpkg{SYNCSA}. However, each discipline uses its particular language and terminology.
+
+The differences in language hampers the mutual understanding and adoption of existing packages, measures and knowledge from different disciplines. As mentioned above, the main packages to work with diversity come from Life and Biological Sciences --which is natural, however there is a lack of packages useful for social scientists in their own codes, language, protocols and kind of data. Here we propose to contribute closing this gap by providing an easy-to-use package that computes some of the most commonly used measures of diversity in social sciences --like the Blau Index, Shannon-Entropy, Hirschman Herfindahl Index--, but also allowing to take disparity and rareness of categories into account with measures like ubiquity or Rao-Stirling diversity.
+
+%say something about all packages are related to biological sciences instead of social sciences 
+
+The \CRANpkg{diveR} package allows calculating a large set of diversity used in different disciplines and explains them in simple way to promote interdisciplinary communication.
+
+The \pkg{diveR} package allows researcher from any discipline to 
 \begin{enumerate}
   \item import object/categories matrices in different formats (matrices and edge lists), 
   \item calculate a large set of diversity measures, and 
   \item export the results in different file formats (EXCEL, SPSS, STATA). 
-\end{enumerate}%The next section explains first different diversity and similarity measures in a non-technical way. Subsequently we introduce the different functions of the package and their corresponding mathematical formula.
+\end{enumerate}
+
+%The next section explains first different diversity and similarity measures in a non-technical way. Subsequently we introduce the different functions of the package and their corresponding mathematical formula.
+
+
 %This section may contain a figure such as Figure~\ref{figure:rlogo}.
 
 \section{Install and requirements}
@@ -26,11 +39,12 @@ The differences in language than hampers the mutual understanding and adoption o
 Source code is available in \url{https://github.com/mguevara/diveR} and issues and requirements can be submitted via the \href{https://github.com/mguevara/diveR/issues}{git repository}.
 
 \section{Example data}
-As a self explanatory data example, we will use data from MIT's Pantheon which maps out cultural and historical exportations of countries proxied by the number of people globally known\citep{macroconnections_mit_medialab_pantheon_2014}. To make the example straightforward, we extracted information only of ten countries from different regions that export up to 150 people globally know.
+As a example, we will use data from MIT's Pantheon project \citep{macroconnections_mit_medialab_pantheon_2014}. Pantheon allows to compare the diversity of occupations of the globally known persons of each country. For simplification reasons, we analyze the data of 10 countries. The full dataset can be accessed at !!!cite here the Nature dataset ref of Amy!!!
 
-In our data, the \dfn{entities} correspond to the countries, and the \dfn{categories} are the occupations .  Note that other common name for entity is \emph{system} and for categories \emph{species}, we will use indistinctly both nominations.
+In our data, the \dfn{entities} correspond to countries, and the \dfn{categories} are occupations. Note that other common name for entity is \emph{system} and for categories \emph{species}, we will use indistinctly both nominations.  
+!!!the distinction between entity, object, system is unclear!!! Moreover, for the sake of simplicity we should actually stick to one name and not using synonyms. We can write that synonyms exist at the beginning and other appropriate places, but should then stick to using always the same term in the explanations!!!
 
-To let the user be familiar with the example data, Figure \ref{figure:pantheon} presents treemaps that visualise the data on global cultural production for three countries with quit different type of exportations. Uruguay's globally know people are mainly soccer players, while for Latvia, the main exportations are politicians, and Canada is dominated by people related to the Arts.
+Figure \ref{figure:pantheon} presents treemaps that visualize the data on global cultural production for three countries whose globally famous persons substantially differ with regard to their occupations. While the globally known persons of Latvia are mainly politicians, Uruguay's globally known people are mainly soccer players and Canada's most famous persons are working in Arts or Entertainment.  !!! shouldn't we add some real names here? E.g. Justin Bieber or so?!!! But besides the most important category of each country, we can also see in the treemaps the diversity of occupations of the famous persons of each country. We can see for example that Canada has a more diverse set of globally famous persons than Uruguay and Latvia.
 
 \begin{widefigure}[htbp]
   \centering
@@ -44,14 +58,19 @@ To let the user be familiar with the example data, Figure \ref{figure:pantheon} 
 
 
 \section{Reading data}
-%A problem with which many researchers --especially from social sciences-- struggle is different file and shape formats. We try to simplify this technical problem as far as possible by implementing different import and export options. In this section we present the possibility to import two different shapes of datasets:To simplify the input of data, we provide the function \code{read.data()} which detects automatically if the data file is in one of these two shapes: matrix or edges.\subsection{Matrix or table shape}
- $M_{ij}$, where $i$ represents the entities (e.g. countries) to which we want to measure diversity, and $j$ the categories (e.g. exports, species) which produces the diversity of the entities. We name this shape of the data as \emph{matrix} or \emph{table}. Each cell $c_{ij}$ of this table provides a value of presence, intensity or production of the category $j$ in the entity $i$. The Table \ref{tab:dataPantheon} shows an example of this type of data input. 
+%A problem with which many researchers --especially from social sciences-- struggle is different file and shape formats. We try to simplify this technical problem as far as possible by implementing different import and export options. In this section we present the possibility to import two different shapes of datasets:
+
+To simplify the input of data, we provide the function \code{read.data()}. This function detects automatically if the data file is in one of these two shapes: matrix shape or edges shape.
+
+
+\subsection{Matrix or table shape}
+ $M_{ij}$, where $i$ represents the entities (e.g. countries) for which we want to measure diversity, and $j$ the categories (e.g. exports, species) which produces the diversity of the entities. We name this shape of the data as \emph{matrix} or \emph{table}. Each cell $c_{ij}$ of the table provides a value of presence, intensity or production of the category $j$ in the entity $i$. The Table \ref{tab:dataPantheon} shows an example of this type of data input. 
   
   \input{tables/dataPantheon.tex}
   
   The function returns the data reshaped as a data frame of three columns. That is, the \emph{panel} shape without null values.
   
-  The user can provide her own paths to data files, as an example we provide raw data files attached to the package. These files are accesible by using the function of the system \code{file()}. 
+  The user can provide her own path to data files, as an example we provide raw data files attached to the package. These files are accesible by using the function of the system \code{file()}.   !!! This here is unclear. Do you want to say something like: Our data example can be accessed by the function(). User can use their own dataset, by refering to the location in xyz... !?!!!
   
   \begin{example}
  path_to_file <- system.file("extdata", "PantheonMatrix.csv", package = "diveR")
@@ -68,8 +87,9 @@ To let the user be familiar with the example data, Figure \ref{figure:pantheon} 
 
 Note that as the original data comes in a matrix shape, the function \code{read.data()} is reshaping (\dfn{melting}) the matrix into a panel shape, that is why the message \code{Using Country as id variables} is printed. This functionality uses the package \CRANpkg{reshape2}.
 
-  \subsection{Edges or panel shape}
-  The second option that we provide is the \emph{panel} or \emph{edges} shape. This way of understand the data is based in columns and should include the ordered columns entity, category, and value. These three concepts are the same defined in the previous point. See Table \ref{tab:dataPantheonPanel} for an example of this type of input.
+
+  \subsection{Edges or panel shape}
+  The second option that we provide is the \emph{panel} or \emph{edges} shape. This way of representing the data is based in columns and should include the ordered columns: entity, category, and value. These three concepts are the same as defined in the previous point. !!! the last sentence is unclear to what you now actually refer. Name/repeat again what you precisely mean!!! See Table \ref{tab:dataPantheonPanel} for an example of this type of input.
 
 \input{tables/dataPantheonPanel.tex}
 
@@ -85,9 +105,11 @@ Here an example, reading a data file with this configuration.
 4        Uruguay          Politician      5
 5          Chile          Politician     10
 ...
-\end{example}
+\end{example}
 
-\subsection{Files in other formats}To facilitate the import of data, we provide a parameter \code{type} which can be used to indicate if the data file is of type Stata or SPSS. This functionality depends on the package \CRANpkg{foreign}.
+
+\subsection{Files in other formats}
+To facilitate the import of data, we provide a parameter \code{type} that can be used to indicate if the data file is of type Stata or SPSS. !!!introduce also .xls and .xlsx.!!! This functionality depends on the package \CRANpkg{foreign}.
 
 \begin{example}
      path_to_file <- system.file("extdata", "PantheonEdges.sps", package = "diveR")
@@ -99,7 +121,7 @@ Here an example, reading a data file with this configuration.
  
 \subsection{Data included}
 
-Finally, to let the user experiment with the package and to conduct the examples in this article, we include a data frame in the edges shape, that is the preferred input format for \pkg{diveR}. The user can call this data frame by using the \code{data()} function. 
+Finally, to let the user experiment with the package and to conduct the examples in this article, we include a data frame in the edges shape that is the preferred input format for \pkg{diveR}. The user can call this data frame by using the \code{data()} function. 
 
 \begin{example}
   data(pantheon)
@@ -119,10 +141,13 @@ str(pantheon)
 \end{example}
 
 
-For the rest of the document, we will use the variable \code{pantheon} as the data frame that contains the input dataframe to be used with the package.
+For the rest of the document, we will use the variable \code{pantheon} as the data frame that contains the input data frame to be used with the package.
 
-Note that if the user wants to provide her own object data, she should provide whether a matrix with names in rows and columns, or a data frame with three columns in this order: entity, category and value.
-%[In a next step we should also include the option of including nested matrices: e.g. Scimago areas and categories; or countries exports at 1,2,3,4 digit level. Therefore the categories need to be numerically classified in a hierarchical way, e.g. like SITC] %[Also we should put an example here. I think that scientific disciplines might be a good example, because then more disciplines can identify with it]
+Note that if the user wants to provide her own object data, she should provide whether a matrix with names in rows and columns, or a data frame with three columns in this order: entity, category and value.  !!! This should be made clear above, before reading our data example !!! 
+
+%[In a next step we should also include the option of including nested matrices: e.g. Scimago areas and categories; or countries exports at 1,2,3,4 digit level. Therefore the categories need to be numerically classified in a hierarchical way, e.g. like SITC] 
+
+%[Also we should put an example here. I think that scientific disciplines might be a good example, because then more disciplines can identify with it]
 
 %\begin{example}
   %d <- readDiver(dataPantheon)
@@ -156,10 +181,10 @@ Vietnam            4
 
 \end{example}
 
-In our example Chile exported in total 26 people while Latvia only 18, however the variety of Latvia is greater than Chile's variety, 10 against 8 which allows us to conclude that Latvia is more diverse (considering only the dimension variety) than Chile if measured by global cultural production --as defined by Pantheon MIT \cite{macroconnections_mit_medialab_pantheon_2014}. In ecology, this measure is also called \dfn{richness} of the system.
+In our example, Chile exported in total 26 people while Latvia only 18, however the variety of Latvia is greater than Chile's variety, 10 against 8 which allows us to conclude that Latvia is more diverse (considering only the dimension variety) than Chile if measured by global cultural production --as defined by Pantheon MIT \cite{macroconnections_mit_medialab_pantheon_2014}. In ecology, this measure is also called \dfn{richness} of the system.
 
 If the variety is considered from the point of view of the species, then we obtain a measure of the abundance/rareness of the specie. This measure in some cases is called \dfn{ubiquity} as in the case of the Economic Complexity \cite[p. 21]{hausmann_atlas_2011}. 
-We include the measure of rareness of the species through the function \code{ubiquity()} that returns the number of systems where the specie has presence in descending order from the most common to the less one.
+We include the measure of rareness of the species through the function \code{ubiquity()} that returns the number of systems where the species has presence in descending order from the most common to the less one.
 In our example the occupation of politician, writer or soccer player is more common (ubiquitous) than the occupation of referee, sculptor or wrestler. 
 
 \begin{example}
@@ -218,14 +243,14 @@ In our --toy-- example, it is interesting to note the case of New Zealand which 
 \label{tab:balance}
 \end{table}
 
-There are other balance measures, that are not included in the function \code{balance()} that the user might want to use, these other functions can be computed by using the function \code{diversity()} that is described in the Subsection \ref{sec:diversity}.
+There are other balance measures that are not included in the function \code{balance()} that the user might want to use, such as !!!XYZ??? These other functions can be computed by using the function \code{diversity()} that is described in the Subsection \ref{sec:diversity}.
 
 %TODO: more discussion about the balance measures, mainly Entropy is needed
 
 \subsection{Disparity}
-Any diversity indicator also depends upon the classification of species into different main categories; or in other words the disparity or dis-similarity between species. For example an artist and a singer are more similar than an chemist and a biologist. Therefore, diversity measures are also closely related to distance and similarity measures like Euclidean distances, cosine similarities, Jaccard-Index or expert classifications of different categories. In consequence we implement in our package the option to calculate different distance matrices to measure the difference between species based in the input data. For this purpose we draw on the package \CRANpkg{proxy} which contains a variety of different measures. 
+Any diversity indicator also depends upon the classification of species into different main categories; or in other words the disparity or dis-similarity between species. For example an artist and a singer are more similar than an chemist and a singer. Therefore, diversity measures are also closely related to distance and similarity measures like Euclidean distances, cosine similarities, Jaccard-Index or expert classifications of different categories. In consequence we implement in our package the option to calculate different distance matrices to measure the difference between species based in the input data. For this purpose we draw on the package \CRANpkg{proxy} which contains a variety of different measures. 
 
-Before computing diversity, in order to let the user visualise the distance matrix to use in the calculation of disparity, we provide the function \code{distances()} that includes the argument 'method' that is the one that signes the method used to compute the distance, as Euclidean, Cosine or Jaccard. Note that, even when Cosine is a measure of similarity, the proper transformation into a distance is performed by the \pkg{proxy} package. Cosine 'distance' is used as default method.
+Before computing diversity, in order to let the user visualize the distance matrix to use in the calculation of disparity, we provide the function \code{distances()} that includes the argument 'method' that is the one that signes the method used to compute the distance, as Euclidean, Cosine or Jaccard. Note that even when Cosine is a measure of similarity, the proper transformation into a distance is performed by the \pkg{proxy} package. Cosine 'distance' is used as default method.
 
 \begin{example}
  distances(pantheon)
@@ -249,7 +274,7 @@ To compute the disparity, we provide the function \code{disparity()} that calls 
 \end{example}
 
 
-In some cases, the user might want also to determine the distance between entities. This also can be performed using the function \code{distances()} but applying the argument \code{agg\_type='col'}. Then a matrix of distances between systems is retrieved. Note again that further uses of this matrix should only consider the upper or lower triangular matrix.
+In some cases, the user might also want to determine the distance between entities. This can be performed using the function \code{distances()} but applying the argument \code{agg\_type='col'}. Then a matrix of distances between systems is retrieved. Note again that further uses of this matrix should only consider the upper or lower triangular matrix.
 
 \begin{example}
   distances(data = pantheon, agg_type = 'col')
@@ -327,6 +352,12 @@ Vietnam         0.3140496
 \end{example}
 
 It is also the case of the true diversity, where the parameter \code{q} can be set according to the user needs.
+
+\section{Conclusion / Discussion}
+
+...
+
+
 %There cite \cite{stirling_general_2007} citep \citep{stirling_general_2007}, citet \citet{stirling_general_2007} will likely be several sections, perhaps including code snippets, such as:
 
 %\section{Data export}
