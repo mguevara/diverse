@@ -28,7 +28,7 @@
 #' 
 #' renyi: log((sum(p_i^q))(1-q)^-1), Rényi entropy per object. It is a generalization of the Shannon entropy parameterized by q. It corresponds to the logarithm of the true diversity. Default for q is 0. 
 #' 
-#' evenness: (-sum(p_i log p_i))/log N, Shannon evenness per object across categories [Pielou 1969] 
+#' evenness: (-sum(p_i log p_i))/log N, Shannon evenness per object across categories [Pielou, 1969] 
 #' 
 #' rao-stirling: (sum((d_ij)^alpha (p_i p_j)^beta), Rao-Stirling diversity per object across categories [Stirling, 2007]. As default we consider alpha=1 and beta=1.
 #' As pairwise disparities (d_ij) the measure considers Jaccard, Euclidean and Cosine. 
