@@ -131,7 +131,7 @@ diversity <- function(data, type="all", method='euclidean', agg_type=NULL, q=0, 
     diversity <- merge(diversity,m_d, by=0, all=TRUE)
     rownames(diversity) <- diversity$Row.names; diversity$Row.names <- NULL
   }
-  if(type == 'rao-stirling' || type=='rs' || type == 'all' || type=='rao' || type=='r'){
+  if(type == 'rao-stirling' || type=='rs' || type == 'all' || type=='rao' || type=='r' || type=='disparity' || type=='d'){
   	disX <- distances(X, agg_type = agg_type, method=method) #compute distances first	
   	disX_mask <- disX
   	disX_mask[ (!is.na(disX_mask))] <- 1
@@ -153,40 +153,57 @@ diversity <- function(data, type="all", method='euclidean', agg_type=NULL, q=0, 
   	}
   	if(type=='disparity' || type=='d')
   	{
-  		m_d[,'disparity_sum'] <- NA	; ms_label <- 'disparity_sum'
+  		m_d[,'disparity_sum'] <- NA	
+  		m_d[,'disparity_mean'] <- NA	
+  		ms_label <- 'disparity_sum'
   	}
   	for(entity in row.names(propX)) #go into each entity
   	  {
   	  	entity_data <- propX[entity,]
   	  	prop_i <- matrix(entity_data, nrow=N,ncol=N, byrow=TRUE)
   	  	prop_j <- matrix(entity_data, nrow=N,ncol=N, byrow=FALSE)
+  	  	#print("prop_i")
+  	  	#print(prop_i)
+  	  	#print("prop_j")
+  	  	#print(prop_j)
+  	  	
   	  	if(ms_label=='disparity_sum')
   	  	{
-  	  		prop_i<- prop_i[prop_i>0] <- 1 #binarizing proportion
-  	  		prop_j<- prop_j[prop_j>0] <- 1 #binarizing proportion
+  	  		prop_i[prop_i>0] <- 1 #binarizing proportion
+  	  		prop_j[prop_j>0] <- 1 #binarizing proportion
   	  		alpha <- 1; beta<-1
   	  		entity_variety <- length(entity_data[entity_data>0])
+  	  		print(paste("entity", entity, 'ent data', entity_data, 'ent variety', entity_variety))
   	  	}
+  	  	#print("prop_i")
+  	  	#print(prop_i)
+  	  	#print("prop_j")
+  	  	#print(prop_j)
   	  	p_ij <- prop_i * prop_j
 				p_ij_mask <- p_ij
   			#p_ij_mask[p_ij_mask != 0] <- 1
   			p_ij_mask[upper.tri(p_ij_mask)] <- 1
+  			#print("p_ij_maks")
+  			#print(p_ij_mask)
   		  diag(p_ij_mask) <- 0
   		  p_ij_mask[lower.tri(p_ij_mask)] <- 0
   	  	rs_entity <- ((disX^alpha)*disX_mask) * ((p_ij^beta)*p_ij_mask) #masks ensures for proportions to use only upper triangle matrix. For distances, to use only existant distances and upper triangle matrix.
   		  m_d[entity, ms_label] <- sum(rs_entity)
-  		  if(type=='disparity' || type=='d')
-  		  { m_d[entity, 'disparity_mean'] <- sum(rs_entity)/entity_variety }
-  		  print(entity)
-  		  print(p_ij)
-  		  print(p_ij_mask)
-  	    print((p_ij^beta)*p_ij_mask)
+  		  
+  		  if(ms_label=='disparity_sum')
+  		  { 
+  		  	m_d[entity, 'disparity_mean'] <- sum(rs_entity)/entity_variety 
+  		  }
+  		  #print(entity)
+  		  #print(p_ij)
+  		  #print(p_ij_mask)
+  	    #print((p_ij^beta)*p_ij_mask)
   	  }
   	#print(rs_entity)
   	#print((p_ij^beta)*p_ij_mask)
-  	print(propX)
-  	print(disX)
-  	print(disX_mask)
+  	#print(propX)
+  	#print(disX)
+  	#print(disX_mask)
   	
       diversity <- merge(diversity,m_d, by=0, all=TRUE)
       rownames(diversity) <- diversity$Row.names; diversity$Row.names <- NULL
