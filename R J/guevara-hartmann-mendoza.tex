@@ -5,7 +5,7 @@
 \maketitle
 
 \abstract{
-This article describes the R package \pkg{diveR} which provides an easy-to-use interface to deal with high volumes of data used in different areas of Social Sciences. Most R packages on Diversity are specialized on the demands and terminology of Life and Biological Sciences. The \pkg{diveR} package presents an useful alternative for social scientists to translate useful concepts from natural science into social science language, and making use of recent large dataset to analyzing the evolution of diversity within social, economic and political systems. The package includes several measures of diversity --like variety, disparity and balance-- and allows to import/export data in a simple manner.
+This article describes the R package \pkg{diveR} which provides an easy-to-use interface to deal with high volumes of data used in different areas of Social Sciences. Most R packages on Diversity are specialized on the demands and terminology of Life and Biological Sciences. The \pkg{diveR} package presents an useful alternative for social scientists to translate useful concepts from natural science into social science language, and making use of recent large dataset to analyzing the evolution of diversity within social, economic and political systems. The package includes several measures of diversity --like variety, disparity and balance-- and allows to import data in a simple manner.
 }
 
 
@@ -24,9 +24,8 @@ The \CRANpkg{diveR} package allows calculating a large set of diversity used in 
 
 The \pkg{diveR} package allows researcher from any discipline to 
 \begin{enumerate}
-  \item import object/categories matrices in different formats (matrices and edge lists), 
-  \item calculate a large set of diversity measures, and 
-  \item export the results in different file formats (EXCEL, SPSS, STATA). 
+  \item import entity/categories matrices in different shapes (matrix and edge list), and
+  \item calculate a large set of diversity measures. 
 \end{enumerate}
 
 %The next section explains first different diversity and similarity measures in a non-technical way. Subsequently we introduce the different functions of the package and their corresponding mathematical formula.
@@ -39,38 +38,41 @@ The \pkg{diveR} package allows researcher from any discipline to
 Source code is available in \url{https://github.com/mguevara/diveR} and issues and requirements can be submitted via the \href{https://github.com/mguevara/diveR/issues}{git repository}.
 
 \section{Example data}
-As a example, we will use data from MIT's Pantheon project \citep{macroconnections_mit_medialab_pantheon_2014}. Pantheon allows to compare the diversity of occupations of the globally known persons of each country. For simplification reasons, we analyze the data of 10 countries. The full dataset can be accessed at !!!cite here the Nature dataset ref of Amy!!!
+As a example, we will use data from MIT's Pantheon project \citep{macroconnections_mit_medialab_pantheon_2014}. Pantheon allows to compare the diversity of occupations of the globally known persons of each country. For simplification reasons, we analyze the data of 10 countries. The full dataset can be accessed at \cite{yu_pantheon:_2015}.
 
 In our data, the \dfn{entities} correspond to countries, and the \dfn{categories} are occupations. Note that other common name for entity is \emph{system} and for categories \emph{species}, we will use indistinctly both nominations.  
 !!!the distinction between entity, object, system is unclear!!! Moreover, for the sake of simplicity we should actually stick to one name and not using synonyms. We can write that synonyms exist at the beginning and other appropriate places, but should then stick to using always the same term in the explanations!!!
 
-Figure \ref{figure:pantheon} presents treemaps that visualize the data on global cultural production for three countries whose globally famous persons substantially differ with regard to their occupations. While the globally known persons of Latvia are mainly politicians, Uruguay's globally known people are mainly soccer players and Canada's most famous persons are working in Arts or Entertainment.  !!! shouldn't we add some real names here? E.g. Justin Bieber or so?!!! But besides the most important category of each country, we can also see in the treemaps the diversity of occupations of the famous persons of each country. We can see for example that Canada has a more diverse set of globally famous persons than Uruguay and Latvia.
+Figure \ref{figure:pantheon} presents treemaps that visualise the data on global cultural production for three countries whose globally famous persons substantially differ with regard to their occupations. While the globally known persons of Latvia are mainly politicians, Uruguay's globally known people are mainly soccer players and Canada's most famous persons are working in Arts or Entertainment. South Africa's most famous persons are related to politics and sports. But besides the most important category of each country, we can also see in the treemaps the diversity of occupations of the famous persons of each country. We can see for example that Canada has a more diverse set of globally famous persons than Uruguay, Latvia and South Africa.
 
-\begin{widefigure}[htbp]
+\begin{figure}[htbp]
   \centering
  \includegraphics[width=5.6cm]{imgPantheonUR} 
- \includegraphics[width=5.6cm]{imgPantheonLV} 
+ \includegraphics[width=5.6cm]{imgPantheonLV} \\
    \includegraphics[width=5.6cm]{imgPantheonCA} 
-  \caption{Globally known people for Uruguay, Latvia and Canada. Size of the boxes is proportional (within the country) to the number of people assigned to each occupation and born in that country. Color according to main domains of occupations. Source \url{http://pantheon.media.mit.edu}}
+      \includegraphics[width=5.6cm]{imgPantheonSA} 
+  \caption{Globally known people for Uruguay, Latvia, Canada and South Africa. Size of the boxes is proportional (within the country) to the number of people assigned to each occupation and born in that country. Color according to main domains of occupations. Source \url{http://pantheon.media.mit.edu}}
   \label{figure:pantheon}
-\end{widefigure}
+\end{figure}
 
 
 
-\section{Reading data}
+\section{Input data}
 %A problem with which many researchers --especially from social sciences-- struggle is different file and shape formats. We try to simplify this technical problem as far as possible by implementing different import and export options. In this section we present the possibility to import two different shapes of datasets:
+The data objects to be processed by the functions of the \pkg{diveR} package, can be whether a matrix with values of abundance where the entities are the \code{rownames} and the categories are the \code{colnames}; or a data frame with three columns in this order: entity, category and value of abundance.
 
-To simplify the input of data, we provide the function \code{read.data()}. This function detects automatically if the data file is in one of these two shapes: matrix shape or edges shape.
+However to simplify the input of data from external files, we provide the function \code{read.data()}. This function reads CSV files and detects automatically if the data file is in one of these two shapes: matrix shape or edges shape, then it retrieves a data frame to be used by the functions of the package.
 
+Here we detail both type of configurations for the external data files to be read.
 
 \subsection{Matrix or table shape}
- $M_{ij}$, where $i$ represents the entities (e.g. countries) for which we want to measure diversity, and $j$ the categories (e.g. exports, species) which produces the diversity of the entities. We name this shape of the data as \emph{matrix} or \emph{table}. Each cell $c_{ij}$ of the table provides a value of presence, intensity or production of the category $j$ in the entity $i$. The Table \ref{tab:dataPantheon} shows an example of this type of data input. 
+ Here, the rows represent the entities (e.g. countries) for which we want to measure diversity, and the columns, the categories (e.g. products, areas of science, species) which produces the diversity of the entities. We name this shape of the data as \emph{matrix} or \emph{table}. Each cell of the table provides a value of presence, intensity, abundance or production of the category in the entity. The Table \ref{tab:dataPantheon} shows an example of this type of data input where the rows are the entitites (countries), the columns are the categories (occupations) and the cells are numeric values of abundance in the sense of quantity of globally known people born in that country.
   
   \input{tables/dataPantheon.tex}
   
-  The function returns the data reshaped as a data frame of three columns. That is, the \emph{panel} shape without null values.
+  The function \code{read.data()} returns the data reshaped as a data frame of three columns. That is, the \emph{panel} shape without \code{NA} values.
   
-  The user can provide her own path to data files, as an example we provide raw data files attached to the package. These files are accesible by using the function of the system \code{file()}.   !!! This here is unclear. Do you want to say something like: Our data example can be accessed by the function(). User can use their own dataset, by refering to the location in xyz... !?!!!
+  The user must provide the path to the external CSV file by using the argument \code{path}. As an example we attached raw data files attached to the package. These files are accesible by using the function of the system \code{file()} which retrieves the local path to the CSV example files included with the package.
   
   \begin{example}
  path_to_file <- system.file("extdata", "PantheonMatrix.csv", package = "diveR")
@@ -89,11 +91,11 @@ Note that as the original data comes in a matrix shape, the function \code{read.
 
 
   \subsection{Edges or panel shape}
-  The second option that we provide is the \emph{panel} or \emph{edges} shape. This way of representing the data is based in columns and should include the ordered columns: entity, category, and value. These three concepts are the same as defined in the previous point. !!! the last sentence is unclear to what you now actually refer. Name/repeat again what you precisely mean!!! See Table \ref{tab:dataPantheonPanel} for an example of this type of input.
+  The second option of reading an external file, is the \emph{panel} or \emph{edges} shape. This way of representing the data is based in columns and should include the ordered columns: entity, category, and value. To read this type of file, the same function \code{read.data()} can be used, it detects automatically this type of configuration and retrieves the data frame needed. See Table \ref{tab:dataPantheonPanel} for an example of this type of external input.
 
 \input{tables/dataPantheonPanel.tex}
 
-Here an example, reading a data file with this configuration.
+Here an example, reading a data file with edges configuration.
 
 \begin{example}
  path_to_file <- system.file("extdata", "PantheonEdges.csv", package = "diveR")
@@ -109,19 +111,20 @@ Here an example, reading a data file with this configuration.
 
 
 \subsection{Files in other formats}
-To facilitate the import of data, we provide a parameter \code{type} that can be used to indicate if the data file is of type Stata or SPSS. !!!introduce also .xls and .xlsx.!!! This functionality depends on the package \CRANpkg{foreign}.
+To facilitate the import of data, we provide a parameter \code{type} that can be used to indicate if the data file is of type Stata or SPSS. This functionality depends on the package \CRANpkg{foreign}.
 
 \begin{example}
-     path_to_file <- system.file("extdata", "PantheonEdges.sps", package = "diveR")
-     pantheon <-  read.data(path = path_to_file, type='spss')
+#reading external Edges file
+path_to_file <- system.file("extdata", "PantheonEdges.sps", package = "diveR")
+pantheon <-  read.data(path = path_to_file, type='spss')
      
-     path_to_file <- system.file("extdata", "PantheonEdges.dta", package = "diveR")
-     pantheon <- read.data(path = path_to_file, type = 'stata')
+path_to_file <- system.file("extdata", "PantheonEdges.dta", package = "diveR")
+pantheon <- read.data(path = path_to_file, type = 'stata')
 \end{example}
  
 \subsection{Data included}
 
-Finally, to let the user experiment with the package and to conduct the examples in this article, we include a data frame in the edges shape that is the preferred input format for \pkg{diveR}. The user can call this data frame by using the \code{data()} function. 
+Finally, to let the user experiment with the package and to conduct the examples in this article, we attached a data frame (\code{.RData}) in the edges shape that is the preferred input format for \pkg{diveR} package. The user can call this data frame by using the \code{data()} function. 
 
 \begin{example}
   data(pantheon)
@@ -141,9 +144,7 @@ str(pantheon)
 \end{example}
 
 
-For the rest of the document, we will use the variable \code{pantheon} as the data frame that contains the input data frame to be used with the package.
-
-Note that if the user wants to provide her own object data, she should provide whether a matrix with names in rows and columns, or a data frame with three columns in this order: entity, category and value.  !!! This should be made clear above, before reading our data example !!! 
+For the rest of the document, we will use the variable \code{pantheon} as the data frame that contains the example data of Countries-Occupations and values of abudance.
 
 %[In a next step we should also include the option of including nested matrices: e.g. Scimago areas and categories; or countries exports at 1,2,3,4 digit level. Therefore the categories need to be numerically classified in a hierarchical way, e.g. like SITC] 
 
@@ -181,8 +182,9 @@ Vietnam            4
 
 \end{example}
 
-In our example, Chile exported in total 26 people while Latvia only 18, however the variety of Latvia is greater than Chile's variety, 10 against 8 which allows us to conclude that Latvia is more diverse (considering only the dimension variety) than Chile if measured by global cultural production --as defined by Pantheon MIT \cite{macroconnections_mit_medialab_pantheon_2014}. In ecology, this measure is also called \dfn{richness} of the system.
+In our example, in Chile were born in total 26 globally known people while in Latvia only 18, however the variety of Latvia is greater than Chile's variety, 10 against 8 which allows us to conclude that Latvia is more diverse (considering only the dimension variety) than Chile if measured by global cultural production --as defined by Pantheon MIT \cite{macroconnections_mit_medialab_pantheon_2014}. In ecology, this measure is also called \dfn{richness} of the system.
 
+\subsubsection{Ubiquity}
 If the variety is considered from the point of view of the species, then we obtain a measure of the abundance/rareness of the specie. This measure in some cases is called \dfn{ubiquity} as in the case of the Economic Complexity \cite[p. 21]{hausmann_atlas_2011}. 
 We include the measure of rareness of the species through the function \code{ubiquity()} that returns the number of systems where the species has presence in descending order from the most common to the less one.
 In our example the occupation of politician, writer or soccer player is more common (ubiquitous) than the occupation of referee, sculptor or wrestler. 
@@ -221,7 +223,7 @@ Uruguay      1.135551 0.6260388 0.3739612     0.5263158        2.674074 0.819126
 Vietnam      1.168518 0.6280992 0.3719008     0.5454545        2.688889 0.8429079
 \end{example}
 
-In our --toy-- example, it is interesting to note the case of New Zealand which Gini-Index is high, that means, less concentrated than other countries. It is also comparable with Canada's Gini-Index, even when variety is 27 for Canada and only 9 for New Zealand. 
+In our --toy-- example, it is interesting to note the case of New Zealand which Gini is high, that means, less concentrated than other countries. It is also comparable with Canada's Gini, even when variety is 27 for Canada and only 9 for New Zealand. Note that the measure Gini used here to measure concentration, is not the same measure widely spread to measure inequality, also called the Gini-index. 
 
 \begin{table}[htdp]
 \begin{center}
@@ -229,9 +231,9 @@ In our --toy-- example, it is interesting to note the case of New Zealand which 
   \toprule
   Measure & \text{Formula} & Reference \\
   \midrule
- Entropy & - \sum\left(p_i \log p_i\right) & \cite{shannon_mathematical_1948} \\
-  Gini-Index &  1 - \sum\left(p_i^2\right)  & \cite{gini_variabilita_1912,ceriani_origins_2011} \\ 
- Simpson & \sum\left(p_i^2\right)  &  \cite{simpson_measurement_1949} \\ 
+ Entropy & - \sum_i\left(p_i \log p_i\right) & \cite{shannon_mathematical_1948} \\
+  Gini, Gini-Simpson,  Herfindahl–Hirschman index,  &  1 - \sum_i\left(p_i^2\right)  & \cite{gini_variabilita_1912,ceriani_origins_2011} \\ 
+ Simpson & \sum_i\left(p_i^2\right)  &  \cite{simpson_measurement_1949} \\ 
  Eveness & -\sum\left(p_i \log p_i\right)/\log{N}  & \cite{pielou_introduction_1970}\\ 
  Inverse-Simpson &  \left(\sum\left(p_i^2\right)\right)^{-1} & \cite{simpson_measurement_1949} \\
    Berger-Parker & \max{\left(p_i\right)} & \cite{berger_diversity_1970} \\ 
