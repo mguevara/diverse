@@ -87,10 +87,10 @@ diversity <- function(data, type="all", method='euclidean', agg_type=NULL, q=0, 
     diversity <- merge(diversity,m_d, by=0, all=TRUE)
     rownames(diversity) <- diversity$Row.names; diversity$Row.names <- NULL
   	if (type == 'gini' || type=='g' || type == 'all') {
-  		colnames(m_d) <- c('gini-simpson')
+  		colnames(m_d) <- c('gini.simpson')
   	}
   	else {
-  		colnames(m_d) <- c('herfindahl-hirschman')
+  		colnames(m_d) <- c('herfindahl.hirschman')
   	}
   }
   if(type == 'simpson' || type=='s' || type == 'all' ) {
@@ -98,27 +98,22 @@ diversity <- function(data, type="all", method='euclidean', agg_type=NULL, q=0, 
   	X_simp[X_simp==0] <- NA
   	m_d <- as.data.frame(rowSums((X_simp*(X_simp-1))/matrix(sumsX*(sumsX-1), ncol=ncol(X_simp), nrow=nrow(X_simp)), na.rm=TRUE)) 
   	colnames(m_d) <- c('simpson')
+  	m_d['sim.diversity'] <- 1-m_d$simpson
+  	m_d['sim.reciprocal'] <- 1/m_d$simpson
     diversity <- merge(diversity,m_d, by=0, all=TRUE)
     rownames(diversity) <- diversity$Row.names; diversity$Row.names <- NULL
   }
   if(type == 'true' || type=='td' || type == 'all') {
     p <- 1/(1-q)
     m_d <- as.data.frame((rowSums(propX ^ q, na.rm=TRUE)) ^ p)
-    colnames(m_d) <- c('true-diversity')
+    colnames(m_d) <- c('true.diversity')
     diversity <- merge(diversity,m_d, by=0, all=TRUE)
     rownames(diversity) <- diversity$Row.names; diversity$Row.names <- NULL
   }
   if(type == 'berger-parker' || type=='bp' || type == 'all') {
     m_d <- as.data.frame(apply(propX, 1, max))
-    colnames(m_d) <- c('berger-parker')
-    diversity <- merge(diversity,m_d, by=0, all=TRUE)
-    rownames(diversity) <- diversity$Row.names; diversity$Row.names <- NULL
-  }
-  if(type == 'inverse-simpson' || type=='is' || type == 'all') {
-    q <- 2
-    p <- 1/(1-q)
-    m_d <- as.data.frame((rowSums(propX ^ q, na.rm=TRUE)) ^ p)
-    colnames(m_d) <- c('inverse-simpson')
+    colnames(m_d) <- c('berger.parker')
+  	m_d['bp.diversity'] <- 1/m_d$berger.parker
     diversity <- merge(diversity,m_d, by=0, all=TRUE)
     rownames(diversity) <- diversity$Row.names; diversity$Row.names <- NULL
   }
@@ -147,9 +142,9 @@ diversity <- function(data, type="all", method='euclidean', agg_type=NULL, q=0, 
   	N <- ncol(propX)
   	m_d <- data.frame(row.names =  rownames(propX))
   	#str(m_d)
-  	if(type == 'rao-stirling' || type=='rs' || type=='all')
+  	if(type == 'rao.stirling' || type=='rs' || type=='all')
   	{
-  		m_d[,'rao-stirling'] <- NA; ms_label <- 'rao-stirling'	
+  		m_d[,'rao.stirling'] <- NA; ms_label <- 'rao.stirling'	
   	}
   	if(type=='rao' || type=='r')
   	{
@@ -157,9 +152,9 @@ diversity <- function(data, type="all", method='euclidean', agg_type=NULL, q=0, 
   	}
   	if(type=='disparity' || type=='d')
   	{
-  		m_d[,'disparity_sum'] <- NA	
-  		m_d[,'disparity_mean'] <- NA	
-  		ms_label <- 'disparity_sum'
+  		m_d[,'disparity.sum'] <- NA	
+  		m_d[,'disparity.mean'] <- NA	
+  		ms_label <- 'disparity.sum'
   	}
   	for(entity in row.names(propX)) #go into each entity
   	  {
@@ -171,7 +166,7 @@ diversity <- function(data, type="all", method='euclidean', agg_type=NULL, q=0, 
   	  	#print("prop_j")
   	  	#print(prop_j)
   	  	
-  	  	if(ms_label=='disparity_sum')
+  	  	if(ms_label=='disparity.sum')
   	  	{
   	  		prop_i[prop_i>0] <- 1 #binarizing proportion
   	  		prop_j[prop_j>0] <- 1 #binarizing proportion
@@ -194,9 +189,9 @@ diversity <- function(data, type="all", method='euclidean', agg_type=NULL, q=0, 
   	  	rs_entity <- ((disX^alpha)*disX_mask) * ((p_ij^beta)*p_ij_mask) #masks ensures for proportions to use only upper triangle matrix. For distances, to use only existant distances and upper triangle matrix.
   		  m_d[entity, ms_label] <- sum(rs_entity)
   		  
-  		  if(ms_label=='disparity_sum')
+  		  if(ms_label=='disparity.sum')
   		  { 
-  		  	m_d[entity, 'disparity_mean'] <- sum(rs_entity)/entity_variety 
+  		  	m_d[entity, 'disparity.mean'] <- sum(rs_entity)/entity_variety 
   		  }
   		  #print(entity)
   		  #print(p_ij)
