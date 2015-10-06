@@ -1,7 +1,8 @@
 #' @title  Diversity measures
 #' @description It receives an object with data especifying entities (systems), categories (species) and values of presence or abundance, and calculates a number of diversity measures.
 #' @param data A numeric matrix with entities as rows and categories as columns and cells as value of abundance. A dataframe with three columns: entities, categories, value of abundance.
-#' @param type A mnemonic string referencing the diversity measure. List of available measures: "variety", "entropy", "gini", "simpson", "true", "inverse-simpson", "herfindahl–hirschman","berger-parker", "renyi", "evenness", "rao","rao-stirling". A list of short mnemonics for each measure: 'v', 'e', 'g', 's', 'td', 'is', 'hh', 'bp,'re', ev', 'r',and 'rs'. The default for type is "all". More information for each measure in details and examples. 
+#' @param type A mnemonic string referencing the diversity measure. List of available measures: "variety", "entropy", "gini", "simpson", "true", "inverse-simpson", "herfindahl–hirschman","berger-parker", "renyi", "evenness", "rao","rao-stirling". A list of short mnemonics for each measure: 'v', 'e', 'g', 's', 'td', 'is', 'hh', 'bp,'re', ev', 'r',and 'rs'. The default for type is "all". More information for each measure in details and examples.
+#' @param dis a square matrix of distances or disimilarities between categories. It must include in the rownames the exact name used for each category in the dataset. Only the upper triangle will be used. If not matrix distance is especified, a matrix of similarities is computed by using the method defined in the parameter method. This for diversity measures that include the dimension of disparity as Rao-Stirling measure. 
 #' @param method "rao-stirling" and "rao" measures, use a disparity function to measure the distance between objects. For example: "cosine", "jaccard", "euclidean". The default for method is cosine. All distance measures availables in package proxy.
 #' @param agg_type aggregation type for diversity analysis. The analysis is conducted per row, but it can also be conducted by column via setting agg_type = "col". Default is NULL. 
 #' @param q parameter for true diversity index measure. This parameter is also used for the Rényi entropy. Default is 0.
@@ -63,7 +64,7 @@
 #' #rao stirling with differente parameters
 #' diversity(data=X, type="rao-stirling", method="euclidean", alpha=0, beta=1)
 #' @export
-diversity <- function(data, type="all", method='euclidean', agg_type=NULL, q=0, alpha=1, beta=1){
+diversity <- function(data, type="all", dist='NULL', method='euclidean', agg_type=NULL, q=0, alpha=1, beta=1){
   X <- get_data(data, agg_type)
 	diversity <- data.frame(row.names=rownames(X))
 	
@@ -131,7 +132,16 @@ diversity <- function(data, type="all", method='euclidean', agg_type=NULL, q=0, 
     rownames(diversity) <- diversity$Row.names; diversity$Row.names <- NULL
   }
   if(type == 'rao-stirling' || type=='rs' || type == 'all' || type=='rao' || type=='r' || type=='disparity' || type=='d'){
-  	disX <- distances(X, agg_type = agg_type, method=method) #compute distances first	
+  	if(dis==NULL)
+  	{
+  		disX <- distances(X, agg_type = agg_type, method=method) #compute distances first		
+  	}
+  	else
+  	{
+  		disX <- dis[,colnames(propX)] #reordering cols of matrix distances
+  		disX <- disX[colnames(propX),] #reordering rows of matrix distances 
+  	}
+  	
   	disX_mask <- disX
   	disX_mask[ (!is.na(disX_mask))] <- 1
   	disX_mask[lower.tri(disX_mask)] <- 0
@@ -277,6 +287,7 @@ variety <- function(data, sort=TRUE)
 #' @examples 
 #' ub <- ubiquity(data=d)
 #' @return a dataframe with values of frequency per category. Decreasing order
+#' @export
 ubiquity <- function(data)
 {
 	ubiq <- diversity(data, type='v', method='euclidean' , agg_type='col')
@@ -299,6 +310,7 @@ ubiquity <- function(data)
 #' data <- read.data(path)
 #' path <-  path_to_matrix_file <- system.file("extdata", "PantheonEdges.csv", package = "diveR")
 #' data <- read.data(path)
+#' @export
 read.data <- function(path, type='csv',sep=','){
 
 	if(type=='csv')
@@ -341,20 +353,11 @@ read.data <- function(path, type='csv',sep=','){
 #' @examples 
 #' Xdis <- dist_mat(data)
 #' Xdis <- dist_mat(data, method="jaccard", agg_type='col')
-distances <- function(data, method='cosine', agg_type=NULL){
+#' @export
+distances <- function(data, method='euclidean', agg_type=NULL){
     X <- get_data(data=data, agg_type=agg_type)
-  
-    if (method == 'jaccard') {
-      disX <- as.matrix(dist(t(X), method="Jaccard"), diag=1)  
-    }
-		if (method == 'euclidean') {
-      disX <- as.matrix(dist(t(X), method="euclidean"), diag=1)
-    }
-    if (method == "cosine") {
-      disX <- as.matrix(dist(t(X), method="cosine"), diag=1)
-    }
-
-  return(disX)
+	  disX <- as.matrix(dist(t(X), method=method), diag=1) 
+  	return(disX)
 }
 
 #' @title A procedure to compute the sum and average of disparities of systems
@@ -365,6 +368,7 @@ distances <- function(data, method='cosine', agg_type=NULL){
 #' @return A data frame with disparity measures as columns for each entity of data. Sum of disparities and average of disparities are computed.
 #' @examples 
 #' disp <- disparity(pantheon)
+#' @export
 disparity <- function(data, method='cosine', agg_type=NULL) {
   disparity <- diversity(data=data, method=method, type='disparity')
   return(disparity)
@@ -375,13 +379,14 @@ disparity <- function(data, method='cosine', agg_type=NULL) {
 #' @param data A matrix of data with row and column names. Or a dataframe with three columns entity, category and value
 #' @examples 
 #' balance(data)
-balance <- function(data )
+#' @export
+balance <- function(data, agg_type=NULL )
 {
-	balance <- diversity(data, type='entropy') #first balance measure
-	measures <- c( 'gini','simpson', 'berger-parker', 'inverse-simpson', 'evenness' )
+	balance <- diversity(data, type='entropy', agg_type=agg_type) #first balance measure
+	measures <- c( 'gini','evenness' )
 	for(measure in measures)
 	{
-		m_b <- diversity(data, type=measure)
+		m_b <- diversity(data, type=measure, agg_type=agg_type)
 		balance <- merge(balance,m_b, by=0, all=TRUE)
 		rownames(balance) <- balance$Row.names; balance$Row.names <- NULL
 	}
@@ -389,7 +394,26 @@ balance <- function(data )
 	return(balance)
 }
 
-
+#' @title Biodiversity
+#' @description A procedure to compute the most common measures used to analyze the biodiversity of a ecosystem, such as Berger-Parker, Entropy and Simpson with their variations
+#' @param data A matrix of data with row and column names. Or a dataframe with three columns entity, category and value
+#' @return a data frame with the main measures of biodiversity
+#' @examples 
+#' biodiversity(data)
+#' @export
+biodiversity <- function(data, agg_type=NULL)
+{
+	biodiv <- diversity(data, type='entropy', agg_type=agg_type) #first balance measure
+	measures <- c( 'berger-parker','simpson')
+	for(measure in measures)
+	{
+		m_b <- diversity(data, type=measure, agg_type=agg_type)
+		biodiv <- merge(biodiv,m_b, by=0, all=TRUE)
+		rownames(biodiv) <- biodiv$Row.names; biodiv$Row.names <- NULL
+	}
+	
+	return(biodiv)
+}
 
 #' @title A procedure to plot the matrix of data as a pheatmap
 #' @description It takes a matrix of data and plots a pheatmap of that matrix
