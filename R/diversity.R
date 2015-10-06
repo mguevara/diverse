@@ -73,6 +73,7 @@ diversity <- function(data, type="all", method='euclidean', agg_type=NULL, q=0, 
     diversity <- merge(diversity,m_d, by=0, all=TRUE)
     rownames(diversity) <- diversity$Row.names; diversity$Row.names <- NULL
   }
+	sumsX <- rowSums(X, na.rm=TRUE)
   propX <- X / rowSums(X, na.rm=TRUE)
   if(type == 'entropy' || type=='e' || type == 'all') { 
     m_d <- as.data.frame(-1 * rowSums(propX * log(propX), na.rm=TRUE))
@@ -80,20 +81,23 @@ diversity <- function(data, type="all", method='euclidean', agg_type=NULL, q=0, 
     diversity <- merge(diversity,m_d, by=0, all=TRUE)
     rownames(diversity) <- diversity$Row.names; diversity$Row.names <- NULL
   }
-  if(type == 'gini' || type=='g' || type == 'all') {
+  if(type == 'gini' || type=='g' || type == 'all'  || type == 'herfindahl-hirschman' || type == 'hh') {
     m_d <- as.data.frame(1 - rowSums(propX ^ 2, na.rm=TRUE))
     colnames(m_d) <- c('gini')
     diversity <- merge(diversity,m_d, by=0, all=TRUE)
     rownames(diversity) <- diversity$Row.names; diversity$Row.names <- NULL
+  	if (type == 'gini' || type=='g' || type == 'all') {
+  		colnames(m_d) <- c('gini-simpson')
+  	}
+  	else {
+  		colnames(m_d) <- c('herfindahl-hirschman')
+  	}
   }
-  if(type == 'simpson' || type=='s' || type == 'all' || type == 'herfindahl-hirschman' || type == 'hh') {
-    m_d <- as.data.frame(rowSums(propX ^ 2, na.rm=TRUE))
-    if (type == 'simpson' || type=='s' || type == 'all') {
-      colnames(m_d) <- c('simpson')
-    }
-    else {
-      colnames(m_d) <- c('herfindahl-hirschman')
-    }
+  if(type == 'simpson' || type=='s' || type == 'all' ) {
+    X_simp <- X
+  	X_simp[X_simp==0] <- NA
+  	m_d <- as.data.frame(rowSums((X_simp*(X_simp-1))/matrix(sumsX*(sumsX-1), ncol=ncol(X_simp), nrow=nrow(X_simp)), na.rm=TRUE)) 
+  	colnames(m_d) <- c('simpson')
     diversity <- merge(diversity,m_d, by=0, all=TRUE)
     rownames(diversity) <- diversity$Row.names; diversity$Row.names <- NULL
   }
