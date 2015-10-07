@@ -4,17 +4,19 @@
 \alias{diversity}
 \title{Diversity measures}
 \usage{
-diversity(data, type = "all", method = "euclidean", agg_type = NULL,
-  q = 0, alpha = 1, beta = 1)
+diversity(data, type = "all", dis = NULL, method = "euclidean",
+  entity_col = FALSE, q = 0, alpha = 1, beta = 1)
 }
 \arguments{
-\item{data}{A numeric matrix or data frame with objects as rows and categories as columns}
+\item{data}{A numeric matrix with entities as rows and categories as columns and cells as value of abundance. A dataframe with three columns: entities, categories, value of abundance.}
 
-\item{type}{A mnemonic string referencing the diversity measure. List of available measures: "variety", "entropy", "gini", "simpson", "true", "inverse-simpson", "herfindahl–hirschman", "renyi", "evenness", "rao-stirling". A list of short mnemonics for each measure: 'v', 'e', 'g', 's', 't', 'inv', 'hh', 're', ev', and 'rs'. The default for type is "all". More information for each measure in details and examples.}
+\item{type}{A mnemonic string referencing the diversity measure. List of available measures: "variety", "entropy", "gini", "simpson", "true", "inverse-simpson", "herfindahl–hirschman","berger-parker", "renyi", "evenness", "rao","rao-stirling". A list of short mnemonics for each measure: 'v', 'e', 'g', 's', 'td', 'is', 'hh', 'bp,'re', ev', 'r',and 'rs'. The default for type is "all". More information for each measure in details and examples.}
 
-\item{method}{"rao-stirling" uses a disparity function between objects. List of available disparity methods: "cosine", "jaccard", "euclidean". The default for method is cosine.}
+\item{dis}{a square matrix of distances or disimilarities between categories. It must include in the rownames the exact name used for each category in the dataset. Only the upper triangle will be used. If not matrix distance is especified, a matrix of similarities is computed by using the method defined in the parameter method. This for diversity measures that include the dimension of disparity as Rao-Stirling measure.}
 
-\item{agg_type}{aggregation type for diversity analysis. The analysis is conducted per row but it can also be performed by column setting agg_type = "col". Default is NULL.}
+\item{method}{"rao-stirling" and "rao" measures, use a disparity function to measure the distance between objects. For example: "cosine", "jaccard", "euclidean". The default for method is cosine. All distance measures availables in package proxy.}
+
+\item{entity_col}{entities are in columns. The analysis assumes that the entities are in rows, but entities could be listed in columns, if that is the case, this parameter should be set to TRUE. Default is FALSE}
 
 \item{q}{parameter for true diversity index measure. This parameter is also used for the Rényi entropy. Default is 0.}
 
@@ -26,16 +28,16 @@ diversity(data, type = "all", method = "euclidean", agg_type = NULL,
 A data frame with diversity measures as columns for each object of data
 }
 \description{
-It takes an object x category matrix and calculates a number of diversity measures
+It receives an object with data especifying entities (systems), categories (species) and values of presence or abundance, and calculates a number of diversity measures.
 }
 \details{
-Available diversity measures are (written for an object x category matrix):
+Available diversity measures are:
 
 Variables: N (category count), p_i (proportion of system comprises category i), d_ij (disparity between i and j).
 
-variety: N, category counts per object [MacArthur 1965]
+variety: N, category counts per system [MacArthur 1965]
 
-entropy: - sum(p_i log p_i), Shannon entropy per object [Shannon 1948]
+entropy: - sum(p_i log p_i), Shannon entropy per system [Shannon 1948]
 
 gini: 1 - sum(p_i^2), Gini-Simpson index per object [Gini 1912].  It is also known as the Gibbs–Martin index or the Blau index in sociology, psychology and management studies.
 
@@ -43,27 +45,32 @@ simpson: sum(p_i^2), Simpson index per object [Simpson 1949]. This measure is kn
 
 true: (sum(p_i^q))(1-q)^-1, true diversity index per object [Hill 1973]. This measure is q parameterized. Default for q is 0.
 
-berger-parker: it is equals to the maximum p_i value in the dataset, i.e. the proportional abundance of the most abundant type.
+berger-parker: it is equals to the maximum p_i value in the system, i.e. the proportional abundance of the most abundant type.
 
 inverse-simpson: (sum(p_i^2))^-1, inverse simpson index per object. This measure is the true diversity at q = 2.
 
 renyi: log((sum(p_i^q))(1-q)^-1), Rényi entropy per object. It is a generalization of the Shannon entropy parameterized by q. It corresponds to the logarithm of the true diversity. Default for q is 0.
 
-evenness: (-sum(p_i log p_i))/log N, Shannon evenness per object across categories [Pielou 1969]
+evenness: (-sum(p_i log p_i))/log N, Shannon evenness per object across categories [Pielou, 1969]
 
 rao-stirling: (sum((d_ij)^alpha (p_i p_j)^beta), Rao-Stirling diversity per object across categories [Stirling, 2007]. As default we consider alpha=1 and beta=1.
 As pairwise disparities (d_ij) the measure considers Jaccard, Euclidean and Cosine.
 }
 \examples{
-X <- readEdges(path="~/MyDiversity/data/toy.edges", sepr=' ', we=TRUE)
-diversity(X, type="gini")
-diversity(X, type="rao-stirling", method="cosine")
-diversity(X, type="all", method="jaccard")
+#reading csv data matrix
+path_to_file <- system.file("extdata", "PantheonMatrix.csv", package = "diver")
+X <- read.data(path = path_to_file)
+diversity(data=X, type="gini")
+diversity(data=X, type="rao-stirling", method="cosine")
+diversity(data=X, type="all", method="jaccard")
 
-data <- readCSV(path="~/MyDiversity/data/sitc_cnt_62.csv", sepr=' ', we=TRUE)
-diversity(data, type="gini")
-diversity(data, type="rao-stirling", method="cosine")
-diversity(data, type="all", method="jaccard")
+#reading csv dataframe
+path_to_file <- system.file("extdata", "PantheonEdges.csv", package = "diver")
+X <- read.data(path = path_to_file)
+#true diversity
+diversity(data=X, type="td", q=1)
+#rao stirling with differente parameters
+diversity(data=X, type="rao-stirling", method="euclidean", alpha=0, beta=1)
 }
 \references{
 Gini, C. (1912). "Italian: Variabilità e mutabilità" 'Variability and Mutability', Memorie di metodologica statistica.

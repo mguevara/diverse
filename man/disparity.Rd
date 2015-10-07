@@ -2,26 +2,24 @@
 % Please edit documentation in R/diversity.R
 \name{disparity}
 \alias{disparity}
-\title{A procedure to analyze a disparity matrix}
+\title{A procedure to compute the sum and average of disparities of systems}
 \usage{
-disparity(X, method = "all", agg_type = "row")
+disparity(data, method = "cosine", entity_col = FALSE)
 }
 \arguments{
-\item{method}{List of available disparity matrix analysis methods: "avg", "sum", "all". The default for method is "all".}
+\item{data}{A matrix or dataframe of entities, categories and values of presence}
 
-\item{agg_type}{aggregation type for disparity analysis. The analysis is conducted per row but it can also be performed by column setting agg_type = "col". Default is "row".}
+\item{method}{a distance measure available in proxy package.}
 
-\item{data}{A disparity matrix to be analyzed}
+\item{entity_col}{aggregation type for disparity analysis. The analysis is conducted per row but it can also be performed by column setting entity_col = TRUE. Default is FALSE.}
 }
 \value{
-A data frame with disparity measures as columns for each object of data
+A data frame with disparity measures as columns for each entity of data. Sum of disparities and average of disparities are computed.
 }
 \description{
-It takes a disparity matrix to get average or sums of disparities
+It takes data of presence-abundance of categories in entities and computes the sum and average of disparities between categories PRESENT in the entity
 }
 \examples{
-Xdis <- dist_mat(data, method="euclidean")
-disp <- disparity(Xdis)
-disp <- disparity(Xdis, method="avg", agg_type='col')
+disp <- disparity(pantheon)
 }
 

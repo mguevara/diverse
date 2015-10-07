@@ -4,17 +4,14 @@
 \alias{get_data}
 \title{Get Data}
 \usage{
-get_data(data, agg_type)
+get_data(data, entity_col = FALSE)
 }
 \arguments{
 \item{data}{Data to be processed as dataframe or as matrix.}
 
-\item{data_agg}{Diferent of NULL if column analysis is needed.}
+\item{entity_col}{TRUE if column analysis is needed.}
 }
 \description{
 It takes data as dataframe (edges) or as matrix (table) to be exported in proper form to be used by the diversity function.
-}
-\examples{
-X <- get_data(data=d, agg_type=NULL)
 }
 

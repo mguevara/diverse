@@ -4,7 +4,7 @@
 #' @param type A mnemonic string referencing the diversity measure. List of available measures: "variety", "entropy", "gini", "simpson", "true", "inverse-simpson", "herfindahl–hirschman","berger-parker", "renyi", "evenness", "rao","rao-stirling". A list of short mnemonics for each measure: 'v', 'e', 'g', 's', 'td', 'is', 'hh', 'bp,'re', ev', 'r',and 'rs'. The default for type is "all". More information for each measure in details and examples.
 #' @param dis a square matrix of distances or disimilarities between categories. It must include in the rownames the exact name used for each category in the dataset. Only the upper triangle will be used. If not matrix distance is especified, a matrix of similarities is computed by using the method defined in the parameter method. This for diversity measures that include the dimension of disparity as Rao-Stirling measure. 
 #' @param method "rao-stirling" and "rao" measures, use a disparity function to measure the distance between objects. For example: "cosine", "jaccard", "euclidean". The default for method is cosine. All distance measures availables in package proxy.
-#' @param agg_type aggregation type for diversity analysis. The analysis is conducted per row, but it can also be conducted by column via setting agg_type = "col". Default is NULL. 
+#' @param entity_col entities are in columns. The analysis assumes that the entities are in rows, but entities could be listed in columns, if that is the case, this parameter should be set to TRUE. Default is FALSE
 #' @param q parameter for true diversity index measure. This parameter is also used for the Rényi entropy. Default is 0.
 #' @param alpha parameter for Rao-Stirling diversity measure. As default we consider alpha=1.
 #' @param beta parameter for Rao-Stirling diversity measure. As default we consider beta=1.
@@ -50,22 +50,22 @@
 #' Stirling, A. (2007). "A General Framework for Analysing Diversity in Science, Technology and Society". Journal of the Royal Society Interface 4: 707-719.
 #' @examples
 #' #reading csv data matrix
-#' path_to_file <- system.file("extdata", "PantheonMatrix.csv", package = "diveR")
+#' path_to_file <- system.file("extdata", "PantheonMatrix.csv", package = "diver")
 #' X <- read.data(path = path_to_file)
 #' diversity(data=X, type="gini")
 #' diversity(data=X, type="rao-stirling", method="cosine")
 #' diversity(data=X, type="all", method="jaccard")
 #' 
 #' #reading csv dataframe
-#' path_to_file <- system.file("extdata", "PantheonEdges.csv", package = "diveR")
+#' path_to_file <- system.file("extdata", "PantheonEdges.csv", package = "diver")
 #' X <- read.data(path = path_to_file)
 #' #true diversity
 #' diversity(data=X, type="td", q=1)
 #' #rao stirling with differente parameters
 #' diversity(data=X, type="rao-stirling", method="euclidean", alpha=0, beta=1)
 #' @export
-diversity <- function(data, type="all", dist='NULL', method='euclidean', agg_type=NULL, q=0, alpha=1, beta=1){
-  X <- get_data(data, agg_type)
+diversity <- function(data, type="all", dis=NULL, method='euclidean', entity_col=FALSE, q=0, alpha=1, beta=1){
+  X <- get_data(data, entity_col)
 	diversity <- data.frame(row.names=rownames(X))
 	
   if (type == 'variety' || type =='v' || type== 'all') {
@@ -98,9 +98,9 @@ diversity <- function(data, type="all", dist='NULL', method='euclidean', agg_typ
     X_simp <- X
   	X_simp[X_simp==0] <- NA
   	m_d <- as.data.frame(rowSums((X_simp*(X_simp-1))/matrix(sumsX*(sumsX-1), ncol=ncol(X_simp), nrow=nrow(X_simp)), na.rm=TRUE)) 
-  	colnames(m_d) <- c('simpson')
-  	m_d['sim.diversity'] <- 1-m_d$simpson
-  	m_d['sim.reciprocal'] <- 1/m_d$simpson
+  	colnames(m_d) <- c('simpson.D')
+  	m_d['simpson.I'] <- 1-m_d$simpson.D
+  	m_d['simpson.R'] <- 1/m_d$simpson.D
     diversity <- merge(diversity,m_d, by=0, all=TRUE)
     rownames(diversity) <- diversity$Row.names; diversity$Row.names <- NULL
   }
@@ -113,8 +113,8 @@ diversity <- function(data, type="all", dist='NULL', method='euclidean', agg_typ
   }
   if(type == 'berger-parker' || type=='bp' || type == 'all') {
     m_d <- as.data.frame(apply(propX, 1, max))
-    colnames(m_d) <- c('berger.parker')
-  	m_d['bp.diversity'] <- 1/m_d$berger.parker
+    colnames(m_d) <- c('berger.parker.D')
+  	m_d['berger.parker.I'] <- 1/m_d$berger.parker
     diversity <- merge(diversity,m_d, by=0, all=TRUE)
     rownames(diversity) <- diversity$Row.names; diversity$Row.names <- NULL
   }
@@ -132,9 +132,9 @@ diversity <- function(data, type="all", dist='NULL', method='euclidean', agg_typ
     rownames(diversity) <- diversity$Row.names; diversity$Row.names <- NULL
   }
   if(type == 'rao-stirling' || type=='rs' || type == 'all' || type=='rao' || type=='r' || type=='disparity' || type=='d'){
-  	if(dis==NULL)
+  	if(is.null(dis))
   	{
-  		disX <- distances(X, agg_type = agg_type, method=method) #compute distances first		
+  		disX <- distances(X, entity_col = entity_col, method=method) #compute distances first		
   	}
   	else
   	{
@@ -152,7 +152,7 @@ diversity <- function(data, type="all", dist='NULL', method='euclidean', agg_typ
   	N <- ncol(propX)
   	m_d <- data.frame(row.names =  rownames(propX))
   	#str(m_d)
-  	if(type == 'rao.stirling' || type=='rs' || type=='all')
+  	if(type == 'rao-stirling' || type=='rs' || type=='all')
   	{
   		m_d[,'rao.stirling'] <- NA; ms_label <- 'rao.stirling'	
   	}
@@ -226,14 +226,11 @@ diversity <- function(data, type="all", dist='NULL', method='euclidean', agg_typ
 #' @title Get Data
 #' @description It takes data as dataframe (edges) or as matrix (table) to be exported in proper form to be used by the diversity function.
 #' @param data Data to be processed as dataframe or as matrix. 
-#' @param data_agg Diferent of NULL if column analysis is needed.
-#' @examples 
-#' X <- get_data(data=d, agg_type=NULL)
-#' @export
-get_data <- function(data, agg_type)
+#' @param entity_col TRUE if column analysis is needed.
+get_data <- function(data, entity_col=FALSE)
 {
 	if (is.data.frame(data)) {
-		if(!is.null(agg_type)) {
+		if(entity_col==TRUE) {
 			#diversity <- data.frame(row.names=levels(data[,2]))
 			data <- droplevels(data) #delete un used levels
 			X <- matrix(0, nrow=nlevels(data[,2]), ncol=nlevels(data[,1]), dimnames=list(levels(data[,2]),levels(data[,1])))
@@ -246,7 +243,7 @@ get_data <- function(data, agg_type)
 		}
 	}
 	else {
-		if (!is.null(agg_type)) {
+		if (entity_col==TRUE) {
 			X <- t(data)
 			#diversity <- data.frame(row.names=rownames(X))
 		}
@@ -260,16 +257,19 @@ get_data <- function(data, agg_type)
 }
 
 
-#' @title Variety
-#' @description It computes the variety or simple diversity of a system. Number of types [!?? What do you mean here with "Number of types"? It seems to be an unfinished sentence!?]
-#' @param data Data to be processed as dataframe or as matrix. 
+#' @title Variety or Richeness
+#' @description It computes the variety (number of distinct types) or simple diversity of an entity. It is also know as richeness. 
+#' @param data Data to be processed as dataframe or as matrix.
+#' @param sort Indicates if results should be ordered or not. Define it to FALSE to avoid ordering.
+#' @param entity_col The entities are located in rows but, if they are located in columns, then entity_col should be set to TRUE. Default is FALSE 
 #' @examples 
-#' vari <- varity(data=d)
+#' variety(data=pantheon)
+#' variety(data=pantheon, sort=FALSE)
 #' @return a dataframe with values of variety
 #' @export
-variety <- function(data, sort=TRUE)
+variety <- function(data, sort=TRUE, entity_col=FALSE)
 {
-	vari <- diversity(data, type='v')
+	vari <- diversity(data, type='v', entity_col=entity_col)
 	if(sort != FALSE)
 	{
 		vari['category'] <- row.names(vari)
@@ -283,14 +283,15 @@ variety <- function(data, sort=TRUE)
 #' @title Ubiquity
 #' @description It computes the ubiquity or the rearnes of the categories
 #' @param data Data to be processed as dataframe or as matrix. 
-#' @param data_agg Diferent of NULL if column analysis is needed.
+#' @param entity_col The entities are located in rows but, if they are located in columns, then entity_col should be set to TRUE. Default is FALSE
 #' @examples 
-#' ub <- ubiquity(data=d)
+#' ub <- ubiquity(data=pantheon)
+#' ub
 #' @return a dataframe with values of frequency per category. Decreasing order
 #' @export
-ubiquity <- function(data)
+ubiquity <- function(data, entity_col = FALSE)
 {
-	ubiq <- diversity(data, type='v', method='euclidean' , agg_type='col')
+	ubiq <- diversity(data, type='v', method='euclidean' , entity_col= (!entity_col))
 	colnames(ubiq) <- 'ubiquity'
 	ubiq['category'] <- row.names(ubiq)
 	ubiq <- ubiq[order(ubiq$ubiquity, decreasing = TRUE), ]
@@ -305,12 +306,14 @@ ubiquity <- function(data)
 #' @param type It indicates the type of data to be read. This parameter facilitate the input of diverse type of data files, such as spss or stata. Posible options are the names of the mentioned softwares. Default value is csv.
 #' @return A data frame with three columns, even when the input file is shaped as a matrix.
 #' @examples 
-#' path <-  path_to_matrix_file <- system.file("extdata", "PantheonMatrix.csv", package = "diveR")
+#' path <-  path_to_matrix_file <- system.file("extdata", "PantheonMatrix.csv", package = "diver")
 #' sep <- ','
 #' data <- read.data(path)
-#' path <-  path_to_matrix_file <- system.file("extdata", "PantheonEdges.csv", package = "diveR")
+#' path <-  path_to_matrix_file <- system.file("extdata", "PantheonEdges.csv", package = "diver")
 #' data <- read.data(path)
 #' @export
+#' @importFrom reshape2 melt
+#' @importFrom foreign read.spss read.dta
 read.data <- function(path, type='csv',sep=','){
 
 	if(type=='csv')
@@ -348,14 +351,16 @@ read.data <- function(path, type='csv',sep=','){
 #' @description It takes a data frame or a matrix to create a disparity matrix
 #' @param data A data frame or matrix of objects x categories
 #' @param method List of available disparity methods: "cosine", "jaccard", "euclidean". The default for method is cosine.
-#' @param agg_type aggregation type for pairwise disparity measure. The analysis is conducted per row but it can also be performed by column setting agg_type = "col". Default is row. 
+#' @param entity_col The entities are located in rows but, if they are located in columns, then entity_col should be set to TRUE. Default is FALSE. 
 #' @return A distance matrix
 #' @examples 
-#' Xdis <- dist_mat(data)
-#' Xdis <- dist_mat(data, method="jaccard", agg_type='col')
+#' Xdis <- distances(pantheon)
+#' Xdis <- distances(pantheon, method="jaccard", entity_col=TRUE)
+#' Xdis <- distances(pantheon, method="cosine", entity_col=TRUE)
 #' @export
-distances <- function(data, method='euclidean', agg_type=NULL){
-    X <- get_data(data=data, agg_type=agg_type)
+#' @importFrom proxy dist
+distances <- function(data, method='euclidean', entity_col=FALSE){
+    X <- get_data(data=data, entity_col=entity_col)
 	  disX <- as.matrix(dist(t(X), method=method), diag=1) 
   	return(disX)
 }
@@ -364,29 +369,31 @@ distances <- function(data, method='euclidean', agg_type=NULL){
 #' @description It takes data of presence-abundance of categories in entities and computes the sum and average of disparities between categories PRESENT in the entity
 #' @param data A matrix or dataframe of entities, categories and values of presence 
 #' @param method a distance measure available in proxy package.
-#' @param agg_type aggregation type for disparity analysis. The analysis is conducted per row but it can also be performed by column setting agg_type = "col". Default is "row". 
+#' @param entity_col aggregation type for disparity analysis. The analysis is conducted per row but it can also be performed by column setting entity_col = TRUE. Default is FALSE. 
 #' @return A data frame with disparity measures as columns for each entity of data. Sum of disparities and average of disparities are computed.
 #' @examples 
 #' disp <- disparity(pantheon)
 #' @export
-disparity <- function(data, method='cosine', agg_type=NULL) {
+disparity <- function(data, method='cosine', entity_col=FALSE) {
   disparity <- diversity(data=data, method=method, type='disparity')
   return(disparity)
 }
 
-#' @title Balance
+#' @title Main measures of balance
 #' @description A procedure to compute several measures of the dimension balance of the diversity.
 #' @param data A matrix of data with row and column names. Or a dataframe with three columns entity, category and value
+#' @param entity_col The entities are located in rows but, if they are located in columns, then entity_col should be set to TRUE. Default is FALSE
+#' @return a dataset that includes main measures of balance
 #' @examples 
-#' balance(data)
+#' str(pantheon)
 #' @export
-balance <- function(data, agg_type=NULL )
+balance <- function(data, entity_col=FALSE )
 {
-	balance <- diversity(data, type='entropy', agg_type=agg_type) #first balance measure
+	balance <- diversity(data, type='entropy', entity_col=entity_col) #first balance measure
 	measures <- c( 'gini','evenness' )
 	for(measure in measures)
 	{
-		m_b <- diversity(data, type=measure, agg_type=agg_type)
+		m_b <- diversity(data, type=measure, entity_col=entity_col)
 		balance <- merge(balance,m_b, by=0, all=TRUE)
 		rownames(balance) <- balance$Row.names; balance$Row.names <- NULL
 	}
@@ -397,33 +404,21 @@ balance <- function(data, agg_type=NULL )
 #' @title Biodiversity
 #' @description A procedure to compute the most common measures used to analyze the biodiversity of a ecosystem, such as Berger-Parker, Entropy and Simpson with their variations
 #' @param data A matrix of data with row and column names. Or a dataframe with three columns entity, category and value
-#' @return a data frame with the main measures of biodiversity
+#' @param entity_col The entities are located in rows but, if they are located in columns, then entity_col should be set to TRUE. Default is FALSE. #' @return a data frame with the main measures of biodiversity
 #' @examples 
-#' biodiversity(data)
+#' str(geese)
+#' biodiversity(geese)
 #' @export
-biodiversity <- function(data, agg_type=NULL)
+biodiversity <- function(data, entity_col=FALSE)
 {
-	biodiv <- diversity(data, type='entropy', agg_type=agg_type) #first balance measure
+	biodiv <- diversity(data, type='entropy', entity_col=entity_col) #first balance measure
 	measures <- c( 'berger-parker','simpson')
 	for(measure in measures)
 	{
-		m_b <- diversity(data, type=measure, agg_type=agg_type)
+		m_b <- diversity(data, type=measure, entity_col=entity_col)
 		biodiv <- merge(biodiv,m_b, by=0, all=TRUE)
 		rownames(biodiv) <- biodiv$Row.names; biodiv$Row.names <- NULL
 	}
 	
 	return(biodiv)
-}
-
-#' @title A procedure to plot the matrix of data as a pheatmap
-#' @description It takes a matrix of data and plots a pheatmap of that matrix
-#' @param data A matrix of data to be ploted
-#' @param fontsize The size of the font used in the plot.
-#' @param fontsize_row The font size of the labels in the rows 
-#' @examples 
-#' pheatmap(data)
-plot.pheatmap <- function(data,title=NULL, fontsize=14, fontsize_row=7, color = c('blue','yellow'))
-{
-	pheatmap(data, cluster_rows=FALSE, cluster_cols=FALSE,main=paste(title),show_colnames=FALSE,legend=FALSE,fontsize = fontsize,fontsize_row=7, color=color)
-	
 }

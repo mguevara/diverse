@@ -21,3 +21,22 @@
 #' summary(pantheon)
 #' pantheon[pantheon$Country=='Chile',]
 "pantheon"
+
+#' Geese data
+#'
+#' Matrix of species of geese.
+#' Dataset includes number of species of 4 geese observed by year in the Netherlands.
+#' Data was curated by the Dutch bird protection organisation, Sovon.
+#'
+#' @format A matrix with variables:
+#' \describe{
+#' \item{Columns}{Year of observation}
+#' \item{Rows}{Specie}
+#' }
+#'
+#' @source \url{https://www.sovon.nl/en}
+#' @source \url{http://www.compass-project.eu/applets/3/index_EN.html}
+#' @examples
+#' str(geese)
+#' summary(geese)
+"geese"

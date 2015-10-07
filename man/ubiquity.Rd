@@ -4,12 +4,12 @@
 \alias{ubiquity}
 \title{Ubiquity}
 \usage{
-ubiquity(data)
+ubiquity(data, entity_col = FALSE)
 }
 \arguments{
 \item{data}{Data to be processed as dataframe or as matrix.}
 
-\item{data_agg}{Diferent of NULL if column analysis is needed.}
+\item{entity_col}{The entities are located in rows but, if they are located in columns, then entity_col should be set to TRUE. Default is FALSE}
 }
 \value{
 a dataframe with values of frequency per category. Decreasing order
@@ -18,6 +18,7 @@ a dataframe with values of frequency per category. Decreasing order
 It computes the ubiquity or the rearnes of the categories
 }
 \examples{
-ub <- ubiquity(data=d)
+ub <- ubiquity(data=pantheon)
+ub
 }
 
