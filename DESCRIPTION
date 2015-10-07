@@ -5,12 +5,12 @@ Author: Miguel R. Guevara <miguel.guevara@upla.cl>, Dominik Hartmann
         <d.hartmann@uni-hohenheim.de>, Marcelo Mendoza
         <marcelo.mendoza@usm.cl>
 Maintainer: Miguel R. Guevara <miguel.guevara@upla.cl>
-Description: It implements a number of diversity measures for data analysis. It deals with proper language to different disciplines from social to ecological sciences.
+Description: It computes a number of diversity measures for data analysis over datasets of different disciplines.
 Depends: proxy, reshape2, foreign
-URL: https://github.com/mguevara/diveR
+URL: https://github.com/mguevara/diver
 Repository: CRAN
 Date: 2015-10-07 10:36:12
-BugReports: https://github.com/mguevara/diveR/issues
+BugReports: https://github.com/mguevara/diver/issues
 License: CC BY-NC 3.0
 LazyData: true
 NeedsCompilation: no
