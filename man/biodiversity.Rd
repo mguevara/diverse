@@ -9,13 +9,13 @@ biodiversity(data, entity_col = FALSE)
 \arguments{
 \item{data}{A matrix of data with row and column names. Or a dataframe with three columns entity, category and value}
 
-\item{entity_col}{The entities are located in rows but, if they are located in columns, then entity_col should be set to TRUE. Default is FALSE. #'}
+\item{entity_col}{The entities are located in rows but, if they are located in columns, then entity_col should be set to TRUE. Default is FALSE}
 }
 \value{
 a data frame with the main measures of biodiversity
 }
 \description{
-A procedure to compute the most common measures used to analyze the biodiversity of a ecosystem, such as Berger-Parker, Entropy and Simpson with their variations
+A procedure to compute the most common measures used to analyze the biodiversity of a ecoentity, such as Berger-Parker, Entropy and Simpson with their variations
 }
 \examples{
 str(geese)

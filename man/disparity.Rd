@@ -2,7 +2,7 @@
 % Please edit documentation in R/diversity.R
 \name{disparity}
 \alias{disparity}
-\title{A procedure to compute the sum and average of disparities of systems}
+\title{A procedure to compute the sum and average of disparities of entitys}
 \usage{
 disparity(data, method = "cosine", entity_col = FALSE)
 }

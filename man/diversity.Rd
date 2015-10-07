@@ -2,7 +2,7 @@
 % Please edit documentation in R/diversity.R
 \name{diversity}
 \alias{diversity}
-\title{Diversity measures}
+\title{Main function to compute diversity measures}
 \usage{
 diversity(data, type = "all", dis = NULL, method = "euclidean",
   entity_col = FALSE, q = 0, alpha = 1, beta = 1)
@@ -10,7 +10,7 @@ diversity(data, type = "all", dis = NULL, method = "euclidean",
 \arguments{
 \item{data}{A numeric matrix with entities as rows and categories as columns and cells as value of abundance. A dataframe with three columns: entities, categories, value of abundance.}
 
-\item{type}{A mnemonic string referencing the diversity measure. List of available measures: "variety", "entropy", "gini", "simpson", "true", "inverse-simpson", "herfindahl–hirschman","berger-parker", "renyi", "evenness", "rao","rao-stirling". A list of short mnemonics for each measure: 'v', 'e', 'g', 's', 'td', 'is', 'hh', 'bp,'re', ev', 'r',and 'rs'. The default for type is "all". More information for each measure in details and examples.}
+\item{type}{A mnemonic string referencing the diversity measure. List of available measures: "variety", "entropy", "gini", "simpson", "true-diversity", "herfindah-hirschman", "berger-parker", "renyi", "evenness", "rao", "rao-stirling". A list of short mnemonics for each measure: "v", "e", "g", "s", "td", 'hh', 'bp,'re', ev', 'r',and 'rs'. The default for type is "all". More information for each measure in details and examples.}
 
 \item{dis}{a square matrix of distances or disimilarities between categories. It must include in the rownames the exact name used for each category in the dataset. Only the upper triangle will be used. If not matrix distance is especified, a matrix of similarities is computed by using the method defined in the parameter method. This for diversity measures that include the dimension of disparity as Rao-Stirling measure.}
 
@@ -18,7 +18,7 @@ diversity(data, type = "all", dis = NULL, method = "euclidean",
 
 \item{entity_col}{entities are in columns. The analysis assumes that the entities are in rows, but entities could be listed in columns, if that is the case, this parameter should be set to TRUE. Default is FALSE}
 
-\item{q}{parameter for true diversity index measure. This parameter is also used for the Rényi entropy. Default is 0.}
+\item{q}{parameter for true diversity index measure. This parameter is also used for the Renyi entropy. Default is 0.}
 
 \item{alpha}{parameter for Rao-Stirling diversity measure. As default we consider alpha=1.}
 
@@ -28,33 +28,33 @@ diversity(data, type = "all", dis = NULL, method = "euclidean",
 A data frame with diversity measures as columns for each object of data
 }
 \description{
-It receives an object with data especifying entities (systems), categories (species) and values of presence or abundance, and calculates a number of diversity measures.
+It receives an object with data especifying entities (entitys), categories (species) and values of presence or abundance, and calculates a number of diversity measures.
 }
 \details{
 Available diversity measures are:
 
-Variables: N (category count), p_i (proportion of system comprises category i), d_ij (disparity between i and j).
+Variables: \eqn{N} (category count), \eqn{p_i} (proportion of entity comprises category i), \eqn{d_{ij}} (disparity between \eqn{i} and \eqn{j}).
 
-variety: N, category counts per system [MacArthur 1965]
+variety: N, category counts per entity [MacArthur 1965]
 
-entropy: - sum(p_i log p_i), Shannon entropy per system [Shannon 1948]
+entropy: Shannon entropy per entity [Shannon 1948] \deqn{- \sum_i\left(p_i \log p_i\right)}
 
-gini: 1 - sum(p_i^2), Gini-Simpson index per object [Gini 1912].  It is also known as the Gibbs–Martin index or the Blau index in sociology, psychology and management studies.
+gini:  Gini-Simpson index per object [Gini 1912].  It is also known as the Gibbs-Martin index or the Blau index in sociology, psychology and management studies. \deqn{1 - \sum_i\left(p_i^2\right)}
 
-simpson: sum(p_i^2), Simpson index per object [Simpson 1949]. This measure is known as the Herfindahl–Hirschman index in economy.
+simpson: Simpson index per object [Simpson 1949]. This measure is known as the Herfindahl-Hirschman index in economy.  \deqn{ D = \sum_i n_i(n_i-1) / N(N-1)}
 
-true: (sum(p_i^q))(1-q)^-1, true diversity index per object [Hill 1973]. This measure is q parameterized. Default for q is 0.
+Also the Simpson's Index of Diversity (\eqn{1-D}) and the Reciprocal Simpson \eqn{1/D} are retrieved.
 
-berger-parker: it is equals to the maximum p_i value in the system, i.e. the proportional abundance of the most abundant type.
+true-diversity: True diversity index per entity [Hill 1973]. This measure is \eqn{q} parameterized. Default for \eqn{q} is 0.
 
-inverse-simpson: (sum(p_i^2))^-1, inverse simpson index per object. This measure is the true diversity at q = 2.
+berger-parker: it is equals to the maximum \eqn{p_i} value in the entity, i.e. the proportional abundance of the most abundant type.
 
-renyi: log((sum(p_i^q))(1-q)^-1), Rényi entropy per object. It is a generalization of the Shannon entropy parameterized by q. It corresponds to the logarithm of the true diversity. Default for q is 0.
+renyi: Renyi entropy per object. It is a generalization of the Shannon entropy parameterized by \eqn{q}. It corresponds to the logarithm of the true diversity. Default for \eqn{q} is 0. \deqn{\left(1-q\right)^{-1} \log\left(\sum_i p_i^q\right)}
 
-evenness: (-sum(p_i log p_i))/log N, Shannon evenness per object across categories [Pielou, 1969]
+evenness:  Shannon evenness per object across categories [Pielou, 1969] \deqn{-\sum_i\left(p_i \log p_i\right)/\log{N} }
 
-rao-stirling: (sum((d_ij)^alpha (p_i p_j)^beta), Rao-Stirling diversity per object across categories [Stirling, 2007]. As default we consider alpha=1 and beta=1.
-As pairwise disparities (d_ij) the measure considers Jaccard, Euclidean and Cosine.
+rao-stirling: Rao-Stirling diversity per object across categories [Stirling, 2007]. As default we consider alpha=1 and beta=1.
+As pairwise disparities (d_ij) the measure considers Jaccard, Euclidean, Cosine or others measures available in the package proxy. \deqn{\sum_{ij}{d_{ij}}^\alpha {\left(p_i p_j \right)}^\beta}
 }
 \examples{
 #reading csv data matrix
@@ -73,15 +73,15 @@ diversity(data=X, type="td", q=1)
 diversity(data=X, type="rao-stirling", method="euclidean", alpha=0, beta=1)
 }
 \references{
-Gini, C. (1912). "Italian: Variabilità e mutabilità" 'Variability and Mutability', Memorie di metodologica statistica.
+Gini, C. (1912). "Italian: Variabilita e mutabilita" 'Variability and Mutability', Memorie di metodologica statistica.
 
-Hill, M. (1973). "Diversity and evenness: a unifying notation and its consequences". Ecology 54: 427–432.
+Hill, M. (1973). "Diversity and evenness: a unifying notation and its consequences". Ecology 54: 427-432.
 
 MacArthur, R. (1965). "Patterns of Species Diversity". Biology Reviews 40: 510-533.
 
 Pielou, E. (1969). "An Introduction to Mathematical Ecology". Wiley.
 
-Shannon, C. (1948). "A Mathematical Theory of Communication". Bell System Technical Journal 27 (3): 379–423.
+Shannon, C. (1948). "A Mathematical Theory of Communication". Bell entity Technical Journal 27 (3): 379-423.
 
 Simpson, A. (1949). "Measurement of Diversity". Nature 163: 41-48.
 

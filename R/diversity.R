@@ -1,49 +1,49 @@
-#' @title  Diversity measures
-#' @description It receives an object with data especifying entities (systems), categories (species) and values of presence or abundance, and calculates a number of diversity measures.
+#' @title  Main function to compute diversity measures
+#' @description It receives an object with data especifying entities (entitys), categories (species) and values of presence or abundance, and calculates a number of diversity measures.
 #' @param data A numeric matrix with entities as rows and categories as columns and cells as value of abundance. A dataframe with three columns: entities, categories, value of abundance.
-#' @param type A mnemonic string referencing the diversity measure. List of available measures: "variety", "entropy", "gini", "simpson", "true", "inverse-simpson", "herfindahl–hirschman","berger-parker", "renyi", "evenness", "rao","rao-stirling". A list of short mnemonics for each measure: 'v', 'e', 'g', 's', 'td', 'is', 'hh', 'bp,'re', ev', 'r',and 'rs'. The default for type is "all". More information for each measure in details and examples.
+#' @param type A mnemonic string referencing the diversity measure. List of available measures: "variety", "entropy", "gini", "simpson", "true-diversity", "herfindah-hirschman", "berger-parker", "renyi", "evenness", "rao", "rao-stirling". A list of short mnemonics for each measure: "v", "e", "g", "s", "td", 'hh', 'bp,'re', ev', 'r',and 'rs'. The default for type is "all". More information for each measure in details and examples.
 #' @param dis a square matrix of distances or disimilarities between categories. It must include in the rownames the exact name used for each category in the dataset. Only the upper triangle will be used. If not matrix distance is especified, a matrix of similarities is computed by using the method defined in the parameter method. This for diversity measures that include the dimension of disparity as Rao-Stirling measure. 
 #' @param method "rao-stirling" and "rao" measures, use a disparity function to measure the distance between objects. For example: "cosine", "jaccard", "euclidean". The default for method is cosine. All distance measures availables in package proxy.
 #' @param entity_col entities are in columns. The analysis assumes that the entities are in rows, but entities could be listed in columns, if that is the case, this parameter should be set to TRUE. Default is FALSE
-#' @param q parameter for true diversity index measure. This parameter is also used for the Rényi entropy. Default is 0.
+#' @param q parameter for true diversity index measure. This parameter is also used for the Renyi entropy. Default is 0.
 #' @param alpha parameter for Rao-Stirling diversity measure. As default we consider alpha=1.
 #' @param beta parameter for Rao-Stirling diversity measure. As default we consider beta=1.
 #' @details Available diversity measures are:
 #' 
-#' Variables: N (category count), p_i (proportion of system comprises category i), d_ij (disparity between i and j).
+#' Variables: \eqn{N} (category count), \eqn{p_i} (proportion of entity comprises category i), \eqn{d_{ij}} (disparity between \eqn{i} and \eqn{j}).
 #' 
-#' variety: N, category counts per system [MacArthur 1965]
+#' variety: N, category counts per entity [MacArthur 1965]
 #' 
-#' entropy: - sum(p_i log p_i), Shannon entropy per system [Shannon 1948]
+#' entropy: Shannon entropy per entity [Shannon 1948] \deqn{- \sum_i\left(p_i \log p_i\right)}
 #' 
-#' gini: 1 - sum(p_i^2), Gini-Simpson index per object [Gini 1912].  It is also known as the Gibbs–Martin index or the Blau index in sociology, psychology and management studies.
+#' gini:  Gini-Simpson index per object [Gini 1912].  It is also known as the Gibbs-Martin index or the Blau index in sociology, psychology and management studies. \deqn{1 - \sum_i\left(p_i^2\right)}
 #' 
-#' simpson: sum(p_i^2), Simpson index per object [Simpson 1949]. This measure is known as the Herfindahl–Hirschman index in economy.  
+#' simpson: Simpson index per object [Simpson 1949]. This measure is known as the Herfindahl-Hirschman index in economy.  \deqn{ D = \sum_i n_i(n_i-1) / N(N-1)} 
 #' 
-#' true: (sum(p_i^q))(1-q)^-1, true diversity index per object [Hill 1973]. This measure is q parameterized. Default for q is 0.  
+#' Also the Simpson's Index of Diversity (\eqn{1-D}) and the Reciprocal Simpson \eqn{1/D} are retrieved.
 #' 
-#' berger-parker: it is equals to the maximum p_i value in the system, i.e. the proportional abundance of the most abundant type. 
+#' true-diversity: True diversity index per entity [Hill 1973]. This measure is \eqn{q} parameterized. Default for \eqn{q} is 0.  
 #' 
-#' inverse-simpson: (sum(p_i^2))^-1, inverse simpson index per object. This measure is the true diversity at q = 2.
+#' berger-parker: it is equals to the maximum \eqn{p_i} value in the entity, i.e. the proportional abundance of the most abundant type. 
+#'  
+#' renyi: Renyi entropy per object. It is a generalization of the Shannon entropy parameterized by \eqn{q}. It corresponds to the logarithm of the true diversity. Default for \eqn{q} is 0. \deqn{\left(1-q\right)^{-1} \log\left(\sum_i p_i^q\right)}
 #' 
-#' renyi: log((sum(p_i^q))(1-q)^-1), Rényi entropy per object. It is a generalization of the Shannon entropy parameterized by q. It corresponds to the logarithm of the true diversity. Default for q is 0. 
+#' evenness:  Shannon evenness per object across categories [Pielou, 1969] \deqn{-\sum_i\left(p_i \log p_i\right)/\log{N} }
 #' 
-#' evenness: (-sum(p_i log p_i))/log N, Shannon evenness per object across categories [Pielou, 1969] 
-#' 
-#' rao-stirling: (sum((d_ij)^alpha (p_i p_j)^beta), Rao-Stirling diversity per object across categories [Stirling, 2007]. As default we consider alpha=1 and beta=1.
-#' As pairwise disparities (d_ij) the measure considers Jaccard, Euclidean and Cosine. 
+#' rao-stirling: Rao-Stirling diversity per object across categories [Stirling, 2007]. As default we consider alpha=1 and beta=1.
+#' As pairwise disparities (d_ij) the measure considers Jaccard, Euclidean, Cosine or others measures available in the package proxy. \deqn{\sum_{ij}{d_{ij}}^\alpha {\left(p_i p_j \right)}^\beta}
 #'  
 #' @return A data frame with diversity measures as columns for each object of data
 #' @references
-#' Gini, C. (1912). "Italian: Variabilità e mutabilità" 'Variability and Mutability', Memorie di metodologica statistica.
+#' Gini, C. (1912). "Italian: Variabilita e mutabilita" 'Variability and Mutability', Memorie di metodologica statistica.
 #' 
-#' Hill, M. (1973). "Diversity and evenness: a unifying notation and its consequences". Ecology 54: 427–432.
+#' Hill, M. (1973). "Diversity and evenness: a unifying notation and its consequences". Ecology 54: 427-432.
 #' 
 #' MacArthur, R. (1965). "Patterns of Species Diversity". Biology Reviews 40: 510-533.  
 #' 
 #' Pielou, E. (1969). "An Introduction to Mathematical Ecology". Wiley.
 #' 
-#' Shannon, C. (1948). "A Mathematical Theory of Communication". Bell System Technical Journal 27 (3): 379–423.
+#' Shannon, C. (1948). "A Mathematical Theory of Communication". Bell entity Technical Journal 27 (3): 379-423.
 #' 
 #' Simpson, A. (1949). "Measurement of Diversity". Nature 163: 41-48.
 #' 
@@ -223,40 +223,6 @@ diversity <- function(data, type="all", dis=NULL, method='euclidean', entity_col
 
 
 
-#' @title Get Data
-#' @description It takes data as dataframe (edges) or as matrix (table) to be exported in proper form to be used by the diversity function.
-#' @param data Data to be processed as dataframe or as matrix. 
-#' @param entity_col TRUE if column analysis is needed.
-get_data <- function(data, entity_col=FALSE)
-{
-	if (is.data.frame(data)) {
-		if(entity_col==TRUE) {
-			#diversity <- data.frame(row.names=levels(data[,2]))
-			data <- droplevels(data) #delete un used levels
-			X <- matrix(0, nrow=nlevels(data[,2]), ncol=nlevels(data[,1]), dimnames=list(levels(data[,2]),levels(data[,1])))
-			X[cbind(data[,2], data[,1])] <- data[,3]
-		}
-		else {
-			#diversity <- data.frame(row.names=levels(data[,1]))
-			X <- matrix(0, nrow=nlevels(data[,1]), ncol=nlevels(data[,2]), dimnames=list(levels(data[,1]),levels(data[,2])))
-			X[cbind(data[,1], data[,2])] <- data[,3]
-		}
-	}
-	else {
-		if (entity_col==TRUE) {
-			X <- t(data)
-			#diversity <- data.frame(row.names=rownames(X))
-		}
-		else {
-			X <- data
-			#diversity <- data.frame(row.names=rownames(X))
-		}  
-	}
-	return(X)
-	
-}
-
-
 #' @title Variety or Richeness
 #' @description It computes the variety (number of distinct types) or simple diversity of an entity. It is also know as richeness. 
 #' @param data Data to be processed as dataframe or as matrix.
@@ -306,22 +272,28 @@ ubiquity <- function(data, entity_col = FALSE)
 #' @param type It indicates the type of data to be read. This parameter facilitate the input of diverse type of data files, such as spss or stata. Posible options are the names of the mentioned softwares. Default value is csv.
 #' @return A data frame with three columns, even when the input file is shaped as a matrix.
 #' @examples 
-#' path <-  path_to_matrix_file <- system.file("extdata", "PantheonMatrix.csv", package = "diver")
+#' #reading an edges list or panel shape, source data must include three columns
+#' path <-  path_to_panel_file <- system.file("extdata", "PantheonEdges.csv", package = "diver")
 #' sep <- ','
 #' data <- read.data(path)
-#' path <-  path_to_matrix_file <- system.file("extdata", "PantheonEdges.csv", package = "diver")
+#' #reading a table
+#' path <-  path_to_panel_file <- system.file("extdata", "PantheonMatrix.csv", package = "diver")
+#' sep <- ','
 #' data <- read.data(path)
+#' #reading a table which includes the entities in the columns
+#' path <-  path_to_matrix_file <- system.file("extdata", "Geese.csv", package = "diver")
+#' data <- read.data(path, entity_col=TRUE)
 #' @export
 #' @importFrom reshape2 melt
 #' @importFrom foreign read.spss read.dta
-read.data <- function(path, type='csv',sep=','){
+read.data <- function(path, type='csv',sep=',', entity_col=FALSE){
 
 	if(type=='csv')
 	{
 		data_temp <- read.csv(path, sep=sep, nrow=1)
 		if(ncol(data_temp)>3)
 		{#matrix shape
-			data <- read.csv(path,sep=sep)
+			data <- read.csv(path,sep=sep, check.names=FALSE)
 			data <- melt(data, na.rm = TRUE)
 		}
 		else
@@ -341,6 +313,11 @@ read.data <- function(path, type='csv',sep=','){
 	}
 	if(ncol(data)> 3)
 	{
+		if(entity_col==TRUE)
+		{
+			data <- t(data)
+		}
+			
 		data <- melt(data, na.rm=TRUE)
 	}
 	row.names(data) <- NULL
@@ -365,7 +342,7 @@ distances <- function(data, method='euclidean', entity_col=FALSE){
   	return(disX)
 }
 
-#' @title A procedure to compute the sum and average of disparities of systems
+#' @title A procedure to compute the sum and average of disparities of entitys
 #' @description It takes data of presence-abundance of categories in entities and computes the sum and average of disparities between categories PRESENT in the entity
 #' @param data A matrix or dataframe of entities, categories and values of presence 
 #' @param method a distance measure available in proxy package.
@@ -385,7 +362,7 @@ disparity <- function(data, method='cosine', entity_col=FALSE) {
 #' @param entity_col The entities are located in rows but, if they are located in columns, then entity_col should be set to TRUE. Default is FALSE
 #' @return a dataset that includes main measures of balance
 #' @examples 
-#' str(pantheon)
+#' balance(pantheon)
 #' @export
 balance <- function(data, entity_col=FALSE )
 {
@@ -402,9 +379,10 @@ balance <- function(data, entity_col=FALSE )
 }
 
 #' @title Biodiversity
-#' @description A procedure to compute the most common measures used to analyze the biodiversity of a ecosystem, such as Berger-Parker, Entropy and Simpson with their variations
+#' @description A procedure to compute the most common measures used to analyze the biodiversity of a ecoentity, such as Berger-Parker, Entropy and Simpson with their variations
 #' @param data A matrix of data with row and column names. Or a dataframe with three columns entity, category and value
-#' @param entity_col The entities are located in rows but, if they are located in columns, then entity_col should be set to TRUE. Default is FALSE. #' @return a data frame with the main measures of biodiversity
+#' @param entity_col The entities are located in rows but, if they are located in columns, then entity_col should be set to TRUE. Default is FALSE
+#' @return a data frame with the main measures of biodiversity
 #' @examples 
 #' str(geese)
 #' biodiversity(geese)

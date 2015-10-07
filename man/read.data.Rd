@@ -4,7 +4,7 @@
 \alias{read.data}
 \title{A procedure to read data of a data file in formats csv, dta or spss}
 \usage{
-read.data(path, type = "csv", sep = ",")
+read.data(path, type = "csv", sep = ",", entity_col = FALSE)
 }
 \arguments{
 \item{path}{A string representing the path to data file. If it is shaped as a matrix, the first column must include proper names of the categories. If it is shaped as edges list, it must contain three columns, which are entity, category, value.}
@@ -20,10 +20,16 @@ A data frame with three columns, even when the input file is shaped as a matrix.
 It reads a file with data shaped as a matrix or as edges list. Several types of formats are allowed.
 }
 \examples{
-path <-  path_to_matrix_file <- system.file("extdata", "PantheonMatrix.csv", package = "diver")
+#reading an edges list or panel shape, source data must include three columns
+path <-  path_to_panel_file <- system.file("extdata", "PantheonEdges.csv", package = "diver")
 sep <- ','
 data <- read.data(path)
-path <-  path_to_matrix_file <- system.file("extdata", "PantheonEdges.csv", package = "diver")
+#reading a table
+path <-  path_to_panel_file <- system.file("extdata", "PantheonMatrix.csv", package = "diver")
+sep <- ','
 data <- read.data(path)
+#reading a table which includes the entities in the columns
+path <-  path_to_matrix_file <- system.file("extdata", "Geese.csv", package = "diver")
+data <- read.data(path, entity_col=TRUE)
 }
 

@@ -15,7 +15,7 @@
 #'
 #' @source \url{http://pantheon.media.mit.edu/}
 #' @references 
-#' A. Z. Yu, S. Ronen, K. Hu, T. Lu, and C. A. Hidalgo, ‘Pantheon: A Dataset for the Study of Global Cultural Production’, arXiv:1502.07310 [physics], Feb. 2015.
+#' A. Z. Yu, S. Ronen, K. Hu, T. Lu, and C. A. Hidalgo, 'Pantheon: A Dataset for the Study of Global Cultural Production', arXiv:1502.07310 [physics], Feb. 2015.
 #' @examples
 #' str(pantheon)
 #' summary(pantheon)

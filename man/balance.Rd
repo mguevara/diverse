@@ -18,6 +18,6 @@ a dataset that includes main measures of balance
 A procedure to compute several measures of the dimension balance of the diversity.
 }
 \examples{
-str(pantheon)
+balance(pantheon)
 }
 
