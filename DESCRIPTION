@@ -1,11 +1,11 @@
 Package: diver
-Title: Diversity Measures Easy to Use
+Title: Easy to Use Diversity Measures
 Version: 0.1.0
 Author: Miguel R. Guevara <miguel.guevara@upla.cl>, Dominik Hartmann
         <d.hartmann@uni-hohenheim.de>, Marcelo Mendoza
         <marcelo.mendoza@usm.cl>
 Maintainer: Miguel R. Guevara <miguel.guevara@upla.cl>
-Description: It computes a number of diversity measures for data analysis over datasets of different disciplines.
+Description: It computes the most common diversity measures.
 Depends: proxy, reshape2, foreign
 URL: https://github.com/mguevara/diver
 Repository: CRAN
