@@ -1,10 +1,9 @@
-#' Pantheon data
+#' Pantheon dataset
 #'
 #' Dataframe of globally known people according to MIT's Pantheon 1.0.
-#' Dataset includes number of globally known people for a sample of 10 countries
-#' that are associated to 53 different occupations. 
-#' The dataframe provided with diveR package is in shape of edges.
-#' The full dataset is described in [Yu et al., 2015].
+#' Dataset includes number of globally known people for a \strong{sample} 
+#' of 10 countries and 53 different occupations. 
+#' The \strong{complete} dataset is described in [Yu et al., 2015].
 #'
 #' @format A dataframe with variables:
 #' \describe{
@@ -22,7 +21,7 @@
 #' pantheon[pantheon$Country=='Chile',]
 "pantheon"
 
-#' Geese data
+#' Geese dataset
 #'
 #' Matrix of species of geese.
 #' Dataset includes number of species of 4 geese observed by year in the Netherlands.
@@ -39,4 +38,6 @@
 #' @examples
 #' str(geese)
 #' summary(geese)
+#' geese[,'2000']
+#' geese['Mute Swan',]
 "geese"

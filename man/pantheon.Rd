@@ -3,7 +3,7 @@
 \docType{data}
 \name{pantheon}
 \alias{pantheon}
-\title{Pantheon data}
+\title{Pantheon dataset}
 \format{A dataframe with variables:
 \describe{
 \item{Country}{Name of the country}
@@ -18,10 +18,9 @@ pantheon
 }
 \description{
 Dataframe of globally known people according to MIT's Pantheon 1.0.
-Dataset includes number of globally known people for a sample of 10 countries
-that are associated to 53 different occupations.
-The dataframe provided with diveR package is in shape of edges.
-The full dataset is described in [Yu et al., 2015].
+Dataset includes number of globally known people for a \strong{sample}
+of 10 countries and 53 different occupations.
+The \strong{complete} dataset is described in [Yu et al., 2015].
 }
 \examples{
 str(pantheon)

@@ -3,7 +3,7 @@
 \docType{data}
 \name{geese}
 \alias{geese}
-\title{Geese data}
+\title{Geese dataset}
 \format{A matrix with variables:
 \describe{
 \item{Columns}{Year of observation}
@@ -25,6 +25,8 @@ Data was curated by the Dutch bird protection organisation, Sovon.
 \examples{
 str(geese)
 summary(geese)
+geese[,'2000']
+geese['Mute Swan',]
 }
 \keyword{datasets}
 
