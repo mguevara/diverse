@@ -1,63 +1,65 @@
 #' @title  \strong{Main} function to compute diversity measures
-#' @description \strong{Main} function of the package. It receives an object with data especifying entitie, categories and values of abundance, then, it computes the required diversity measure.
-#' @param data A numeric matrix with: entities as rows, categories as columns and cells as value of abundance. It could also be a matrix with categories in rows and entities in columns, but in that case, the paramenter "entity_col" should be set to TRUE. The matrix must include proper names for rows and columns. The parameter data, can also be a dataframe with three columns in this order: entities, categories, value of abundance.
-#' @param type A mnemonic string referencing the diversity measure. List of available measures: "variety", "entropy", "gini-simpson", "simpson", "true-diversity", "herfindah-hirschman", "berger-parker", "renyi", "evenness", "rao", "rao-stirling". A list of short mnemonics for each measure: "v", "e", "gs", "s", "td", "hh", "bp", "re", "ev", "r",and "rs". The default for type is "all" which computes all available formulas. More information for each measure in details and examples.
-#' @param entity_col Entities are in columns. The analysis assumes that in the data matrix, the entities are in rows, but, if in the data matrix the entities are in the columns and the categories in the rows, then, the parameter entity_col, should be set to TRUE. Default is FALSE
-#' @param dis Square matrix of distances or disimilarities between categories. It must include in the rownames the exact name used for each category in the dataset. Only the upper triangle will be used. If this parameter is not defined, and the user requieres a mesure that uses disparities (e.g. Rao), then a matrix of disparities is computed internally using the method defined by the parameter 'method'.
-#' @param method "rao-stirling" and "rao" measures, use a disparity function to measure the distance between objects. If the user does not provide a matrix with disparities by using the paramenter 'dis', then a matrix of disparities is computed using the method especified in this parameter (method). For example: "cosine", "jaccard", "euclidean". The default method is cosine. The user can choose, one of the disparity measures availables in package proxy.
-#' @param q parameter used for true diversity index. This parameter is also used for the Renyi entropy. Default is 0.
-#' @param alpha Parameter for Rao-Stirling diversity. Default is 1.
-#' @param beta Parameter for Rao-Stirling diversity. Default is 1.
+#' @description \strong{Main} function of the package. The diversity function computes diversity measures for a dataset with entities, categories and values.
+#' @param data A numeric matrix with entities \eqn{i} in the rows and categories \eqn{j} in the columns. Cells show the respective value (value of abundance) of entity \eqn{i} in the category \eqn{j}. It can also be a transpose of the previous matrix, that is, a matrix with categories in the rows and entities in the columns, but in that case, the parameter "entity_col" has to be set to TRUE. The matrix must include names for the rows and the columns. The parameter "data", also accepts a dataframe with three columns in the following order: entity, category, value. 
+#' @param type A mnemonic string referencing to the available diversity measures. The available measures are: "variety", (Shannon) "entropy", "gini-simpson", "simpson", "true-diversity", "herfindah-hirschman", "berger-parker", "renyi", (Shannon) "evenness", "rao", "rao-stirling". A list of short mnemonics for each measure: "v", "e", "gs", "s", "td", "hh", "bp", "re", "ev", "r",and "rs". The default for type is "all" which computes all available formulas. More information for each measure in the sections on Details and Examples.
+#' @param entity_col Entities are in the columns. The analysis assumes that the entities are in the rows of the matrix. If the entities are in the columns and the categories in the rows, then the parameter "entity_col" has to be set to TRUE. The default value is FALSE.
+#' @param dis Optional square matrix of distances or disimilarities between categories. It allows the user to provide her own matrix of disimilarities between categories. The category names have to be both in the rows and in the columns, and these names must be precisely the same names used by the categories in the parameter "data". Only the upper triangle will be used. If  the parameter "dis" is not defined, and the user requires a measure that uses disparities (e.g. Rao), then a matrix of disparities is computed internally using the method defined by the parameter 'method'.
+#' @param method The "rao-stirling" and "rao"-diversity indices use a disparity function to measure the distance between objects. If the user does not provide a matrix with disparities by using the paramenter 'dis', then a matrix of disparities is computed using the method especified in this parameter (method). Possible values for this parameter are distance or dissimilarity methods available in "proxy" package as for example:"Euclidean", "Kullback" or "Canberra". This parameter also accepts a similarity method available in the "proxy" package, as for example: "cosine", "correlation" or "Jaccard" among others. In the latter case, a correspondent transformation to a dissimilarity measure will be retrieved. A list of available methods can be queried by using the function \code{\link[proxy]{pr_DB}}. e.g. summary(pr_DB). The default value is Euclidean distance.
+#' @param q Parameter used for the true diversity index. This parameter is also used for the Renyi entropy. The default value is 0.
+#' @param alpha Parameter for Rao-Stirling diversity. The default value is 1.
+#' @param beta Parameter for Rao-Stirling diversity. The default value is 1.
 #' @details  
-#' Notation used in the following formulas: \eqn{N},category count; \eqn{p_i}, proportion of entity comprises category \eqn{i}; \eqn{d_{ij}}, disparity between \eqn{i} and \eqn{j};  \eqn{q},\eqn{\alpha} and \eqn{\beta}, parameters.
+#' Notation used in the following formulas: \eqn{N}, category count; \eqn{p_i}, proportion of entity comprises category \eqn{i}; \eqn{d_{ij}}, disparity between \eqn{i} and \eqn{j};  \eqn{q},\eqn{\alpha} and \eqn{\beta}, parameters.
 #' 
-#' The available diversity measures included in the package, are listed above. The titles of the formulas, are the possible values that the parameter "type" might take to compute that formula:
+#' The available diversity measures included in the package are listed above. The titles of the formulas are the possible mnemonic values that the parameter "type" might take to compute that formula (i.e. diversity(data, type='variety') or diversity(data, type='v'):
 #' 
 #' 
-#' \strong{variety v:}
+#' \strong{variety, v:}
 #'  N, category counts per entity [MacArthur 1965]
 #' 
 #' 
-#' \strong{entropy e:}
+#' \strong{entropy, e:}
 #' Shannon entropy per entity [Shannon 1948] \deqn{- \sum_i(p_i \log p_i)}
 #' 
-#' 
-#' \strong{gini-simpson gs:}
-#' Gini-Simpson index per object [Gini 1912].  It is also known as the Gibbs-Martin index or the Blau index in sociology, psychology and management studies. This measure is also known as the Herfindahl-Hirschman Index in economy \deqn{1 - \sum_i(p_i^2)}
+#' \strong{Herfindahl-Hirschman, hh, hhi:} The Herfindahl-Hirschman Index used in economy to measure the concentration of markets. \deqn{\sum_i(p_i^2)}
 #' 
 #' 
-#' \strong{simpson s:}
+#' \strong{gini-simpson, gs:}
+#' Gini-Simpson index per object [Gini 1912].  This measure is also known as the Gibbs-Martin index or the Blau index in sociology, psychology and management studies.  \deqn{1 - \sum_i(p_i^2)}
+#' 
+#' 
+#' \strong{simpson, s:}
 #' Simpson index per entity [Simpson 1949].   \deqn{ D = \sum_i n_i(n_i-1) / N(N-1)} 
-#' When this measure is required, other associated measures are also retrieved, as Simpson's Index of Diversity \eqn{1-D} and the Reciprocal Simpson \eqn{1/D}.
+#' When this measure is required, then also associated variations Simpson's Index of Diversity \eqn{1-D} and the Reciprocal Simpson \eqn{1/D} will be computed.
 #' 
 #' 
-#' \strong{true-diversity td:}
+#' \strong{true-diversity, td:}
 #' True diversity index per entity [Hill 1973]. This measure is \eqn{q} parameterized. Default for \eqn{q} is 0.  \deqn{(\sum_ip_{i}^q)^{1/(1-q)}}
 #' 
 #' 
-#' \strong{berger-parker bp:}
-#' It is equals to the maximum \eqn{p_i} value in the entity, i.e. the proportional abundance of the most abundant type. 
+#' \strong{berger-parker, bp:}
+#' Berger-Parker index is equals to the maximum \eqn{p_i} value in the entity, i.e. the proportional abundance of the most abundant type. 
 #'  
 #'  
-#' \strong{renyi re}
-#'  Renyi entropy per object. It is a generalization of the Shannon entropy parameterized by \eqn{q}. It corresponds to the logarithm of the true diversity. Default for \eqn{q} is 0. \deqn{(1-q)^{-1} \log(\sum_i p_i^q)}
+#' \strong{renyi, re:}
+#'  Renyi entropy per object. This measure is a generalization of the Shannon entropy parameterized by \eqn{q}. It corresponds to the logarithm of the true diversity. The default value for \eqn{q} is 0. \deqn{(1-q)^{-1} \log(\sum_i p_i^q)}
 #' 
 #' 
-#' \strong{evenness ev:}
+#' \strong{evenness, ev:}
 #'  Shannon evenness per object across categories [Pielou, 1969] \deqn{-\sum_i(p_i \log p_i)/\log{N} }
 #' 
 #' 
-#' \strong{rao rao:}
+#' \strong{rao:}
 #' Rao diversity. \deqn{\sum_{ij}d_{ij} p_i p_j }
 #' 
 #' 
-#' \strong{rao-stirling rs:}
+#' \strong{rao-stirling, rs:}
 #'  Rao-Stirling diversity per object across categories [Stirling, 2007]. Default values are \eqn{\alpha=1} and \eqn{\beta=1}.
-#' As pairwise disparities (d_ij) the measure considers Jaccard, Euclidean, Cosine or others measures available in the package proxy. \deqn{\sum_{ij}{d_{ij}}^\alpha {(p_i p_j )}^\beta}
+#' For the pairwise disparities the measure allows to consider the Jaccard Index, Euclidean distances, Cosine Similarity among others. \deqn{\sum_{ij}{d_{ij}}^\alpha {(p_i p_j )}^\beta}
 #'  
 #'  
 #'  
-#' @return A data frame with diversity measures as columns for each object of data
+#' @return A data frame with diversity measures as columns for each entity.
 #' @references
 #' Gini, C. (1912). "Italian: Variabilita e mutabilita" 'Variability and Mutability', Memorie di metodologica statistica.
 #' 
@@ -109,19 +111,18 @@ diversity <- function(data, type="all", entity_col=FALSE, dis=NULL, method='eucl
     diversity <- merge(diversity,m_d, by=0, all=TRUE)
     rownames(diversity) <- diversity$Row.names; diversity$Row.names <- NULL
   }
-  if(type == 'gini-simpson' || type=='gs' || type == 'all'  || type == 'herfindahl-hirschman' || type == 'hh') {
+	
+	if(type == 'all'  || type == 'herfindahl-hirschman' || type == 'hh' || type == 'hhi'){
+		m_d <- as.data.frame(rowSums(propX ^ 2, na.rm=TRUE))
+		colnames(m_d) <- c('HHI')
+		diversity <- merge(diversity,m_d, by=0, all=TRUE)
+		rownames(diversity) <- diversity$Row.names; diversity$Row.names <- NULL
+	}
+  if(type == 'gini-simpson' || type=='gs' || type == 'all') {
     m_d <- as.data.frame(1 - rowSums(propX ^ 2, na.rm=TRUE))
-    #colnames(m_d) <- c('gini.simpson')
+  	colnames(m_d) <- c('gini.simpson')
     diversity <- merge(diversity,m_d, by=0, all=TRUE)
     rownames(diversity) <- diversity$Row.names; diversity$Row.names <- NULL
-  	if (type == 'gini-simpson' || type=='gs' || type == 'all') {
-  		colnames(m_d) <- c('gini.simpson')
-  	}
-  	else {
-  		colnames(m_d) <- c('herfindahl.hirschman')
-  	}
-  }
-  if(type == 'simpson' || type=='s' || type == 'all' ) {
     X_simp <- X
   	X_simp[X_simp==0] <- NA
   	m_d <- as.data.frame(rowSums((X_simp*(X_simp-1))/matrix(sumsX*(sumsX-1), ncol=ncol(X_simp), nrow=nrow(X_simp)), na.rm=TRUE)) 
@@ -250,23 +251,24 @@ diversity <- function(data, type="all", entity_col=FALSE, dis=NULL, method='eucl
 
 
 
-#' @title Variety or Richeness
-#' @description It computes the variety (number of distinct types) or simple diversity of an entity. It is also know as richeness. 
-#' @param data A numeric matrix with: entities as rows, categories as columns and cells as value of abundance. It could also be a matrix with categories in rows and entities in columns, but in that case, the paramenter "entity_col" should be set to TRUE. The matrix must include proper names for rows and columns. The parameter data, can also be a dataframe with three columns in this order: entities, categories, value of abundance.
+#' @title Variety or Richness
+#' @description It computes the variety (number of distinct types) or simple diversity of an entity. It is also know as richness. 
+#' @param data A numeric matrix with entities \eqn{i} in the rows and categories \eqn{j} in the columns. Cells show the respective value (value of abundance) of entity \eqn{i} in the category \eqn{j}. It can also be a transpose of the previous matrix, that is, a matrix with categories in the rows and entities in the columns, but in that case, the parameter "entity_col" has to be set to TRUE. The matrix must include names for the rows and the columns. The parameter "data", also accepts a dataframe with three columns in the following order: entity, category, value. 
 #' @param sort Indicates if results should be ordered or not. Define it to FALSE to avoid ordering.
-#' @param entity_col Entities are in columns. The analysis assumes that in the data matrix, the entities are in rows, but, if in the data matrix the entities are in the columns and the categories in the rows, then, the parameter entity_col, should be set to TRUE. Default is FALSE
+#' @param decreasing If paramenter "sort" is set to TRUE, this parameter indicates descending order. The default value is TRUE. 
+#' @param entity_col Entities are in the columns. The analysis assumes that the entities are in the rows of the matrix. If the entities are in the columns and the categories in the rows, then the parameter "entity_col" has to be set to TRUE. The default value is FALSE.
 #' @examples 
 #' dim_variety(data=pantheon)
 #' dim_variety(data=pantheon, sort=FALSE)
 #' @return A dataframe with values of variety for each entity.
 #' @export
-dim_variety <- function(data, sort=TRUE, entity_col=FALSE)
+dim_variety <- function(data, sort=TRUE, decreasing=TRUE, entity_col=FALSE)
 {
 	vari <- diversity(data, type='v', entity_col=entity_col)
 	if(sort != FALSE)
 	{
 		vari['category'] <- row.names(vari)
-		vari <- vari[order(vari$variety, decreasing = TRUE), ]
+		vari <- vari[order(vari$variety, decreasing = decreasing), ]
 		vari['category'] <- NULL	
 	}
 	
@@ -274,9 +276,9 @@ dim_variety <- function(data, sort=TRUE, entity_col=FALSE)
 }
 
 #' @title Ubiquity of categories across entities
-#' @description It computes the ubiquity or the rearnes of the categories
-#' @param data A numeric matrix with: entities as rows, categories as columns and cells as value of abundance. It could also be a matrix with categories in rows and entities in columns, but in that case, the paramenter "entity_col" should be set to TRUE. The matrix must include proper names for rows and columns. The parameter data, can also be a dataframe with three columns in this order: entities, categories, value of abundance.
-#' @param entity_col Entities are in columns. The analysis assumes that in the data matrix, the entities are in rows, but, if in the data matrix the entities are in the columns and the categories in the rows, then, the parameter entity_col, should be set to TRUE. Default is FALSE
+#' @description It computes the ubiquity or the rareness of the categories
+#' @param data A numeric matrix with entities \eqn{i} in the rows and categories \eqn{j} in the columns. Cells show the respective value (value of abundance) of entity \eqn{i} in the category \eqn{j}. It can also be a transpose of the previous matrix, that is, a matrix with categories in the rows and entities in the columns, but in that case, the parameter "entity_col" has to be set to TRUE. The matrix must include names for the rows and the columns. The parameter "data", also accepts a dataframe with three columns in the following order: entity, category, value. 
+#' @param entity_col Entities are in the columns. The analysis assumes that the entities are in the rows of the matrix. If the entities are in the columns and the categories in the rows, then the parameter "entity_col" has to be set to TRUE. The default value is FALSE.
 #' @examples 
 #' ub <- u_ubiquity(data=pantheon)
 #' ub
@@ -293,11 +295,11 @@ u_ubiquity <- function(data, entity_col = FALSE)
 }
 
 #' @title A procedure to read data of a data file in formats csv, dta or spss
-#' @description It reads a file with data shaped as a matrix or as edges list. Several types of formats are allowed.
-#' @param path A string representing the path to data file. If it is shaped as a matrix, the first column must include proper names of the categories. If it is shaped as edges list, it must contain three columns, which are entity, category, value. 
+#' @description This function reads a file with data shaped as a matrix or as edges list. Several types of formats are allowed.
+#' @param path A string representing the path to data file. If the data contained in the file is shaped as a matrix, the first column must include the names of the categories. If the data is shaped as edges list, it must contain three columns, which are: entity, category, value. 
 #' @param sep Separator field used in the file to separate columns, if it is a CSV file. Default value is comma.
-#' @param type It indicates the type of data to be read. This parameter facilitate the input of diverse type of data files, such as spss or stata. Posible options are the names of the mentioned softwares. Default value is csv.
-#' @param entity_col Entities are in columns. The analysis assumes that in the data matrix, the entities are in rows, but, if in the data matrix the entities are in the columns and the categories in the rows, then, the parameter entity_col, should be set to TRUE. Default is FALSE
+#' @param type It indicates the type of data to be read. This parameter facilitate the input of diverse type of data files, such as spss or stata. Possible options are the names of the mentioned softwares. The default value is csv.
+#' @param entity_col Entities are in the columns. The analysis assumes that the entities are in the rows of the matrix. If the entities are in the columns and the categories in the rows, then the parameter "entity_col" has to be set to TRUE. The default value is FALSE.
 #' @return A data frame with three columns (entity, category, value).
 #' @examples 
 #' #reading an edges list or panel shape, source data must include three columns
@@ -354,10 +356,10 @@ read_data <- function(path, type='csv',sep=',', entity_col=FALSE){
 
 #' @title A procedure to create a disparity matrix from a data frame or a matrix
 #' @description It takes a data frame or a matrix to create a disparity matrix
-#' @param data A numeric matrix with: entities as rows, categories as columns and cells as value of abundance. It could also be a matrix with categories in rows and entities in columns, but in that case, the paramenter "entity_col" should be set to TRUE. The matrix must include proper names for rows and columns. The parameter data, can also be a dataframe with three columns in this order: entities, categories, value of abundance.
-#' @param method A distance or disimilarity method available in "proxy" package. A list of available methods can be queried by using the function \code{\link[proxy]{pr_DB}}. e.g. summary(pr_DB). If a similarity method is invoqued (as cosine) a proper transformation to disimilarity will be retrieved. Default is Euclidean.
-#' @param entity_col Entities are in columns. The analysis assumes that in the data matrix, the entities are in rows, but, if in the data matrix the entities are in the columns and the categories in the rows, then, the parameter entity_col, should be set to TRUE. Default is FALSE
-#' @return A distance or disimilarity matrix
+#' @param data A numeric matrix with entities \eqn{i} in the rows and categories \eqn{j} in the columns. Cells show the respective value (value of abundance) of entity \eqn{i} in the category \eqn{j}. It can also be a transpose of the previous matrix, that is, a matrix with categories in the rows and entities in the columns, but in that case, the parameter "entity_col" has to be set to TRUE. The matrix must include names for the rows and the columns. The parameter "data", also accepts a dataframe with three columns in the following order: entity, category, value. 
+#' @param method A distance or dissimilarity method available in "proxy" package as for example:"Euclidean", "Kullback" or "Canberra". This parameter also accepts a similarity method available in the "proxy" package, as for example: "cosine", "correlation" or "Jaccard" among others. In the latter case, a correspondant transformation to a dissimilarity measure will be retrieved. A list of available methods can be queried by using the function \code{\link[proxy]{pr_DB}}. e.g. summary(pr_DB). The default value is Euclidean distance.
+#' @param entity_col Entities are in the columns. The analysis assumes that the entities are in the rows of the matrix. If the entities are in the columns and the categories in the rows, then the parameter "entity_col" has to be set to TRUE. The default value is FALSE.
+#' @return A distance or dissimilarity square matrix
 #' @examples 
 #' Xdis <- u_distances(pantheon)
 #' Xdis <- u_distances(pantheon, method="jaccard", entity_col=TRUE)
@@ -371,30 +373,31 @@ u_distances <- function(data, method='euclidean', entity_col=FALSE){
 }
 
 #' @title A procedure to compute the sum and average of disparities of entities
-#' @description It takes data of abundance of categories in entities and computes the sum and average of disparities between categories PRESENT in the entity
-#' @param data A numeric matrix with: entities as rows, categories as columns and cells as value of abundance. It could also be a matrix with categories in rows and entities in columns, but in that case, the paramenter "entity_col" should be set to TRUE. The matrix must include proper names for rows and columns. The parameter data, can also be a dataframe with three columns in this order: entities, categories, value of abundance.
-#' @param method A distance or disimilarity method available in "proxy" package. A list of available methods can be queried by using the function \code{\link[proxy]{pr_DB}}. e.g. summary(pr_DB). If a similarity method is invoqued (as cosine) a proper transformation to disimilarity will be retrieved. Default is euclidean.
-#' @param entity_col Entities are in columns. The analysis assumes that in the data matrix, the entities are in rows, but, if in the data matrix the entities are in the columns and the categories in the rows, then, the parameter entity_col, should be set to TRUE. Default is FALSE
-#' @return method A data frame with resulting disparity measures of each entity in the dataset. Sum of disparities and average of disparities are computed.
+#' @description Computes the sum and the average of disparities between the categories present in each entity.
+#' @param data A numeric matrix with entities \eqn{i} in the rows and categories \eqn{j} in the columns. Cells show the respective value (value of abundance) of entity \eqn{i} in the category \eqn{j}. It can also be a transpose of the previous matrix, that is, a matrix with categories in the rows and entities in the columns, but in that case, the parameter "entity_col" has to be set to TRUE. The matrix must include names for the rows and the columns. The parameter "data", also accepts a dataframe with three columns in the following order: entity, category, value. 
+#' @param method A distance or dissimilarity method available in "proxy" package as for example:"Euclidean", "Kullback" or "Canberra". This parameter also accepts a similarity method available in the "proxy" package, as for example: "cosine", "correlation" or "Jaccard" among others. In the latter case, a correspondant transformation to a dissimilarity measure will be retrieved. A list of available methods can be queried by using the function \code{\link[proxy]{pr_DB}}. e.g. summary(pr_DB). The default value is Euclidean distance.
+#' @param entity_col Entities are in the columns. The analysis assumes that the entities are in the rows of the matrix. If the entities are in the columns and the categories in the rows, then the parameter "entity_col" has to be set to TRUE. The default value is FALSE.
+#' @return A data frame with disparity measures for each entity in the dataset. Both the sum of disparitiesand the average of disparities are computed.
 #' @examples 
 #' dim_disparity(pantheon)
 #' @export
-dim_disparity <- function(data, method='cosine', entity_col=FALSE) {
+dim_disparity <- function(data, method='euclidean', entity_col=FALSE) {
   disparity <- diversity(data=data, method=method, type='disparity')
   return(disparity)
 }
 
 #' @title Main measures of balance
-#' @description A procedure to compute several measures associated to balance or eveness.
-#' @param data A numeric matrix with: entities as rows, categories as columns and cells as value of abundance. It could also be a matrix with categories in rows and entities in columns, but in that case, the paramenter "entity_col" should be set to TRUE. The matrix must include proper names for rows and columns. The parameter data, can also be a dataframe with three columns in this order: entities, categories, value of abundance.
-#' @param entity_col Entities are in columns. The analysis assumes that in the data matrix, the entities are in rows, but, if in the data matrix the entities are in the columns and the categories in the rows, then, the parameter entity_col, should be set to TRUE. Default is FALSE
+#' @description  A procedure to compute several measures associated to the balance or evenness of categories.
+#' @param data A numeric matrix with entities \eqn{i} in the rows and categories \eqn{j} in the columns. Cells show the respective value (value of abundance) of entity \eqn{i} in the category \eqn{j}. It can also be a transpose of the previous matrix, that is, a matrix with categories in the rows and entities in the columns, but in that case, the parameter "entity_col" has to be set to TRUE. The matrix must include names for the rows and the columns. The parameter "data", also accepts a dataframe with three columns in the following order: entity, category, value. 
+#' @param entity_col Entities are in the columns. The analysis assumes that the entities are in the rows of the matrix. If the entities are in the columns and the categories in the rows, then the parameter "entity_col" has to be set to TRUE. The default value is FALSE.
+#' @return A data frame that includes the measures of balance: Shannon entropy, Herfindahl-Hirschman Index (HHI), Gini-Simpson Index and Shannon evenness. 
 #' @examples 
 #' dim_balance(pantheon)
 #' @export
 dim_balance <- function(data, entity_col=FALSE )
 {
 	balance <- diversity(data, type='entropy', entity_col=entity_col) #first balance measure
-	measures <- c( 'gini-simpson','evenness' )
+	measures <- c( 'hh', 'gini-simpson','evenness' )
 	for(measure in measures)
 	{
 		m_b <- diversity(data, type=measure, entity_col=entity_col)
@@ -406,10 +409,10 @@ dim_balance <- function(data, entity_col=FALSE )
 }
 
 #' @title Most common measures used in Ecology to analyze biodiversity
-#' @description A procedure to compute the most common measures used to analyze the biodiversity in an ecosystem, such as Berger-Parker, Entropy and Simpson with their variations.
-#' @param data A numeric matrix with: entities as rows, categories as columns and cells as value of abundance. It could also be a matrix with categories in rows and entities in columns, but in that case, the paramenter "entity_col" should be set to TRUE. The matrix must include proper names for rows and columns. The parameter data, can also be a dataframe with three columns in this order: entities, categories, value of abundance.
-#' @param entity_col entities are in columns. The analysis assumes that in the data matrix, the entities are in rows, but, if in the data matrix the entities are in the columns and the categories in the rows, then, the parameter entity_col, should be set to TRUE. Default is FALSE
-#' @return a data frame with measures often used to measure diversity of an ecosystem
+#' @description A procedure to compute the most common measures used to analyze the biodiversity in an ecosystem, such as Berger-Parker, Shannon Entropy and Simpson with their variations.
+#' @param data A numeric matrix with entities \eqn{i} in the rows and categories \eqn{j} in the columns. Cells show the respective value (value of abundance) of entity \eqn{i} in the category \eqn{j}. It can also be a transpose of the previous matrix, that is, a matrix with categories in the rows and entities in the columns, but in that case, the parameter "entity_col" has to be set to TRUE. The matrix must include names for the rows and the columns. The parameter "data", also accepts a dataframe with three columns in the following order: entity, category, value. 
+#' @param entity_col Entities are in the columns. The analysis assumes that the entities are in the rows of the matrix. If the entities are in the columns and the categories in the rows, then the parameter "entity_col" has to be set to TRUE. The default value is FALSE.
+#' @return A dataframe with common measures of diversity in ecosystems.
 #' @examples 
 #' str(geese)
 #' diver_bio(geese)

@@ -7,19 +7,19 @@
 read_data(path, type = "csv", sep = ",", entity_col = FALSE)
 }
 \arguments{
-\item{path}{A string representing the path to data file. If it is shaped as a matrix, the first column must include proper names of the categories. If it is shaped as edges list, it must contain three columns, which are entity, category, value.}
+\item{path}{A string representing the path to data file. If the data contained in the file is shaped as a matrix, the first column must include the names of the categories. If the data is shaped as edges list, it must contain three columns, which are: entity, category, value.}
 
-\item{type}{It indicates the type of data to be read. This parameter facilitate the input of diverse type of data files, such as spss or stata. Posible options are the names of the mentioned softwares. Default value is csv.}
+\item{type}{It indicates the type of data to be read. This parameter facilitate the input of diverse type of data files, such as spss or stata. Possible options are the names of the mentioned softwares. The default value is csv.}
 
 \item{sep}{Separator field used in the file to separate columns, if it is a CSV file. Default value is comma.}
 
-\item{entity_col}{Entities are in columns. The analysis assumes that in the data matrix, the entities are in rows, but, if in the data matrix the entities are in the columns and the categories in the rows, then, the parameter entity_col, should be set to TRUE. Default is FALSE}
+\item{entity_col}{Entities are in the columns. The analysis assumes that the entities are in the rows of the matrix. If the entities are in the columns and the categories in the rows, then the parameter "entity_col" has to be set to TRUE. The default value is FALSE.}
 }
 \value{
 A data frame with three columns (entity, category, value).
 }
 \description{
-It reads a file with data shaped as a matrix or as edges list. Several types of formats are allowed.
+This function reads a file with data shaped as a matrix or as edges list. Several types of formats are allowed.
 }
 \examples{
 #reading an edges list or panel shape, source data must include three columns

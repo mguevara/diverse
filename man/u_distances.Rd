@@ -7,14 +7,14 @@
 u_distances(data, method = "euclidean", entity_col = FALSE)
 }
 \arguments{
-\item{data}{A numeric matrix with: entities as rows, categories as columns and cells as value of abundance. It could also be a matrix with categories in rows and entities in columns, but in that case, the paramenter "entity_col" should be set to TRUE. The matrix must include proper names for rows and columns. The parameter data, can also be a dataframe with three columns in this order: entities, categories, value of abundance.}
+\item{data}{A numeric matrix with entities \eqn{i} in the rows and categories \eqn{j} in the columns. Cells show the respective value (value of abundance) of entity \eqn{i} in the category \eqn{j}. It can also be a transpose of the previous matrix, that is, a matrix with categories in the rows and entities in the columns, but in that case, the parameter "entity_col" has to be set to TRUE. The matrix must include names for the rows and the columns. The parameter "data", also accepts a dataframe with three columns in the following order: entity, category, value.}
 
-\item{method}{A distance or disimilarity method available in "proxy" package. A list of available methods can be queried by using the function \code{\link[proxy]{pr_DB}}. e.g. summary(pr_DB). If a similarity method is invoqued (as cosine) a proper transformation to disimilarity will be retrieved. Default is Euclidean.}
+\item{method}{A distance or dissimilarity method available in "proxy" package as for example:"Euclidean", "Kullback" or "Canberra". This parameter also accepts a similarity method available in the "proxy" package, as for example: "cosine", "correlation" or "Jaccard" among others. In the latter case, a correspondant transformation to a dissimilarity measure will be retrieved. A list of available methods can be queried by using the function \code{\link[proxy]{pr_DB}}. e.g. summary(pr_DB). The default value is Euclidean distance.}
 
-\item{entity_col}{Entities are in columns. The analysis assumes that in the data matrix, the entities are in rows, but, if in the data matrix the entities are in the columns and the categories in the rows, then, the parameter entity_col, should be set to TRUE. Default is FALSE}
+\item{entity_col}{Entities are in the columns. The analysis assumes that the entities are in the rows of the matrix. If the entities are in the columns and the categories in the rows, then the parameter "entity_col" has to be set to TRUE. The default value is FALSE.}
 }
 \value{
-A distance or disimilarity matrix
+A distance or dissimilarity square matrix
 }
 \description{
 It takes a data frame or a matrix to create a disparity matrix

@@ -8,74 +8,76 @@ diversity(data, type = "all", entity_col = FALSE, dis = NULL,
   method = "euclidean", q = 0, alpha = 1, beta = 1)
 }
 \arguments{
-\item{data}{A numeric matrix with: entities as rows, categories as columns and cells as value of abundance. It could also be a matrix with categories in rows and entities in columns, but in that case, the paramenter "entity_col" should be set to TRUE. The matrix must include proper names for rows and columns. The parameter data, can also be a dataframe with three columns in this order: entities, categories, value of abundance.}
+\item{data}{A numeric matrix with entities \eqn{i} in the rows and categories \eqn{j} in the columns. Cells show the respective value (value of abundance) of entity \eqn{i} in the category \eqn{j}. It can also be a transpose of the previous matrix, that is, a matrix with categories in the rows and entities in the columns, but in that case, the parameter "entity_col" has to be set to TRUE. The matrix must include names for the rows and the columns. The parameter "data", also accepts a dataframe with three columns in the following order: entity, category, value.}
 
-\item{type}{A mnemonic string referencing the diversity measure. List of available measures: "variety", "entropy", "gini-simpson", "simpson", "true-diversity", "herfindah-hirschman", "berger-parker", "renyi", "evenness", "rao", "rao-stirling". A list of short mnemonics for each measure: "v", "e", "gs", "s", "td", "hh", "bp", "re", "ev", "r",and "rs". The default for type is "all" which computes all available formulas. More information for each measure in details and examples.}
+\item{type}{A mnemonic string referencing to the available diversity measures. The available measures are: "variety", (Shannon) "entropy", "gini-simpson", "simpson", "true-diversity", "herfindah-hirschman", "berger-parker", "renyi", (Shannon) "evenness", "rao", "rao-stirling". A list of short mnemonics for each measure: "v", "e", "gs", "s", "td", "hh", "bp", "re", "ev", "r",and "rs". The default for type is "all" which computes all available formulas. More information for each measure in the sections on Details and Examples.}
 
-\item{entity_col}{Entities are in columns. The analysis assumes that in the data matrix, the entities are in rows, but, if in the data matrix the entities are in the columns and the categories in the rows, then, the parameter entity_col, should be set to TRUE. Default is FALSE}
+\item{entity_col}{Entities are in the columns. The analysis assumes that the entities are in the rows of the matrix. If the entities are in the columns and the categories in the rows, then the parameter "entity_col" has to be set to TRUE. The default value is FALSE.}
 
-\item{dis}{Square matrix of distances or disimilarities between categories. It must include in the rownames the exact name used for each category in the dataset. Only the upper triangle will be used. If this parameter is not defined, and the user requieres a mesure that uses disparities (e.g. Rao), then a matrix of disparities is computed internally using the method defined by the parameter 'method'.}
+\item{dis}{Optional square matrix of distances or disimilarities between categories. It allows the user to provide her own matrix of disimilarities between categories. The category names have to be both in the rows and in the columns, and these names must be precisely the same names used by the categories in the parameter "data". Only the upper triangle will be used. If  the parameter "dis" is not defined, and the user requires a measure that uses disparities (e.g. Rao), then a matrix of disparities is computed internally using the method defined by the parameter 'method'.}
 
-\item{method}{"rao-stirling" and "rao" measures, use a disparity function to measure the distance between objects. If the user does not provide a matrix with disparities by using the paramenter 'dis', then a matrix of disparities is computed using the method especified in this parameter (method). For example: "cosine", "jaccard", "euclidean". The default method is cosine. The user can choose, one of the disparity measures availables in package proxy.}
+\item{method}{The "rao-stirling" and "rao"-diversity indices use a disparity function to measure the distance between objects. If the user does not provide a matrix with disparities by using the paramenter 'dis', then a matrix of disparities is computed using the method especified in this parameter (method). Possible values for this parameter are distance or dissimilarity methods available in "proxy" package as for example:"Euclidean", "Kullback" or "Canberra". This parameter also accepts a similarity method available in the "proxy" package, as for example: "cosine", "correlation" or "Jaccard" among others. In the latter case, a correspondent transformation to a dissimilarity measure will be retrieved. A list of available methods can be queried by using the function \code{\link[proxy]{pr_DB}}. e.g. summary(pr_DB). The default value is Euclidean distance.}
 
-\item{q}{parameter used for true diversity index. This parameter is also used for the Renyi entropy. Default is 0.}
+\item{q}{Parameter used for the true diversity index. This parameter is also used for the Renyi entropy. The default value is 0.}
 
-\item{alpha}{Parameter for Rao-Stirling diversity. Default is 1.}
+\item{alpha}{Parameter for Rao-Stirling diversity. The default value is 1.}
 
-\item{beta}{Parameter for Rao-Stirling diversity. Default is 1.}
+\item{beta}{Parameter for Rao-Stirling diversity. The default value is 1.}
 }
 \value{
-A data frame with diversity measures as columns for each object of data
+A data frame with diversity measures as columns for each entity.
 }
 \description{
-\strong{Main} function of the package. It receives an object with data especifying entitie, categories and values of abundance, then, it computes the required diversity measure.
+\strong{Main} function of the package. The diversity function computes diversity measures for a dataset with entities, categories and values.
 }
 \details{
-Notation used in the following formulas: \eqn{N},category count; \eqn{p_i}, proportion of entity comprises category \eqn{i}; \eqn{d_{ij}}, disparity between \eqn{i} and \eqn{j};  \eqn{q},\eqn{\alpha} and \eqn{\beta}, parameters.
+Notation used in the following formulas: \eqn{N}, category count; \eqn{p_i}, proportion of entity comprises category \eqn{i}; \eqn{d_{ij}}, disparity between \eqn{i} and \eqn{j};  \eqn{q},\eqn{\alpha} and \eqn{\beta}, parameters.
 
-The available diversity measures included in the package, are listed above. The titles of the formulas, are the possible values that the parameter "type" might take to compute that formula:
+The available diversity measures included in the package are listed above. The titles of the formulas are the possible mnemonic values that the parameter "type" might take to compute that formula (i.e. diversity(data, type='variety') or diversity(data, type='v'):
 
 
-\strong{variety v:}
+\strong{variety, v:}
  N, category counts per entity [MacArthur 1965]
 
 
-\strong{entropy e:}
+\strong{entropy, e:}
 Shannon entropy per entity [Shannon 1948] \deqn{- \sum_i(p_i \log p_i)}
 
-
-\strong{gini-simpson gs:}
-Gini-Simpson index per object [Gini 1912].  It is also known as the Gibbs-Martin index or the Blau index in sociology, psychology and management studies. This measure is also known as the Herfindahl-Hirschman Index in economy \deqn{1 - \sum_i(p_i^2)}
+\strong{Herfindahl-Hirschman, hh, hhi:} The Herfindahl-Hirschman Index used in economy to measure the concentration of markets. \deqn{\sum_i(p_i^2)}
 
 
-\strong{simpson s:}
+\strong{gini-simpson, gs:}
+Gini-Simpson index per object [Gini 1912].  This measure is also known as the Gibbs-Martin index or the Blau index in sociology, psychology and management studies.  \deqn{1 - \sum_i(p_i^2)}
+
+
+\strong{simpson, s:}
 Simpson index per entity [Simpson 1949].   \deqn{ D = \sum_i n_i(n_i-1) / N(N-1)}
-When this measure is required, other associated measures are also retrieved, as Simpson's Index of Diversity \eqn{1-D} and the Reciprocal Simpson \eqn{1/D}.
+When this measure is required, then also associated variations Simpson's Index of Diversity \eqn{1-D} and the Reciprocal Simpson \eqn{1/D} will be computed.
 
 
-\strong{true-diversity td:}
+\strong{true-diversity, td:}
 True diversity index per entity [Hill 1973]. This measure is \eqn{q} parameterized. Default for \eqn{q} is 0.  \deqn{(\sum_ip_{i}^q)^{1/(1-q)}}
 
 
-\strong{berger-parker bp:}
-It is equals to the maximum \eqn{p_i} value in the entity, i.e. the proportional abundance of the most abundant type.
+\strong{berger-parker, bp:}
+Berger-Parker index is equals to the maximum \eqn{p_i} value in the entity, i.e. the proportional abundance of the most abundant type.
 
 
-\strong{renyi re}
- Renyi entropy per object. It is a generalization of the Shannon entropy parameterized by \eqn{q}. It corresponds to the logarithm of the true diversity. Default for \eqn{q} is 0. \deqn{(1-q)^{-1} \log(\sum_i p_i^q)}
+\strong{renyi, re:}
+ Renyi entropy per object. This measure is a generalization of the Shannon entropy parameterized by \eqn{q}. It corresponds to the logarithm of the true diversity. The default value for \eqn{q} is 0. \deqn{(1-q)^{-1} \log(\sum_i p_i^q)}
 
 
-\strong{evenness ev:}
+\strong{evenness, ev:}
  Shannon evenness per object across categories [Pielou, 1969] \deqn{-\sum_i(p_i \log p_i)/\log{N} }
 
 
-\strong{rao rao:}
+\strong{rao:}
 Rao diversity. \deqn{\sum_{ij}d_{ij} p_i p_j }
 
 
-\strong{rao-stirling rs:}
+\strong{rao-stirling, rs:}
  Rao-Stirling diversity per object across categories [Stirling, 2007]. Default values are \eqn{\alpha=1} and \eqn{\beta=1}.
-As pairwise disparities (d_ij) the measure considers Jaccard, Euclidean, Cosine or others measures available in the package proxy. \deqn{\sum_{ij}{d_{ij}}^\alpha {(p_i p_j )}^\beta}
+For the pairwise disparities the measure allows to consider the Jaccard Index, Euclidean distances, Cosine Similarity among others. \deqn{\sum_{ij}{d_{ij}}^\alpha {(p_i p_j )}^\beta}
 }
 \examples{
 diversity(pantheon)

@@ -2,22 +2,24 @@
 % Please edit documentation in R/diversity.R
 \name{dim_variety}
 \alias{dim_variety}
-\title{Variety or Richeness}
+\title{Variety or Richness}
 \usage{
-dim_variety(data, sort = TRUE, entity_col = FALSE)
+dim_variety(data, sort = TRUE, decreasing = TRUE, entity_col = FALSE)
 }
 \arguments{
-\item{data}{A numeric matrix with: entities as rows, categories as columns and cells as value of abundance. It could also be a matrix with categories in rows and entities in columns, but in that case, the paramenter "entity_col" should be set to TRUE. The matrix must include proper names for rows and columns. The parameter data, can also be a dataframe with three columns in this order: entities, categories, value of abundance.}
+\item{data}{A numeric matrix with entities \eqn{i} in the rows and categories \eqn{j} in the columns. Cells show the respective value (value of abundance) of entity \eqn{i} in the category \eqn{j}. It can also be a transpose of the previous matrix, that is, a matrix with categories in the rows and entities in the columns, but in that case, the parameter "entity_col" has to be set to TRUE. The matrix must include names for the rows and the columns. The parameter "data", also accepts a dataframe with three columns in the following order: entity, category, value.}
 
 \item{sort}{Indicates if results should be ordered or not. Define it to FALSE to avoid ordering.}
 
-\item{entity_col}{Entities are in columns. The analysis assumes that in the data matrix, the entities are in rows, but, if in the data matrix the entities are in the columns and the categories in the rows, then, the parameter entity_col, should be set to TRUE. Default is FALSE}
+\item{decreasing}{If paramenter "sort" is set to TRUE, this parameter indicates descending order. The default value is TRUE.}
+
+\item{entity_col}{Entities are in the columns. The analysis assumes that the entities are in the rows of the matrix. If the entities are in the columns and the categories in the rows, then the parameter "entity_col" has to be set to TRUE. The default value is FALSE.}
 }
 \value{
 A dataframe with values of variety for each entity.
 }
 \description{
-It computes the variety (number of distinct types) or simple diversity of an entity. It is also know as richeness.
+It computes the variety (number of distinct types) or simple diversity of an entity. It is also know as richness.
 }
 \examples{
 dim_variety(data=pantheon)
