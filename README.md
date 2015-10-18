@@ -20,16 +20,18 @@
  diversity(pantheon)
  diversity(pantheon, type='variety')
  diversity(geese, type='berger-parker', entity_col=TRUE)
+ 
  #reading csv data matrix
- path_to_file <- system.file("extdata", "PantheonMatrix.csv", package = "diver")
+ path_to_file <- system.file("extdata", "PantheonMatrix.csv", package = "diverse")
  X <- read_data(path = path_to_file)
  diversity(data=X, type="gini")
  diversity(data=X, type="rao-stirling", method="cosine")
  diversity(data=X, type="all", method="jaccard")
 
  #reading csv dataframe
- path_to_file <- system.file("extdata", "PantheonEdges.csv", package = "diver")
+ path_to_file <- system.file("extdata", "PantheonEdges.csv", package = "diverse")
  X <- read_data(path = path_to_file)
+ 
  #true diversity
  diversity(data=X, type="td", q=1)
  #rao stirling with differente parameters
