@@ -23,7 +23,7 @@
 
 #' Geese dataset
 #'
-#' Matrix of species of geese.
+#' A matrix of species of geese.
 #' Dataset includes the number of species of 4 geese observed by year in the Netherlands.
 #' Data was curated by the Dutch bird protection organisation Sovon.
 #'

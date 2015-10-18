@@ -7,9 +7,9 @@
 dim_variety(data, sort = TRUE, decreasing = TRUE, entity_col = FALSE)
 }
 \arguments{
-\item{data}{A numeric matrix with entities \eqn{i} in the rows and categories \eqn{j} in the columns. Cells show the respective value (value of abundance) of entity \eqn{i} in the category \eqn{j}. It can also be a transpose of the previous matrix, that is, a matrix with categories in the rows and entities in the columns, but in that case, the parameter "entity_col" has to be set to TRUE. The matrix must include names for the rows and the columns. The parameter "data", also accepts a dataframe with three columns in the following order: entity, category, value.}
+\item{data}{A numeric matrix with entities \eqn{i} in the rows and categories \eqn{j} in the columns. Cells show the respective value (value of abundance) of entity \eqn{i} in the category \eqn{j}. It can also be a transpose of the previous matrix, that is, a matrix with categories in the rows and entities in the columns. Yet in that case, the parameter "entity_col" has to be set to TRUE. The matrix must include names for the rows and the columns. The parameter "data", also accepts a dataframe with three columns in the following order: entity, category, value.}
 
-\item{sort}{Indicates if results should be ordered or not. Define it to FALSE to avoid ordering.}
+\item{sort}{Indicates whether results should be ordered or not. Define it to FALSE to avoid ordering.}
 
 \item{decreasing}{If paramenter "sort" is set to TRUE, this parameter indicates descending order. The default value is TRUE.}
 
@@ -19,7 +19,7 @@ dim_variety(data, sort = TRUE, decreasing = TRUE, entity_col = FALSE)
 A dataframe with values of variety for each entity.
 }
 \description{
-It computes the variety (number of distinct types) or simple diversity of an entity. It is also know as richness.
+It computes the variety (number of distinct types) or simple diversity of an entity. It is also known as richness.
 }
 \examples{
 dim_variety(data=pantheon)

@@ -1,4 +1,4 @@
-Package: diver
+Package: diverse
 Title: Easy to Use Diversity Measures
 Version: 0.1.0
 Author: Miguel R. Guevara <miguel.guevara@upla.cl>, Dominik Hartmann
@@ -7,10 +7,10 @@ Author: Miguel R. Guevara <miguel.guevara@upla.cl>, Dominik Hartmann
 Maintainer: Miguel R. Guevara <miguel.guevara@upla.cl>
 Description: It computes the most common diversity measures used in social and natural sciences.
 Depends: proxy, reshape2, foreign
-URL: https://github.com/mguevara/diver
+URL: https://github.com/mguevara/diverse
 Repository: CRAN
-Date: 2015-10-07 10:36:12
-BugReports: https://github.com/mguevara/diver/issues
+Date: 2015-10-19
+BugReports: https://github.com/mguevara/diverse/issues
 License: CC BY-NC 3.0
 LazyData: true
 NeedsCompilation: no
