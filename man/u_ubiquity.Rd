@@ -7,9 +7,9 @@
 u_ubiquity(data, entity_col = FALSE)
 }
 \arguments{
-\item{data}{A numeric matrix with entities \eqn{i} in the rows and categories \eqn{j} in the columns. Cells show the respective value (value of abundance) of entity \eqn{i} in the category \eqn{j}. It can also be a transpose of the previous matrix, that is, a matrix with categories in the rows and entities in the columns. Yet in that case, the parameter "entity_col" has to be set to TRUE. The matrix must include names for the rows and the columns. The parameter "data", also accepts a dataframe with three columns in the following order: entity, category, value.}
+\item{data}{A numeric matrix with entities \eqn{i} in the rows and categories \eqn{j} in the columns. Cells show the respective value (value of abundance) of entity \eqn{i} in the category \eqn{j}. It can also be a transpose of the previous matrix, that is, a matrix with categories in the rows and entities in the columns. Yet in that case, the parameter "entity_col" has to be set to TRUE. The matrix must include names for the rows and the columns. The parameter "data", also accepts a dataframe with three columns in the following order: entity, category and value.}
 
-\item{entity_col}{Entities are in the columns. The analysis assumes that the entities are in the rows of the matrix. If the entities are in the columns and the categories in the rows, then the parameter "entity_col" has to be set to TRUE. The default value is FALSE.}
+\item{entity_col}{A flag to indicate that entities are in the columns. The analysis assumes that the entities are in the rows of the matrix. If the entities are in the columns and the categories in the rows, then the parameter "entity_col" has to be set to TRUE. The default value is FALSE.}
 }
 \value{
 A dataframe with values of number of entities where the category is present. Ordered in decreasing order.
@@ -19,6 +19,5 @@ It computes the ubiquity or the rareness of the categories
 }
 \examples{
 ub <- u_ubiquity(data=pantheon)
-ub
 }
 

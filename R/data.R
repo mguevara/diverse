@@ -15,16 +15,18 @@
 #' @source \url{http://pantheon.media.mit.edu/}
 #' @references 
 #' A. Z. Yu, S. Ronen, K. Hu, T. Lu, and C. A. Hidalgo, 'Pantheon: A Dataset for the Study of Global Cultural Production', arXiv:1502.07310 [physics], Feb. 2015.
+#' @keywords dataset
 #' @examples
+#' data(pantheon)
 #' str(pantheon)
 #' summary(pantheon)
-#' pantheon[pantheon$Country=='Chile',]
+#' pantheon[pantheon$Country=="Chile",]
 "pantheon"
 
 #' Geese dataset
 #'
 #' A matrix of species of geese.
-#' Dataset includes the number of species of 4 geese observed by year in the Netherlands.
+#' Dataset includes the quantity of 4 species of geese observed by year in the Netherlands.
 #' Data was curated by the Dutch bird protection organisation Sovon.
 #'
 #' @format A matrix with variables:
@@ -35,9 +37,11 @@
 #'
 #' @source \url{https://www.sovon.nl/en}
 #' @source \url{http://www.compass-project.eu/applets/3/index_EN.html}
+#' @keywords dataset
 #' @examples
+#' data(geese)
 #' str(geese)
 #' summary(geese)
-#' geese[,'2000']
-#' geese['Mute Swan',]
+#' geese[,"2000"]
+#' geese["Mute Swan",]
 "geese"

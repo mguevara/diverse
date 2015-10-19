@@ -19,14 +19,15 @@ geese
 }
 \description{
 A matrix of species of geese.
-Dataset includes the number of species of 4 geese observed by year in the Netherlands.
+Dataset includes the quantity of 4 species of geese observed by year in the Netherlands.
 Data was curated by the Dutch bird protection organisation Sovon.
 }
 \examples{
+data(geese)
 str(geese)
 summary(geese)
-geese[,'2000']
-geese['Mute Swan',]
+geese[,"2000"]
+geese["Mute Swan",]
 }
-\keyword{datasets}
+\keyword{dataset}
 

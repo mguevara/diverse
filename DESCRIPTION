@@ -8,9 +8,9 @@ Maintainer: Miguel R. Guevara <miguel.guevara@upla.cl>
 Description: It computes the most common diversity measures used in social and natural sciences.
 Depends: proxy, reshape2, foreign
 URL: https://github.com/mguevara/diverse
-Repository: CRAN
 Date: 2015-10-19
 BugReports: https://github.com/mguevara/diverse/issues
-License: CC BY-NC 3.0
+License: CC BY-SA 4.0
+Repository: CRAN
 LazyData: true
 NeedsCompilation: no

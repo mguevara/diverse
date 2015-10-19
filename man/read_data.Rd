@@ -13,7 +13,7 @@ read_data(path, type = "csv", sep = ",", entity_col = FALSE)
 
 \item{sep}{Separator character used in the file to separate columns. Only for CSV file. Default value is comma.}
 
-\item{entity_col}{Entities are in the columns. The analysis assumes that the entities are in the rows of the matrix. If the entities are in the columns and the categories in the rows, then the parameter "entity_col" has to be set to TRUE. The default value is FALSE.}
+\item{entity_col}{A flag to indicate that entities are in the columns. The analysis assumes that the entities are in the rows of the matrix. If the entities are in the columns and the categories in the rows, then the parameter "entity_col" has to be set to TRUE. The default value is FALSE.}
 }
 \value{
 A data frame with three columns (entity, category, value).
@@ -23,15 +23,15 @@ This function reads a file with data shaped as a matrix or as edges list. Severa
 }
 \examples{
 #reading an edges list or panel shape, source data must include three columns
-path <-  path_to_panel_file <- system.file("extdata", "PantheonEdges.csv", package = "diverse")
+path <-   system.file("extdata", "PantheonEdges.csv", package = "diverse")
 sep <- ','
 data <- read_data(path)
 #reading a table
-path <-  path_to_panel_file <- system.file("extdata", "PantheonMatrix.csv", package = "diverse")
+path  <- system.file("extdata", "PantheonMatrix.csv", package = "diverse")
 sep <- ','
 data <- read_data(path)
 #reading a table which includes the entities in the columns
-path <-  path_to_matrix_file <- system.file("extdata", "Geese.csv", package = "diverse")
+path <- system.file("extdata", "Geese.csv", package = "diverse")
 data <- read_data(path, entity_col=TRUE)
 }
 

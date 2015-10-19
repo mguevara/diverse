@@ -23,12 +23,13 @@ of 10 countries and 53 different occupations.
 The \strong{complete} dataset is described in [Yu et al., 2015].
 }
 \examples{
+data(pantheon)
 str(pantheon)
 summary(pantheon)
-pantheon[pantheon$Country=='Chile',]
+pantheon[pantheon$Country=="Chile",]
 }
 \references{
 A. Z. Yu, S. Ronen, K. Hu, T. Lu, and C. A. Hidalgo, 'Pantheon: A Dataset for the Study of Global Cultural Production', arXiv:1502.07310 [physics], Feb. 2015.
 }
-\keyword{datasets}
+\keyword{dataset}
 
