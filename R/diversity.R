@@ -299,6 +299,7 @@ u_ubiquity <- function(data, entity_col = FALSE)
 #' @export
 #' @importFrom reshape2 melt
 #' @importFrom foreign read.spss read.dta
+#' @importFrom utils read.csv
 read_data <- function(path, type='csv',sep=',', entity_col=FALSE){
 
 	if(type=='csv')
