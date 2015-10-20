@@ -5,7 +5,7 @@ Author: Miguel R. Guevara <miguel.guevara@upla.cl>, Dominik Hartmann
         <d.hartmann@uni-hohenheim.de>, Marcelo Mendoza
         <marcelo.mendoza@usm.cl>
 Maintainer: Miguel R. Guevara <miguel.guevara@upla.cl>
-Description: It computes the most common diversity measures used in social and natural sciences.
+Description: Computes the most common diversity measures used in social and natural sciences.
 Depends: proxy, reshape2, foreign
 URL: https://github.com/mguevara/diverse
 Date: 2015-10-19
