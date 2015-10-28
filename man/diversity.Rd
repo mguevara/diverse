@@ -10,7 +10,7 @@ diversity(data, type = "all", entity_col = FALSE, dis = NULL,
 \arguments{
 \item{data}{A numeric matrix with entities \eqn{i} in the rows and categories \eqn{j} in the columns. Cells show the respective value (value of abundance) of entity \eqn{i} in the category \eqn{j}. It can also be a transpose of the previous matrix, that is, a matrix with categories in the rows and entities in the columns. Yet in that case, the parameter "entity_col" has to be set to TRUE. The matrix must include names for the rows and the columns. The parameter "data", also accepts a dataframe with three columns in the following order: entity, category and value.}
 
-\item{type}{A mnemonic string referencing to the available diversity measures. The available measures are: "variety", (Shannon) "entropy", "gini-simpson", "simpson", "true-diversity", "herfindahl-hirschman", "berger-parker", "renyi", (Shannon) "evenness", "rao", "rao-stirling". A list of short mnemonics for each measure: "v", "e", "gs", "s", "td", "hh", "bp", "re", "ev", "r", and "rs". The default for type is "all" which computes all available formulas. More information for each measure can be found in the sections on 'Details and Examples'.}
+\item{type}{A vector of nemonic strings referencing to the available diversity measures. The available measures are: "variety", (Shannon) "entropy", "blau","gini-simpson", "simpson", "true-diversity", "herfindahl-hirschman", "berger-parker", "renyi", (Pielou) "evenness", "rao", "rao-stirling". A list of short mnemonics for each measure: "v", "e", "gs", "s", "td", "hh", "bp", "re", "ev", "r", and "rs". The default for type is "all" which computes all available formulas.}
 
 \item{entity_col}{A flag to indicate that entities are in the columns. The analysis assumes that the entities are in the rows of the matrix. If the entities are in the columns and the categories in the rows, then the parameter "entity_col" has to be set to TRUE. The default value is FALSE.}
 
@@ -68,7 +68,7 @@ Berger-Parker index is equals to the maximum \eqn{p_i} value in the entity, i.e.
 
 
 \strong{evenness, ev:}
- Shannon evenness per object across categories [Pielou, 1969] \deqn{-\sum_i(p_i \log p_i)/\log{N} }
+ Pielou evenness per object across categories [Pielou, 1969]. It is based in Shannon Entropy \deqn{-\sum_i(p_i \log p_i)/\log{N} }
 
 
 \strong{rao:}

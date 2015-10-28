@@ -39,7 +39,6 @@
 #' @source \url{http://www.compass-project.eu/applets/3/index_EN.html}
 #' @keywords dataset
 #' @examples
-#' data(geese)
 #' str(geese)
 #' summary(geese)
 #' geese[,"2000"]

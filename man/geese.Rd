@@ -23,7 +23,6 @@ Dataset includes the quantity of 4 species of geese observed by year in the Neth
 Data was curated by the Dutch bird protection organisation Sovon.
 }
 \examples{
-data(geese)
 str(geese)
 summary(geese)
 geese[,"2000"]
