@@ -44,3 +44,25 @@
 #' geese[,"2000"]
 #' geese["Mute Swan",]
 "geese"
+
+#' Scidat dataset
+#'
+#' A matrix of number of papers authored from countries.
+#' Dataset includes number of papers authored 
+#' from 10 countries in 2013. Data was aggregated from SCimago. 
+#'
+#' @format A matrix with variables:
+#' \describe{
+#' \item{Columns}{Areas of Science according SCimago}
+#' \item{Rows}{Name of the country}
+#' }
+#'
+#' @source Raw data before the aggregation was queried from 
+#' \url{http://pantheon.media.mit.edu/} in 2014.
+#' @keywords dataset
+#' @examples
+#' str(scidat)
+#' summary(scidat)
+#' scidat["United States",]
+#' scidat[,"Chemistry"]
+"scidat"
