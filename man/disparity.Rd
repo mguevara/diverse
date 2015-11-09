@@ -2,7 +2,7 @@
 % Please edit documentation in R/diversity.R
 \name{disparity}
 \alias{disparity}
-\title{A procedure to compute the sum and average of disparities of entities}
+\title{A procedure to compute the sum and average of disparities}
 \usage{
 disparity(data, method = "euclidean", category_row = FALSE)
 }
@@ -17,7 +17,7 @@ disparity(data, method = "euclidean", category_row = FALSE)
 A data frame with disparity measures for each entity in the dataset. Both the sum of disparities and the average of disparities are computed.
 }
 \description{
-Computes the sum and the average of disparities between the categories present in each entity.
+Computes the sum and the average of distances or disparities between the categories.
 }
 \examples{
 data(pantheon)

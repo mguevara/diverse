@@ -19,7 +19,7 @@ variety(data, sort = TRUE, decreasing = TRUE, category_row = FALSE)
 A dataframe with values of variety for each entity.
 }
 \description{
-It computes the variety (number of distinct types) or simple diversity of an entity. It is also known as richness.
+Computes the variety (number of distinct types) or simple diversity of an entity. It is also known as richness.
 }
 \examples{
 variety(data=pantheon)

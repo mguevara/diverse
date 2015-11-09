@@ -2,7 +2,7 @@
 % Please edit documentation in R/diversity.R
 \name{dis_categories}
 \alias{dis_categories}
-\title{A procedure to create a disparity matrix from a data frame or a matrix}
+\title{A procedure to create a disparity matrix between categories.}
 \usage{
 dis_categories(data, method = "euclidean", category_row = FALSE)
 }
@@ -17,7 +17,7 @@ dis_categories(data, method = "euclidean", category_row = FALSE)
 A distance or dissimilarity square matrix
 }
 \description{
-It takes a data frame or a matrix to create a disparity matrix
+Takes a data frame or a matrix to create a disparity matrix
 }
 \examples{
 Xdis <- dis_categories(pantheon)

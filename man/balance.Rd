@@ -12,10 +12,10 @@ balance(data, category_row = FALSE)
 \item{category_row}{A flag to indicate that categories are in the rows. The analysis assumes that the categories are in the columns of the matrix. If the categories are in the rows and the entities in the columns, then the parameter "category_row" has to be set to TRUE. The default value is FALSE.}
 }
 \value{
-A matrix of categories-entities with proportions.
+A matrix of entities-categories with proportions.
 }
 \description{
-It computes the proportions or probabilities.
+Computes the proportions or probabilities of raw values.
 }
 \examples{
 balance(data=geese, category_row = TRUE)

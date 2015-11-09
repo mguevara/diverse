@@ -4,28 +4,30 @@
 \name{scidat}
 \alias{scidat}
 \title{Scidat dataset}
-\format{A matrix with variables:
+\format{A matrix with the variables:
 \describe{
 \item{Columns}{Areas of Science according SCimago}
 \item{Rows}{Name of the country}
 }}
 \source{
 Raw data before the aggregation was queried from
-\url{http://pantheon.media.mit.edu/} in 2014.
+\url{http://www.scimagojr.com/} in 2014.
 }
 \usage{
 scidat
 }
 \description{
-A matrix of number of papers authored from countries.
-Dataset includes number of papers authored
-from 10 countries in 2013. Data was aggregated from SCimago.
+A matrix of the number of papers authored by 10 countries in 27 areas
+of science in the year 2013. Data was retrieved and aggregated from SCimago.
 }
 \examples{
 str(scidat)
 summary(scidat)
 scidat["United States",]
 scidat[,"Chemistry"]
+}
+\references{
+SCImago. (2007). SJR-SCImago Journal & Country Rank.
 }
 \keyword{dataset}
 

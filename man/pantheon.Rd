@@ -4,11 +4,11 @@
 \name{pantheon}
 \alias{pantheon}
 \title{Pantheon dataset}
-\format{A dataframe with variables:
+\format{A dataframe with the variables:
 \describe{
 \item{Country}{Name of the country}
-\item{Occupation}{Occupation according to Pantheon's taxonomy}
-\item{Value}{Quantity of globally known that waws born in that country}
+\item{Occupation}{Occupation according to the taxonomy of Pantheon}
+\item{Value}{ Quantity of globally famous people that were born in that country}
 }}
 \source{
 \url{http://pantheon.media.mit.edu/}
@@ -17,8 +17,8 @@
 pantheon
 }
 \description{
-Dataframe of globally known people according to MIT's Pantheon 1.0.
-Dataset includes number of globally known people for a \strong{sample}
+Dataframe of globally famous people according to MIT's Pantheon 1.0.
+Dataset includes the number of globally famous people for a \strong{sample}
 of 10 countries and 53 different occupations.
 The \strong{complete} dataset is described in [Yu et al., 2015].
 }

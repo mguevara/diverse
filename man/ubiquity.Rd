@@ -15,7 +15,7 @@ ubiquity(data, category_row = FALSE)
 A dataframe with values of number of entities where the category is present. Ordered in decreasing order.
 }
 \description{
-It computes the ubiquity or the rareness of the categories
+Computes the ubiquity or the rareness of the categories
 }
 \examples{
 ub <- ubiquity(data=pantheon)

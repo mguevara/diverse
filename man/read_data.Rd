@@ -24,11 +24,11 @@ This function reads a file with data shaped as a matrix or as edges list. Severa
 \examples{
 #reading an edges list or panel shape, source data must include three columns
 path <-   system.file("extdata", "PantheonEdges.csv", package = "diverse")
-sep <- ','
+sep <- ","
 data <- read_data(path)
 #reading a table
 path  <- system.file("extdata", "PantheonMatrix.csv", package = "diverse")
-sep <- ','
+sep <- ","
 data <- read_data(path)
 #reading a table which includes the entities in the columns
 path <- system.file("extdata", "Geese.csv", package = "diverse")

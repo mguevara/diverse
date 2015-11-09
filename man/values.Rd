@@ -2,7 +2,7 @@
 % Please edit documentation in R/diversity.R
 \name{values}
 \alias{values}
-\title{Raw values of amount of elements in categories vs entities}
+\title{Pre-process the raw data}
 \usage{
 values(data, category_row = FALSE, norm = NULL, filter = NULL,
   binary = FALSE)
@@ -12,26 +12,29 @@ values(data, category_row = FALSE, norm = NULL, filter = NULL,
 
 \item{category_row}{A flag to indicate that categories are in the rows. The analysis assumes that the categories are in the columns of the matrix. If the categories are in the rows and the entities in the columns, then the parameter "category_row" has to be set to TRUE. The default value is FALSE.}
 
-\item{norm}{A method to compute normalization. Possible values are 'p','proportions' 'rca' (Revealed Comparative Advantages)[Balassa 1986],'rca_norm' (RCA normalized between -1 and with 1. Values of RCA=1 equivalent to 0 in the normalization), 'ai' (Activity Index).}
+\item{norm}{Methods to compute normalized values. Possible values are 'p', 'proportions', 'rca', 'rca_norm' and 'ai'. RCA refers to Revealed Comparative Advantages [Balassa 1986], rca_norm normalizes the RCAs between -1 and with 1, ai refers to the Activity Index.}
 
-\item{filter}{A thershold below which values are replaced with NA.}
+\item{filter}{A threshold below which values are replaced with NA.}
 
-\item{binary}{A boolean value to indicate if binarization is required. Values distinct than NA are replaced with 1.}
+\item{binary}{A boolean value to indicate if values distinct from NA are replaced with 1.}
 }
 \value{
-A matrix with raw values of number of elements in each category-entity.
+A matrix with the raw, normalized, filtered and\/or binarized data.
 }
 \description{
-It retrieves a matrix with raw values or with normalized values.
+Allows to filter, binarize and/or normalize raw data.
 Also filter and binarization is available.
 }
 \details{
-If the three parameters 'norm', 'filter' and 'binary' are used, then the same sequential order is used to make the calculation.
+If the three parameters 'norm', 'filter' and 'binary' are used, then the same sequential order is applied in the calculations.
 }
 \examples{
-val <- values(data=pantheon)
+#raw values
+values(data=pantheon)
 values(data = scidat)
+#proportions
 values(data = scidat, norm='p')
+#revealed comparative advantages
 values(data = scidat, norm='rca')
 values(data = scidat, norm='rca', filter=1)
 values(data = scidat, norm='rca', filter=1, binary=TRUE)

@@ -17,10 +17,11 @@ dis_entities(data, method = "euclidean", category_row = FALSE)
 A distance or dissimilarity square matrix
 }
 \description{
-It takes a data frame or a matrix to create a disparity matrix
+Takes a data frame or a matrix to create a disparity matrix
 }
 \examples{
 Xdis <- dis_entities(pantheon)
-dis_entities(scidat)
+#for science dataset
+dis_entities(scidat, method='cosine')
 }
 
