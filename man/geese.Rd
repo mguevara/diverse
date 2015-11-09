@@ -4,10 +4,10 @@
 \name{geese}
 \alias{geese}
 \title{Geese dataset}
-\format{A matrix with variables:
+\format{A matrix with the variables:
 \describe{
 \item{Columns}{Year of observation}
-\item{Rows}{Specie}
+\item{Rows}{Species}
 }}
 \source{
 \url{https://www.sovon.nl/en}
@@ -19,11 +19,10 @@ geese
 }
 \description{
 A matrix of species of geese.
-Dataset includes the quantity of 4 species of geese observed by year in the Netherlands.
-Data was curated by the Dutch bird protection organisation Sovon.
+The dataset includes the quantity of 4 species of geese observed by year in the Netherlands.
+The data comes from the Dutch bird protection organisation Sovon.
 }
 \examples{
-data(geese)
 str(geese)
 summary(geese)
 geese[,"2000"]

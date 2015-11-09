@@ -4,15 +4,15 @@
 \alias{diversity}
 \title{\strong{Main} function to compute diversity measures}
 \usage{
-diversity(data, type = "all", entity_col = FALSE, dis = NULL,
-  method = "euclidean", q = 0, alpha = 1, beta = 1)
+diversity(data, type = "all", category_row = FALSE, dis = NULL,
+  method = "euclidean", q = 0, alpha = 1, beta = 1, base = exp(1))
 }
 \arguments{
-\item{data}{A numeric matrix with entities \eqn{i} in the rows and categories \eqn{j} in the columns. Cells show the respective value (value of abundance) of entity \eqn{i} in the category \eqn{j}. It can also be a transpose of the previous matrix, that is, a matrix with categories in the rows and entities in the columns. Yet in that case, the parameter "entity_col" has to be set to TRUE. The matrix must include names for the rows and the columns. The parameter "data", also accepts a dataframe with three columns in the following order: entity, category and value.}
+\item{data}{A numeric matrix with entities \eqn{i} in the rows and categories \eqn{j} in the columns. Cells show the respective value (value of abundance) of entity \eqn{i} in the category \eqn{j}. It can also be a transpose of the previous matrix, that is, a matrix with categories in the rows and entities in the columns. Yet in that case, the parameter "category_row" has to be set to TRUE. The matrix must include names for the rows and the columns. The parameter "data", also accepts a dataframe with three columns in the following order: entity, category and value.}
 
-\item{type}{A mnemonic string referencing to the available diversity measures. The available measures are: "variety", (Shannon) "entropy", "gini-simpson", "simpson", "true-diversity", "herfindahl-hirschman", "berger-parker", "renyi", (Shannon) "evenness", "rao", "rao-stirling". A list of short mnemonics for each measure: "v", "e", "gs", "s", "td", "hh", "bp", "re", "ev", "r", and "rs". The default for type is "all" which computes all available formulas. More information for each measure can be found in the sections on 'Details and Examples'.}
+\item{type}{A string or a vector of strings of nemonic strings referencing to the available diversity measures. The available measures are: "variety", (Shannon) "entropy", "blau","gini-simpson", "simpson", "true-diversity", "herfindahl-hirschman", "berger-parker", "renyi", (Pielou) "evenness", "rao", "rao-stirling". A list of short mnemonics for each measure: "v", "e", "gs", "s", "td", "hh", "bp", "re", "ev", "r", and "rs". The default for type is "all" which computes all available formulas.}
 
-\item{entity_col}{A flag to indicate that entities are in the columns. The analysis assumes that the entities are in the rows of the matrix. If the entities are in the columns and the categories in the rows, then the parameter "entity_col" has to be set to TRUE. The default value is FALSE.}
+\item{category_row}{A flag to indicate that categories are in the rows. The analysis assumes that the categories are in the columns of the matrix. If the categories are in the rows and the entities in the columns, then the parameter "category_row" has to be set to TRUE. The default value is FALSE.}
 
 \item{dis}{Optional square matrix of distances or dissimilarities between categories. It allows the user to provide her own matrix of dissimilarities between categories. The category names have to be both in the rows and in the columns, and these must be the exact same names used by the categories in the parameter "data". Only the upper triangle will be used. If  the parameter "dis" is not defined, and the user requires a measure that uses disparities (e.g. Rao), then a matrix of disparities is computed internally using the method defined by the parameter 'method'. The default value is NULL.}
 
@@ -23,6 +23,8 @@ diversity(data, type = "all", entity_col = FALSE, dis = NULL,
 \item{alpha}{Parameter for Rao-Stirling diversity. The default value is 1.}
 
 \item{beta}{Parameter for Rao-Stirling diversity. The default value is 1.}
+
+\item{base}{Base of the logarithm. Used in Entropy calculations. The default value is exp(1).}
 }
 \value{
 A data frame with diversity measures as columns for each entity.
@@ -37,7 +39,7 @@ The available diversity measures included in the package are listed above. The t
 
 
 \strong{variety, v:}
- N, category counts per entity [MacArthur 1965]
+ Category counts per entity [MacArthur 1965] \deqn{\sum_i(p_i^0)}.
 
 
 \strong{entropy, e:}
@@ -56,7 +58,7 @@ When this measure is required, then also associated variations Simpson's Index o
 
 
 \strong{true-diversity, td:}
-True diversity index per entity [Hill 1973]. This measure is \eqn{q} parameterized. Default for \eqn{q} is 0.  \deqn{(\sum_ip_{i}^q)^{1/(1-q)}}
+True diversity index per entity [Hill 1973]. This measure is \eqn{q} parameterized. When \eqn{q=1} the equation is undefined, then, an aproximation is computed. Default for \eqn{q} is 0.  \deqn{(\sum_ip_{i}^q)^{1/(1-q)}}
 
 
 \strong{berger-parker, bp:}
@@ -68,7 +70,7 @@ Berger-Parker index is equals to the maximum \eqn{p_i} value in the entity, i.e.
 
 
 \strong{evenness, ev:}
- Shannon evenness per object across categories [Pielou, 1969] \deqn{-\sum_i(p_i \log p_i)/\log{N} }
+ Pielou evenness per object across categories [Pielou, 1969]. It is based in Shannon Entropy \deqn{-\sum_i(p_i \log p_i)/\log{v} }
 
 
 \strong{rao:}
@@ -80,9 +82,10 @@ Rao diversity. \deqn{\sum_{ij}d_{ij} p_i p_j }
 For the pairwise disparities the measure allows to consider the Jaccard Index, Euclidean distances, Cosine Similarity among others. \deqn{\sum_{ij}{d_{ij}}^\alpha {(p_i p_j )}^\beta}
 }
 \examples{
+data(pantheon)
 diversity(pantheon)
 diversity(pantheon, type='variety')
-diversity(geese, type='berger-parker', entity_col=TRUE)
+diversity(geese, type='berger-parker', category_row=TRUE)
 #reading csv data matrix
 path_to_file <- system.file("extdata", "PantheonMatrix.csv", package = "diverse")
 X <- read_data(path = path_to_file)
@@ -97,6 +100,8 @@ X <- read_data(path = path_to_file)
 diversity(data=X, type="td", q=1)
 #rao stirling with differente parameters
 diversity(data=X, type="rao-stirling", method="euclidean", alpha=0, beta=1)
+#more than one diversity measure
+diversity(data=X, type=c('e','ev','bp','s'))
 }
 \references{
 Gini, C. (1912). "Italian: Variabilita e mutabilita" 'Variability and Mutability', Memorie di metodologica statistica.
