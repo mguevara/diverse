@@ -134,6 +134,9 @@ diversity <- function(data, type="all", category_row=FALSE, dis=NULL, method='eu
 	  if(measure == 'gini-simpson' || measure=='gs' || measure == 'all') {
 	    m_d <- as.data.frame(1 - rowSums(propX ^ 2, na.rm=TRUE))
 	  	colnames(m_d) <- c('gini.simpson')
+	    #compute associated measures as concentration and inverse
+	    m_d['gini.simpson.C'] <- 1-m_d$gini.simpson #concentration
+	    m_d['gini.simpson.R'] <- 1/m_d$gini.simpson.C #reciprocal
 	    diversity <- merge(diversity,m_d, by=0, all=TRUE)
 	    rownames(diversity) <- diversity$Row.names; diversity$Row.names <- NULL
 	  }
@@ -143,8 +146,8 @@ diversity <- function(data, type="all", category_row=FALSE, dis=NULL, method='eu
 	  	X_simp[X_simp==0] <- NA
 	  	m_d <- as.data.frame(rowSums((X_simp*(X_simp-1))/matrix(sumsX*(sumsX-1), ncol=ncol(X_simp), nrow=nrow(X_simp)), na.rm=TRUE)) 
 	  	colnames(m_d) <- c('simpson.D')
-	  	m_d['simpson.I'] <- 1-m_d$simpson.D
-	  	m_d['simpson.R'] <- 1/m_d$simpson.D
+	  	m_d['simpson.I'] <- 1-m_d$simpson.D #I index
+	  	m_d['simpson.R'] <- 1/m_d$simpson.D #R reciprocal
 	    diversity <- merge(diversity,m_d, by=0, all=TRUE)
 	    rownames(diversity) <- diversity$Row.names; diversity$Row.names <- NULL
 	  }
@@ -156,7 +159,7 @@ diversity <- function(data, type="all", category_row=FALSE, dis=NULL, method='eu
 	  		m_d <- as.data.frame(rowSums(X>0, na.rm=TRUE))
 	  	else if(q == 1) #an approximation is computed
 	    	{
-	  			m_d <- as.data.frame(rowSums(propX * log(propX, base=exp(1)), na.rm=TRUE))
+	  			m_d <- -1*as.data.frame(rowSums(propX * log(propX, base=exp(1)), na.rm=TRUE))
 	  			m_d <- exp(m_d) #exponential of Shannon Entropy
 	  		}
 	  	else
@@ -530,4 +533,83 @@ dis_entities <- function(data, method='euclidean', category_row=FALSE){
 disparity <- function(data, method='euclidean', category_row=FALSE) {
   disparity <- diversity(data=data, category_row=category_row, method=method, type='disparity')
   return(disparity)
+}
+
+#' @title A procedure to simulate labeled individuals in one categories
+#' @description Simulates a number of individuals tagged in N different categories, given a distribution such as log normal or normal.
+#' @param n_categ number of categories 
+#' @param size number of individuals. 
+#' @param category_prefix a prefix for the label of the category
+#' @param type distribution name of the function of 'categories (species) abundance distribution' to simulate indivuduals. Use 'log-normal' for log normal distribution or 'normal' for normal distribution. Default value is 'log-normal'
+#' @param mean parameter for normal or log-normal distribution. Default value is 0.
+#' @param sd parameter for normal or log-normal distribution. Default value is 1.
+#' @return A vector of category labels. 
+#' @examples 
+#' sim_individuals(n_categ=50, size=10000, category_prefix='ctg', type='log-normal', mean=0.507, sd=1.183)
+#' @export
+sim_individuals <- function(n_categ, size,  category_prefix='', type = 'log-normal', mean=0, sd=1) {
+		probabilities <- NA
+		individuals <- ''
+		if(type=='log-normal')
+		{
+			probabilities <- rlnorm(n_categ, meanlog = mean, sdlog = sd)
+			probabilities <- probabilities/max(probabilities)
+		}
+		if(type == 'normal')
+		{
+			probabilities <- rnorm(n_categ, mean = mean, sd = sd)
+			probabilities <- probabilities/max(probabilities)
+		}
+		if(is.na(probabilities[1])==FALSE)
+		{
+			
+			while(length(unique(individuals)) != n_categ)
+			{
+				individuals <- sample(paste(category_prefix,(1:n_categ), sep=''), size = size, replace = TRUE, prob = probabilities )
+			}
+			
+		}
+		else
+		{
+			while(length(unique(individuals)) != n_categ)
+			{
+				individuals <- sample(paste(category_prefix,(1:n_categ), sep=''), size = size, replace = TRUE)
+			}
+		}
+		return(individuals)
+}
+
+
+#' @title A procedure to simulate entities 
+#' @description Simulates an entity with values of abundance for some categories. 
+#' @param n_categ number of categories 
+#' @param size number of individuals. Default value is 7 times n_categ.
+#' @param category_prefix a prefix for the label of the category
+#' @param type both, a distribution name or a vector of integers. The distribution corresponds to  the function of 'categories (species) abundance distribution' to simulate indivuduals that are aggregated in frequencies or values of abundance. Use 'log-normal' for log normal distribution or 'normal' for normal distribution.  In the second case, an integer or a vector of integers of possible values of abundance to be used randomly. Default value is 'log-normal'
+#' @param mean parameter for normal or log-normal distribution. Default value is 0.
+#' @param sd parameter for normal or log-normal distribution. Default value is 1.
+#' @return A data frame with two columns: category and value of abundance. 
+#' @examples 
+#' sim_entity(n_categ=50,  category_prefix='ctg', values=1) #equal value
+#' sim_entity(n_categ=50,  category_prefix='ctg', values=sample(1:100, replace=TRUE)) #random numbers for values of abundance
+#' sim_entity(n_categ=50,  category_prefix='ctg', values='log-normal') #equal value
+#' @export
+sim_entity <- function(n_categ, category_prefix='', values = 'log-normal', size=-1,    mean=0, sd=1) {
+	data_entity = data.frame()
+	if(is.numeric(values)==TRUE)
+	{
+		Value <- sample(x = values, size = n_categ, replace=TRUE)
+		Category <- paste(category_prefix,(1:n_categ),sep='')
+		data_entity <- data.frame(Category, Value)
+	}
+	else
+	{
+		if(size==-1)
+				size_s<-n_categ*7
+		else
+				size_s <- size
+		data_entity <- as.data.frame(table(sim_individuals(n_categ = n_categ, category_prefix = category_prefix, size = size_s, type = values, mean = mean, sd=sd)))
+	}
+	
+	return(data_entity)
 }
