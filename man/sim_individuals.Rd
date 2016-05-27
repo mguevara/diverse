@@ -2,7 +2,7 @@
 % Please edit documentation in R/diversity.R
 \name{sim_individuals}
 \alias{sim_individuals}
-\title{A procedure to simulate labeled individuals in one categories}
+\title{A procedure to simulate labeled individuals for one category}
 \usage{
 sim_individuals(n_categ, size, category_prefix = "", type = "log-normal",
   mean = 0, sd = 1)

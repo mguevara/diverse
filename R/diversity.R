@@ -535,7 +535,7 @@ disparity <- function(data, method='euclidean', category_row=FALSE) {
   return(disparity)
 }
 
-#' @title A procedure to simulate labeled individuals in one categories
+#' @title A procedure to simulate labeled individuals for one category
 #' @description Simulates a number of individuals tagged in N different categories, given a distribution such as log normal or normal.
 #' @param n_categ number of categories 
 #' @param size number of individuals. 
@@ -553,12 +553,13 @@ sim_individuals <- function(n_categ, size,  category_prefix='', type = 'log-norm
 		if(type=='log-normal')
 		{
 			probabilities <- rlnorm(n_categ, meanlog = mean, sdlog = sd)
-			probabilities <- probabilities/max(probabilities)
+			#probabilities <- rlnorm(50, meanlog=0.507, sdlog = 1.183)
+			probabilities <- probabilities/sum(probabilities)
 		}
 		if(type == 'normal')
 		{
 			probabilities <- rnorm(n_categ, mean = mean, sd = sd)
-			probabilities <- probabilities/max(probabilities)
+			probabilities <- probabilities/sum(probabilities)
 		}
 		if(is.na(probabilities[1])==FALSE)
 		{
@@ -598,7 +599,9 @@ sim_entity <- function(n_categ, category_prefix='', values = 'log-normal', size=
 	data_entity = data.frame()
 	if(is.numeric(values)==TRUE)
 	{
-		Value <- sample(x = values, size = n_categ, replace=TRUE)
+		Value <- values
+		if(length(values)>1)
+			Value <- sample(x = values, size = n_categ, replace=TRUE)
 		Category <- paste(category_prefix,(1:n_categ),sep='')
 		data_entity <- data.frame(Category, Value)
 	}
@@ -612,4 +615,42 @@ sim_entity <- function(n_categ, category_prefix='', values = 'log-normal', size=
 	}
 	
 	return(data_entity)
+}
+
+
+#' @title A procedure to simulate datasets 
+#' @description Simulates a dataset with values of variety for each entity and possible values of abundance. 
+#' @param n_categ a vector with number of categories for each entity. The number of entities to create is defined by the length of this vector.
+#' @param size number of individuals. A number or a vector of numbers for each entity. Default value is 7 times variety. 
+#' @param category_prefix a prefix for the label of the category
+#' @param entity_prefix a prefix for the label of the entity
+#' @param type both, a distribution name or a vector of integers. The distribution corresponds to  the function of 'categories (species) abundance distribution' to simulate individuals that are aggregated in frequencies or values of abundance. Use 'log-normal' for log normal distribution or 'normal' for normal distribution.  In the second case, an integer or a vector of integers of possible values of abundance to be used randomly. Default value is 'log-normal'
+#' @param mean parameter for normal or log-normal distribution. Default value is 0.
+#' @param sd parameter for normal or log-normal distribution. Default value is 1.
+#' @return A data frame with three columns: entity, category and value of abundance. 
+#' @examples 
+#' sim_dataset(n_categ=50,  category_prefix='ctg', values=1) #equal value
+#' sim_entity(n_categ=50,  category_prefix='ctg', values=sample(1:100, replace=TRUE)) #random numbers for values of abundance
+#' sim_entity(n_categ=50,  category_prefix='ctg', values='log-normal') #equal value
+#' @export
+sim_dataset <- function(n_categ, category_prefix='', entity_prefix='', values = 'log-normal', size=-1,mean=0, sd=1) {
+	data_set = data.frame()
+	
+	for(i in seq(1,length(n_categ)))
+	{
+		values_e <- values
+		
+		size_e <- size
+		if(length(size)>1)
+		{
+			size_e <- size[i]
+		}
+		data_entity = sim_entity(n_categ = n_categ[i], category_prefix = category_prefix, values = values_e, size = size_e, mean = mean, sd=sd)
+		Entity <- paste(entity_prefix,i,sep = "")
+		data_entity<- cbind(Entity, data_entity)
+		data_set <- rbind(data_set,data_entity)
+	} 
+	
+	colnames(data_set) <- c("Entity", "Category", "Value")
+	return(data_set)
 }
