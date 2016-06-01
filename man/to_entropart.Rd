@@ -2,22 +2,20 @@
 % Please edit documentation in R/diversity.R
 \name{to_entropart}
 \alias{to_entropart}
-\title{A procedure to create a meta community for Entropart package}
+\title{Transforms data to be used in Entropart package}
 \usage{
-to_entropart(data, weights = 1)
+to_entropart(data)
 }
 \arguments{
 \item{data}{a dataframe used in diverse with three columns, entity, category and value of abundance.}
-
-\item{weights}{a vector of weights for each entity (community)}
 }
 \value{
-An object of type metacommunity to be used in entropart.
+An object of type matrix of abundance to be used in entropart to create metacommunities.
 }
 \description{
-Transform a dataframe used in diverse to a metacommunity used in Entropart.
+Transform a dataframe used in diverse to values of abundance to be used in Entropart.
 }
 \examples{
-to_entropart(sim_dataset(c(1,2)))
+ab <- to_entropart(sim_dataset(c(1,2)))
 }
 

@@ -29,7 +29,7 @@ summary(pantheon)
 pantheon[pantheon$Country=="Chile",]
 }
 \references{
-A. Z. Yu, S. Ronen, K. Hu, T. Lu, and C. A. Hidalgo, 'Pantheon: A Dataset for the Study of Global Cultural Production', arXiv:1502.07310 [physics], Feb. 2015.
+Yu, A. Z., Ronen, S., Hu, K., Lu, T., & Hidalgo, C. A. (2016). Pantheon 1.0, a manually verified dataset of globally famous biographies. Scientific Data, 3.
 }
 \keyword{dataset}
 

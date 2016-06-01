@@ -1,18 +1,18 @@
 #' @title  \strong{Main} function to compute diversity measures
 #' @description \strong{Main} function of the package. The diversity function computes diversity measures for a dataset with entities, categories and values.
-#' @param data A numeric matrix with entities \eqn{i} in the rows and categories \eqn{j} in the columns. Cells show the respective value (value of abundance) of entity \eqn{i} in the category \eqn{j}. It can also be a transpose of the previous matrix, that is, a matrix with categories in the rows and entities in the columns. Yet in that case, the parameter "category_row" has to be set to TRUE. The matrix must include names for the rows and the columns. The parameter "data", also accepts a dataframe with three columns in the following order: entity, category and value. 
+#' @param data A numeric matrix with entities \eqn{i} in the rows and categories \eqn{j} in the columns. Cells show the respective value (value of abundance) of entity \eqn{i} in the category \eqn{j}. It can also be a transpose of the previous matrix, that is, a matrix with categories in the rows and entities in the columns. Yet in that case, the argument "category_row" has to be set to TRUE. The matrix must include names for the rows and the columns. The argument "data", also accepts a dataframe with three columns in the following order: entity, category and value. 
 #' @param type A string or a vector of strings of nemonic strings referencing to the available diversity measures. The available measures are: "variety", (Shannon) "entropy", "blau","gini-simpson", "simpson", "hill-numbers", "herfindahl-hirschman", "berger-parker", "renyi", (Pielou) "evenness", "rao", "rao-stirling". A list of short mnemonics for each measure: "v", "e", "gs", "s", "td", "hh", "bp", "re", "ev", "r", and "rs". The default for type is "all" which computes all available formulas.
-#' @param category_row A flag to indicate that categories are in the rows. The analysis assumes that the categories are in the columns of the matrix. If the categories are in the rows and the entities in the columns, then the parameter "category_row" has to be set to TRUE. The default value is FALSE.
-#' @param dis Optional square matrix of distances or dissimilarities between categories. It allows the user to provide her own matrix of dissimilarities between categories. The category names have to be both in the rows and in the columns, and these must be the exact same names used by the categories in the parameter "data". Only the upper triangle will be used. If  the parameter "dis" is not defined, and the user requires a measure that uses disparities (e.g. Rao), then a matrix of disparities is computed internally using the method defined by the parameter 'method'. The default value is NULL.
-#' @param method The "rao-stirling" and "rao"-diversity indices use a disparity function to measure the distance between objects. If the user does not provide a matrix with disparities by using the parameter 'dis', then a matrix of disparities is computed using the method especified in this parameter (method). Possible values for this parameter are distance or dissimilarity methods available in "proxy" package as for example "Euclidean", "Kullback" or "Canberra". This parameter also accepts a similarity method available in the "proxy" package, as for example: "cosine", "correlation" or "Jaccard" among others. In the latter case, a correspondent transformation to a dissimilarity measure will be retrieved. A list of available methods can be queried by using the function \code{\link[proxy]{pr_DB}}. e.g. summary(pr_DB). The default value is Euclidean distance.
-#' @param q The parameter used for the hill numbers. This parameter is also used for the Renyi entropy and HCDT entropy. The default value is 0.
+#' @param category_row A flag to indicate that categories are in the rows. The analysis assumes that the categories are in the columns of the matrix. If the categories are in the rows and the entities in the columns, then the argument "category_row" has to be set to TRUE. The default value is FALSE.
+#' @param dis Optional square matrix of distances or dissimilarities between categories. It allows the user to provide her own matrix of dissimilarities between categories. The category names have to be both in the rows and in the columns, and these must be the exact same names used by the categories in the argument "data". Only the upper triangle will be used. If  the argument "dis" is not defined, and the user requires a measure that uses disparities (e.g. Rao), then a matrix of disparities is computed internally using the method defined by the argument 'method'. The default value is NULL.
+#' @param method The "rao-stirling" and "rao"-diversity indices use a disparity function to measure the distance between objects. If the user does not provide a matrix with disparities by using the argument 'dis', then a matrix of disparities is computed using the method specified in this argument (method). Possible values for this argument are distance or dissimilarity methods available in "proxy" package as for example "Euclidean", "Kullback" or "Canberra". This argument also accepts a similarity method available in the "proxy" package, as for example: "cosine", "correlation" or "Jaccard" among others. In the latter case, a correspondent transformation to a dissimilarity measure will be retrieved. A list of available methods can be queried by using the function \code{\link[proxy]{pr_DB}}. e.g. summary(pr_DB). The default value is Euclidean distance.
+#' @param q The parameter used for the hill numbers. This argument is also used for the Renyi entropy and HCDT entropy. The default value is 0.
 #' @param alpha Parameter for Rao-Stirling diversity. The default value is 1.
 #' @param beta Parameter for Rao-Stirling diversity. The default value is 1.
 #' @param base Base of the logarithm. Used in Entropy calculations. The default value is exp(1).
 #' @details  
-#' Notation used in the following formulas: \eqn{N}, category count; \eqn{p_i}, proportion of entity comprises category \eqn{i}; \eqn{d_{ij}}, disparity between \eqn{i} and \eqn{j};  \eqn{q},\eqn{\alpha} and \eqn{\beta}, parameters.
+#' Notation used in the following formulas: \eqn{N}, category count; \eqn{p_i}, proportion of entity comprises category \eqn{i}; \eqn{d_{ij}}, disparity between \eqn{i} and \eqn{j};  \eqn{q},\eqn{\alpha} and \eqn{\beta}, arguments.
 #' 
-#' The available diversity measures included in the package are listed above. The titles of the formulas are the possible mnemonic values that the parameter "type" might take to compute that formula (i.e. diversity(data, type='variety') or diversity(data, type='v'):
+#' The available diversity measures included in the package are listed above. The titles of the formulas are the possible mnemonic values that the argument "type" might take to compute that formula (i.e. diversity(data, type='variety') or diversity(data, type='v'):
 #' 
 #' 
 #' \strong{variety, v:}
@@ -75,6 +75,13 @@
 #' Simpson, A. (1949). "Measurement of Diversity". Nature 163: 41-48.
 #' 
 #' Stirling, A. (2007). "A General Framework for Analysing Diversity in Science, Technology and Society". Journal of the Royal Society Interface 4: 707-719.
+#' 
+#' Rafols, I., & Meyer, M. (2009). Diversity and network coherence as indicators of interdisciplinarity: case studies in bionanoscience. Scientometrics, 82(2), 263-287.
+#'
+#' Rafols, I. (2014). Knowledge Integration and Diffusion: Measures and Mapping of Diversity and Coherence. In Y. Ding, R. Rousseau, & D. Wolfram (Eds.), Measuring Scholarly Impact (pp. 169-190). Springer International Publishing. 
+#'  
+#' Chavarro, D., Tang, P., & Rafols, I. (2014). Interdisciplinarity and research on local issues: evidence from a developing country. Research Evaluation, 23(3), 195-209.
+
 #' @examples
 #' data(pantheon)
 #' diversity(pantheon)
@@ -92,7 +99,7 @@
 #' X <- read_data(path = path_to_file)
 #' #hill numbers
 #' diversity(data=X, type="td", q=1)
-#' #rao stirling with differente parameters
+#' #rao stirling with differente arguments
 #' diversity(data=X, type="rao-stirling", method="euclidean", alpha=0, beta=1)
 #' #more than one diversity measure
 #' diversity(data=X, type=c('e','ev','bp','s'))
@@ -296,9 +303,9 @@ diversity <- function(data, type="all", category_row=FALSE, dis=NULL, method='eu
 
 #' @title Balance or proportions
 #' @description Computes the proportions or probabilities of raw values. 
-#' @param data A numeric matrix with entities \eqn{i} in the rows and categories \eqn{j} in the columns. Cells show the respective value (value of abundance) of entity \eqn{i} in the category \eqn{j}. It can also be a transpose of the previous matrix, that is, a matrix with categories in the rows and entities in the columns. Yet in that case, the parameter "category_row" has to be set to TRUE. The matrix must include names for the rows and the columns. The parameter "data", also accepts a dataframe with three columns in the following order: entity, category and value. 
+#' @param data A numeric matrix with entities \eqn{i} in the rows and categories \eqn{j} in the columns. Cells show the respective value (value of abundance) of entity \eqn{i} in the category \eqn{j}. It can also be a transpose of the previous matrix, that is, a matrix with categories in the rows and entities in the columns. Yet in that case, the argument "category_row" has to be set to TRUE. The matrix must include names for the rows and the columns. The argument "data", also accepts a dataframe with three columns in the following order: entity, category and value. 
 #' 
-#' @param category_row A flag to indicate that categories are in the rows. The analysis assumes that the categories are in the columns of the matrix. If the categories are in the rows and the entities in the columns, then the parameter "category_row" has to be set to TRUE. The default value is FALSE.
+#' @param category_row A flag to indicate that categories are in the rows. The analysis assumes that the categories are in the columns of the matrix. If the categories are in the rows and the entities in the columns, then the argument "category_row" has to be set to TRUE. The default value is FALSE.
 #' @examples 
 #' balance(data=geese, category_row = TRUE)
 #' @return A matrix of entities-categories with proportions.
@@ -313,10 +320,10 @@ balance <- function(data, category_row=FALSE)
 
 #' @title Variety or Richness
 #' @description Computes the variety (number of distinct types) or simple diversity of an entity. It is also known as richness. 
-#' @param data A numeric matrix with entities \eqn{i} in the rows and categories \eqn{j} in the columns. Cells show the respective value (value of abundance) of entity \eqn{i} in the category \eqn{j}. It can also be a transpose of the previous matrix, that is, a matrix with categories in the rows and entities in the columns. Yet in that case, the parameter "category_row" has to be set to TRUE. The matrix must include names for the rows and the columns. The parameter "data", also accepts a dataframe with three columns in the following order: entity, category and value. 
+#' @param data A numeric matrix with entities \eqn{i} in the rows and categories \eqn{j} in the columns. Cells show the respective value (value of abundance) of entity \eqn{i} in the category \eqn{j}. It can also be a transpose of the previous matrix, that is, a matrix with categories in the rows and entities in the columns. Yet in that case, the argument "category_row" has to be set to TRUE. The matrix must include names for the rows and the columns. The argument "data", also accepts a dataframe with three columns in the following order: entity, category and value. 
 #' @param sort Indicates whether results should be ordered or not. Define it to FALSE to avoid ordering.
-#' @param decreasing If parameter "sort" is set to TRUE, this parameter indicates descending order. The default value is TRUE. 
-#' @param category_row A flag to indicate that categories are in the rows. The analysis assumes that the categories are in the columns of the matrix. If the categories are in the rows and the entities in the columns, then the parameter "category_row" has to be set to TRUE. The default value is FALSE.
+#' @param decreasing If argument "sort" is set to TRUE, this argument indicates descending order. The default value is TRUE. 
+#' @param category_row A flag to indicate that categories are in the rows. The analysis assumes that the categories are in the columns of the matrix. If the categories are in the rows and the entities in the columns, then the argument "category_row" has to be set to TRUE. The default value is FALSE.
 #' @examples 
 #' variety(data=pantheon)
 #' variety(data=pantheon, sort=FALSE)
@@ -338,12 +345,12 @@ variety <- function(data, sort=TRUE, decreasing=TRUE, category_row=FALSE)
 #' @title Pre-process the raw data
 #' @description Allows to filter, binarize and/or normalize raw data.
 #' Also filter and binarization is available.
-#' @param data A numeric matrix with entities \eqn{i} in the rows and categories \eqn{j} in the columns. Cells show the respective value (value of abundance) of entity \eqn{i} in the category \eqn{j}. It can also be a transpose of the previous matrix, that is, a matrix with categories in the rows and entities in the columns. Yet in that case, the parameter "category_row" has to be set to TRUE. The matrix must include names for the rows and the columns. The parameter "data", also accepts a dataframe with three columns in the following order: entity, category and value.  
-#' @param category_row A flag to indicate that categories are in the rows. The analysis assumes that the categories are in the columns of the matrix. If the categories are in the rows and the entities in the columns, then the parameter "category_row" has to be set to TRUE. The default value is FALSE.
+#' @param data A numeric matrix with entities \eqn{i} in the rows and categories \eqn{j} in the columns. Cells show the respective value (value of abundance) of entity \eqn{i} in the category \eqn{j}. It can also be a transpose of the previous matrix, that is, a matrix with categories in the rows and entities in the columns. Yet in that case, the argument "category_row" has to be set to TRUE. The matrix must include names for the rows and the columns. The argument "data", also accepts a dataframe with three columns in the following order: entity, category and value.  
+#' @param category_row A flag to indicate that categories are in the rows. The analysis assumes that the categories are in the columns of the matrix. If the categories are in the rows and the entities in the columns, then the argument "category_row" has to be set to TRUE. The default value is FALSE.
 #' @param norm Methods to compute normalized values. Possible values are 'p', 'proportions', 'rca', 'rca_norm' and 'ai'. RCA refers to Revealed Comparative Advantages [Balassa 1986], rca_norm normalizes the RCAs between -1 and with 1, ai refers to the Activity Index. 
 #' @param filter A threshold below which values are replaced with NA.
 #' @param binary A boolean value to indicate if values distinct from NA are replaced with 1.
-#' @details If the three parameters 'norm', 'filter' and 'binary' are used, then the same sequential order is applied in the calculations.
+#' @details If the three arguments 'norm', 'filter' and 'binary' are used, then the same sequential order is applied in the calculations.
 #' @references Balassa, B. (1986). Comparative advantage in manufactured goods: a reappraisal. The Review of Economics and Statistics, 315-319.
 #' @examples 
 #' #raw values
@@ -397,8 +404,8 @@ values <- function(data, category_row = FALSE, norm=NULL, filter=NULL, binary=FA
 
 #' @title Ubiquity of categories across entities
 #' @description Computes the ubiquity or the rareness of the categories
-#' @param data A numeric matrix with entities \eqn{i} in the rows and categories \eqn{j} in the columns. Cells show the respective value (value of abundance) of entity \eqn{i} in the category \eqn{j}. It can also be a transpose of the previous matrix, that is, a matrix with categories in the rows and entities in the columns. Yet in that case, the parameter "category_row" has to be set to TRUE. The matrix must include names for the rows and the columns. The parameter "data", also accepts a dataframe with three columns in the following order: entity, category and value.  
-#' @param category_row A flag to indicate that categories are in the rows. The analysis assumes that the categories are in the columns of the matrix. If the categories are in the rows and the entities in the columns, then the parameter "category_row" has to be set to TRUE. The default value is FALSE.
+#' @param data A numeric matrix with entities \eqn{i} in the rows and categories \eqn{j} in the columns. Cells show the respective value (value of abundance) of entity \eqn{i} in the category \eqn{j}. It can also be a transpose of the previous matrix, that is, a matrix with categories in the rows and entities in the columns. Yet in that case, the argument "category_row" has to be set to TRUE. The matrix must include names for the rows and the columns. The argument "data", also accepts a dataframe with three columns in the following order: entity, category and value.  
+#' @param category_row A flag to indicate that categories are in the rows. The analysis assumes that the categories are in the columns of the matrix. If the categories are in the rows and the entities in the columns, then the argument "category_row" has to be set to TRUE. The default value is FALSE.
 #' @examples 
 #' ub <- ubiquity(data=pantheon)
 #' @return A dataframe with values of number of entities where the category is present. Ordered in decreasing order.
@@ -417,8 +424,8 @@ ubiquity <- function(data, category_row = FALSE)
 #' @description This function reads a file with data shaped as a matrix or as edges list. Several types of formats are allowed.
 #' @param path A string representing the path to data file. If the data contained in the file is shaped as a matrix, the first column must include the names of the categories. If the data is shaped as edges list, it must contain three columns: Entity, category and value. 
 #' @param sep Separator character used in the file to separate columns. Only for CSV file. Default value is comma.
-#' @param type It indicates the type of data to be read. This parameter facilitates the input of diverse types of data files, such as spss or stata. Possible options are the names of the mentioned software. The default value is csv.
-#' @param category_row A flag to indicate that categories are in the rows. The analysis assumes that the categories are in the columns of the matrix. If the categories are in the rows and the entities in the columns, then the parameter "category_row" has to be set to TRUE. The default value is FALSE.
+#' @param type It indicates the type of data to be read. This argument facilitates the input of diverse types of data files, such as spss or stata. Possible options are the names of the mentioned software. The default value is csv.
+#' @param category_row A flag to indicate that categories are in the rows. The analysis assumes that the categories are in the columns of the matrix. If the categories are in the rows and the entities in the columns, then the argument "category_row" has to be set to TRUE. The default value is FALSE.
 #' @return A data frame with three columns (entity, category, value).
 #' @examples 
 #' #reading an edges list or panel shape, source data must include three columns
@@ -476,9 +483,9 @@ read_data <- function(path, type='csv',sep=',', category_row=FALSE){
 
 #' @title A procedure to create a disparity matrix between categories.
 #' @description Takes a data frame or a matrix to create a disparity matrix
-#' @param data A numeric matrix with entities \eqn{i} in the rows and categories \eqn{j} in the columns. Cells show the respective value (value of abundance) of entity \eqn{i} in the category \eqn{j}. It can also be a transpose of the previous matrix, that is, a matrix with categories in the rows and entities in the columns. Yet in that case, the parameter "category_row" has to be set to TRUE. The matrix must include names for the rows and the columns. The parameter "data", also accepts a dataframe with three columns in the following order: entity, category and value. 
-#' @param method A distance or dissimilarity method available in "proxy" package as for example "Euclidean", "Kullback" or "Canberra". This parameter also accepts a similarity method available in the "proxy" package, as for example: "cosine", "correlation" or "Jaccard" among others. In the latter case, a correspondent transformation to a dissimilarity measure will be retrieved. A list of available methods can be queried by using the function \code{\link[proxy]{pr_DB}}. e.g. summary(pr_DB). The default value is Euclidean distance.
-#' @param category_row A flag to indicate that categories are in the rows. The analysis assumes that the categories are in the columns of the matrix. If the categories are in the rows and the entities in the columns, then the parameter "category_row" has to be set to TRUE. The default value is FALSE.
+#' @param data A numeric matrix with entities \eqn{i} in the rows and categories \eqn{j} in the columns. Cells show the respective value (value of abundance) of entity \eqn{i} in the category \eqn{j}. It can also be a transpose of the previous matrix, that is, a matrix with categories in the rows and entities in the columns. Yet in that case, the argument "category_row" has to be set to TRUE. The matrix must include names for the rows and the columns. The argument "data", also accepts a dataframe with three columns in the following order: entity, category and value. 
+#' @param method A distance or dissimilarity method available in "proxy" package as for example "Euclidean", "Kullback" or "Canberra". This argument also accepts a similarity method available in the "proxy" package, as for example: "cosine", "correlation" or "Jaccard" among others. In the latter case, a correspondent transformation to a dissimilarity measure will be retrieved. A list of available methods can be queried by using the function \code{\link[proxy]{pr_DB}}. e.g. summary(pr_DB). The default value is Euclidean distance.
+#' @param category_row A flag to indicate that categories are in the rows. The analysis assumes that the categories are in the columns of the matrix. If the categories are in the rows and the entities in the columns, then the argument "category_row" has to be set to TRUE. The default value is FALSE.
 #' @return A distance or dissimilarity square matrix
 #' @examples 
 #' Xdis <- dis_categories(pantheon)
@@ -493,9 +500,9 @@ dis_categories <- function(data, method='euclidean', category_row=FALSE){
 
 #' @title A procedure to create a disparity matrix between entities
 #' @description Takes a data frame or a matrix to create a disparity matrix
-#' @param data A numeric matrix with entities \eqn{i} in the rows and categories \eqn{j} in the columns. Cells show the respective value (value of abundance) of entity \eqn{i} in the category \eqn{j}. It can also be a transpose of the previous matrix, that is, a matrix with categories in the rows and entities in the columns. Yet in that case, the parameter "category_row" has to be set to TRUE. The matrix must include names for the rows and the columns. The parameter "data", also accepts a dataframe with three columns in the following order: entity, category and value. 
-#' @param method A distance or dissimilarity method available in "proxy" package as for example "Euclidean", "Kullback" or "Canberra". This parameter also accepts a similarity method available in the "proxy" package, as for example: "cosine", "correlation" or "Jaccard" among others. In the latter case, a correspondent transformation to a dissimilarity measure will be retrieved. A list of available methods can be queried by using the function \code{\link[proxy]{pr_DB}}. e.g. summary(pr_DB). The default value is Euclidean distance.
-#' @param category_row A flag to indicate that categories are in the rows. The analysis assumes that the categories are in the columns of the matrix. If the categories are in the rows and the entities in the columns, then the parameter "category_row" has to be set to TRUE. The default value is FALSE.
+#' @param data A numeric matrix with entities \eqn{i} in the rows and categories \eqn{j} in the columns. Cells show the respective value (value of abundance) of entity \eqn{i} in the category \eqn{j}. It can also be a transpose of the previous matrix, that is, a matrix with categories in the rows and entities in the columns. Yet in that case, the argument "category_row" has to be set to TRUE. The matrix must include names for the rows and the columns. The argument "data", also accepts a dataframe with three columns in the following order: entity, category and value. 
+#' @param method A distance or dissimilarity method available in "proxy" package as for example "Euclidean", "Kullback" or "Canberra". This argument also accepts a similarity method available in the "proxy" package, as for example: "cosine", "correlation" or "Jaccard" among others. In the latter case, a correspondent transformation to a dissimilarity measure will be retrieved. A list of available methods can be queried by using the function \code{\link[proxy]{pr_DB}}. e.g. summary(pr_DB). The default value is Euclidean distance.
+#' @param category_row A flag to indicate that categories are in the rows. The analysis assumes that the categories are in the columns of the matrix. If the categories are in the rows and the entities in the columns, then the argument "category_row" has to be set to TRUE. The default value is FALSE.
 #' @return A distance or dissimilarity square matrix
 #' @examples 
 #' Xdis <- dis_entities(pantheon)
@@ -511,9 +518,9 @@ dis_entities <- function(data, method='euclidean', category_row=FALSE){
 
 #' @title A procedure to compute the sum and average of disparities
 #' @description Computes the sum and the average of distances or disparities between the categories.
-#' @param data A numeric matrix with entities \eqn{i} in the rows and categories \eqn{j} in the columns. Cells show the respective value (value of abundance) of entity \eqn{i} in the category \eqn{j}. It can also be a transpose of the previous matrix, that is, a matrix with categories in the rows and entities in the columns. Yet in that case, the parameter "category_row" has to be set to TRUE. The matrix must include names for the rows and the columns. The parameter "data", also accepts a dataframe with three columns in the following order: entity, category and value. 
-#' @param method A distance or dissimilarity method available in "proxy" package as for example "Euclidean", "Kullback" or "Canberra". This parameter also accepts a similarity method available in the "proxy" package, as for example: "cosine", "correlation" or "Jaccard" among others. In the latter case, a correspondent transformation to a dissimilarity measure will be retrieved. A list of available methods can be queried by using the function \code{\link[proxy]{pr_DB}}. e.g. summary(pr_DB). The default value is Euclidean distance.
-#' @param category_row A flag to indicate that categories are in the rows. The analysis assumes that the categories are in the columns of the matrix. If the categories are in the rows and the entities in the columns, then the parameter "category_row" has to be set to TRUE. The default value is FALSE.
+#' @param data A numeric matrix with entities \eqn{i} in the rows and categories \eqn{j} in the columns. Cells show the respective value (value of abundance) of entity \eqn{i} in the category \eqn{j}. It can also be a transpose of the previous matrix, that is, a matrix with categories in the rows and entities in the columns. Yet in that case, the argument "category_row" has to be set to TRUE. The matrix must include names for the rows and the columns. The argument "data", also accepts a dataframe with three columns in the following order: entity, category and value. 
+#' @param method A distance or dissimilarity method available in "proxy" package as for example "Euclidean", "Kullback" or "Canberra". This argument also accepts a similarity method available in the "proxy" package, as for example: "cosine", "correlation" or "Jaccard" among others. In the latter case, a correspondent transformation to a dissimilarity measure will be retrieved. A list of available methods can be queried by using the function \code{\link[proxy]{pr_DB}}. e.g. summary(pr_DB). The default value is Euclidean distance.
+#' @param category_row A flag to indicate that categories are in the rows. The analysis assumes that the categories are in the columns of the matrix. If the categories are in the rows and the entities in the columns, then the argument "category_row" has to be set to TRUE. The default value is FALSE.
 #' @return A data frame with disparity measures for each entity in the dataset. Both the sum of disparities and the average of disparities are computed.
 #' @examples 
 #' data(pantheon)
@@ -539,8 +546,8 @@ disparity <- function(data, method='euclidean', category_row=FALSE) {
 #' @description Simulates a number of individuals tagged in N different categories, given a distribution such as log normal or normal.
 #' @param n_categ number of categories 
 #' @param size number of individuals. 
-#' @param category_prefix a prefix for the label of the category
-#' @param type distribution name of the function of 'categories (species) abundance distribution' to simulate indivuduals. Use 'log-normal' for log normal distribution or 'normal' for normal distribution. Default value is 'log-normal'
+#' @param category_prefix a prefix to be used as part of the category label
+#' @param type distribution name. The distribution is used to simulate how individuals are created. Use 'log-normal' for log normal distribution or 'normal' for normal distribution. Default value is 'log-normal'
 #' @param mean parameter for normal or log-normal distribution. Default value is 0.
 #' @param sd parameter for normal or log-normal distribution. Default value is 1.
 #' @return A vector of category labels. 
@@ -585,14 +592,15 @@ sim_individuals <- function(n_categ, size,  category_prefix='', type = 'log-norm
 #' @description Simulates an entity with values of abundance for some categories. 
 #' @param n_categ number of categories 
 #' @param size number of individuals. Default value is 7 times n_categ.
-#' @param category_prefix a prefix for the label of the category
-#' @param type both, a distribution name or a vector of integers. The distribution corresponds to  the function of 'categories (species) abundance distribution' to simulate indivuduals that are aggregated in frequencies or values of abundance. Use 'log-normal' for log normal distribution or 'normal' for normal distribution.  In the second case, an integer or a vector of integers of possible values of abundance to be used randomly. Default value is 'log-normal'
+#' @param category_prefix a prefix to be used as part of the category label
+#' @param values values of abundance. This argument can be both, a distribution name or a vector of integers. The distribution is used to simulate individuals that are aggregated in frequencies or values of abundance. In the second case, an integer or a vector of integers of possible values of abundance to be used randomly. Default value is 'log-normal'
 #' @param mean parameter for normal or log-normal distribution. Default value is 0.
 #' @param sd parameter for normal or log-normal distribution. Default value is 1.
 #' @return A data frame with two columns: category and value of abundance. 
 #' @examples 
 #' sim_entity(n_categ=50,  category_prefix='ctg', values=1) #equal value
-#' sim_entity(n_categ=50,  category_prefix='ctg', values=sample(1:100, replace=TRUE)) #random numbers for values of abundance
+#' #random numbers for values of abundance
+#' sim_entity(n_categ=50,  category_prefix='ctg', values=sample(1:100, replace=TRUE)) 
 #' sim_entity(n_categ=50,  category_prefix='ctg', values='log-normal') #equal value
 #' @export
 sim_entity <- function(n_categ, category_prefix='', values = 'log-normal', size=-1,    mean=0, sd=1) {
@@ -622,15 +630,20 @@ sim_entity <- function(n_categ, category_prefix='', values = 'log-normal', size=
 #' @description Simulates a dataset with values of variety for each entity and possible values of abundance. 
 #' @param n_categ a vector with number of categories for each entity. The number of entities to create is defined by the length of this vector.
 #' @param size number of individuals. A number or a vector of numbers for each entity. Default value is 7 times variety. 
-#' @param category_prefix a prefix for the label of the category
-#' @param entity_prefix a prefix for the label of the entity
-#' @param type both, a distribution name or a vector of integers. The distribution corresponds to  the function of 'categories (species) abundance distribution' to simulate individuals that are aggregated in frequencies or values of abundance. Use 'log-normal' for log normal distribution or 'normal' for normal distribution.  In the second case, an integer or a vector of integers of possible values of abundance to be used randomly. Default value is 'log-normal'
+#' @param category_prefix a prefix to be used as part of the category label
+#' @param entity_prefix a prefix to be used as part of the entity label
+#' @param values values of abundance. This argument can be both, a distribution name or a vector of integers. The distribution is used to simulate individuals that are aggregated in frequencies or values of abundance. Use 'log-normal' for log normal distribution or 'normal' for normal distribution.  In the second case, an integer or a vector of integers of possible values of abundance to be used randomly. Default value is 'log-normal'
 #' @param mean parameter for normal or log-normal distribution. Default value is 0.
 #' @param sd parameter for normal or log-normal distribution. Default value is 1.
-#' @param category_random boolean parameter to determine if categories should be taken randomly or sequentially. Default is FALSE
+#' @param category_random boolean argument to determine if categories should be taken randomly (TRUE) or sequentially (FALSE). Default is FALSE
 #' @return A data frame with three columns: entity, category and value of abundance. 
 #' @examples 
-#' sim_dataset(n_categ=50,  category_prefix='ctg', values=1) #equal value
+#' sim_dataset(n_categ=50,  category_prefix='ctg', values=1) #equal value, just one entity
+#' #Several entities with random values
+#' n_entities <- 50
+#' v_n_categ <- sample(1:100, size = n_entities, replace=TRUE)
+#' v_values <- sample(10:5000, size= n_entities, replace=TRUE)
+#' data_set <- sim_dataset(n_categ = v_n_categ, values= v_values, category_prefix = "C", category_random = TRUE)
 #' @export
 sim_dataset <- function(n_categ, category_prefix='', entity_prefix='', values = 'log-normal', size=-1,mean=0, sd=1, category_random=FALSE) {
 	data_set = data.frame()
@@ -669,22 +682,17 @@ sim_dataset <- function(n_categ, category_prefix='', entity_prefix='', values = 
 }
 
 
-#' @title A procedure to create a meta community for Entropart package 
-#' @description Transform a dataframe used in diverse to a metacommunity used in Entropart. 
+#' @title Transforms data to be used in Entropart package 
+#' @description Transform a dataframe used in diverse to values of abundance to be used in Entropart. 
 #' @param data a dataframe used in diverse with three columns, entity, category and value of abundance.
-#' @param weights a vector of weights for each entity (community) 
-#' @return An object of type metacommunity to be used in entropart. 
+#' @return An object of type matrix of abundance to be used in entropart to create metacommunities. 
 #' @examples 
-#' to_entropart(sim_dataset(c(1,2))) 
+#' ab <- to_entropart(sim_dataset(c(1,2))) 
 #' @export
-to_entropart <- function(data, weights=1)
+to_entropart <- function(data)
 {
 	Abundances <- data.frame(t(values(data)))
 	Species <- rownames(Abundances)
 	Communities <- colnames(Abundances)
-	#Weigths <- 1
-	#weigths <- data.frame(Communities, Weigths)
-
 	return(Abundances)
-	#return(mc)
 }

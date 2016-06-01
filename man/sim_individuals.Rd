@@ -12,9 +12,9 @@ sim_individuals(n_categ, size, category_prefix = "", type = "log-normal",
 
 \item{size}{number of individuals.}
 
-\item{category_prefix}{a prefix for the label of the category}
+\item{category_prefix}{a prefix to be used as part of the category label}
 
-\item{type}{distribution name of the function of 'categories (species) abundance distribution' to simulate indivuduals. Use 'log-normal' for log normal distribution or 'normal' for normal distribution. Default value is 'log-normal'}
+\item{type}{distribution name. The distribution is used to simulate how individuals are created. Use 'log-normal' for log normal distribution or 'normal' for normal distribution. Default value is 'log-normal'}
 
 \item{mean}{parameter for normal or log-normal distribution. Default value is 0.}
 

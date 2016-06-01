@@ -9,11 +9,11 @@ read_data(path, type = "csv", sep = ",", category_row = FALSE)
 \arguments{
 \item{path}{A string representing the path to data file. If the data contained in the file is shaped as a matrix, the first column must include the names of the categories. If the data is shaped as edges list, it must contain three columns: Entity, category and value.}
 
-\item{type}{It indicates the type of data to be read. This parameter facilitates the input of diverse types of data files, such as spss or stata. Possible options are the names of the mentioned software. The default value is csv.}
+\item{type}{It indicates the type of data to be read. This argument facilitates the input of diverse types of data files, such as spss or stata. Possible options are the names of the mentioned software. The default value is csv.}
 
 \item{sep}{Separator character used in the file to separate columns. Only for CSV file. Default value is comma.}
 
-\item{category_row}{A flag to indicate that categories are in the rows. The analysis assumes that the categories are in the columns of the matrix. If the categories are in the rows and the entities in the columns, then the parameter "category_row" has to be set to TRUE. The default value is FALSE.}
+\item{category_row}{A flag to indicate that categories are in the rows. The analysis assumes that the categories are in the columns of the matrix. If the categories are in the rows and the entities in the columns, then the argument "category_row" has to be set to TRUE. The default value is FALSE.}
 }
 \value{
 A data frame with three columns (entity, category, value).

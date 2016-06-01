@@ -7,13 +7,13 @@
 variety(data, sort = TRUE, decreasing = TRUE, category_row = FALSE)
 }
 \arguments{
-\item{data}{A numeric matrix with entities \eqn{i} in the rows and categories \eqn{j} in the columns. Cells show the respective value (value of abundance) of entity \eqn{i} in the category \eqn{j}. It can also be a transpose of the previous matrix, that is, a matrix with categories in the rows and entities in the columns. Yet in that case, the parameter "category_row" has to be set to TRUE. The matrix must include names for the rows and the columns. The parameter "data", also accepts a dataframe with three columns in the following order: entity, category and value.}
+\item{data}{A numeric matrix with entities \eqn{i} in the rows and categories \eqn{j} in the columns. Cells show the respective value (value of abundance) of entity \eqn{i} in the category \eqn{j}. It can also be a transpose of the previous matrix, that is, a matrix with categories in the rows and entities in the columns. Yet in that case, the argument "category_row" has to be set to TRUE. The matrix must include names for the rows and the columns. The argument "data", also accepts a dataframe with three columns in the following order: entity, category and value.}
 
 \item{sort}{Indicates whether results should be ordered or not. Define it to FALSE to avoid ordering.}
 
-\item{decreasing}{If parameter "sort" is set to TRUE, this parameter indicates descending order. The default value is TRUE.}
+\item{decreasing}{If argument "sort" is set to TRUE, this argument indicates descending order. The default value is TRUE.}
 
-\item{category_row}{A flag to indicate that categories are in the rows. The analysis assumes that the categories are in the columns of the matrix. If the categories are in the rows and the entities in the columns, then the parameter "category_row" has to be set to TRUE. The default value is FALSE.}
+\item{category_row}{A flag to indicate that categories are in the rows. The analysis assumes that the categories are in the columns of the matrix. If the categories are in the rows and the entities in the columns, then the argument "category_row" has to be set to TRUE. The default value is FALSE.}
 }
 \value{
 A dataframe with values of variety for each entity.

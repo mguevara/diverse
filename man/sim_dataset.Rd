@@ -11,9 +11,11 @@ sim_dataset(n_categ, category_prefix = "", entity_prefix = "",
 \arguments{
 \item{n_categ}{a vector with number of categories for each entity. The number of entities to create is defined by the length of this vector.}
 
-\item{category_prefix}{a prefix for the label of the category}
+\item{category_prefix}{a prefix to be used as part of the category label}
 
-\item{entity_prefix}{a prefix for the label of the entity}
+\item{entity_prefix}{a prefix to be used as part of the entity label}
+
+\item{values}{values of abundance. This argument can be both, a distribution name or a vector of integers. The distribution is used to simulate individuals that are aggregated in frequencies or values of abundance. Use 'log-normal' for log normal distribution or 'normal' for normal distribution.  In the second case, an integer or a vector of integers of possible values of abundance to be used randomly. Default value is 'log-normal'}
 
 \item{size}{number of individuals. A number or a vector of numbers for each entity. Default value is 7 times variety.}
 
@@ -21,9 +23,7 @@ sim_dataset(n_categ, category_prefix = "", entity_prefix = "",
 
 \item{sd}{parameter for normal or log-normal distribution. Default value is 1.}
 
-\item{category_random}{boolean parameter to determine if categories should be taken randomly or sequentially. Default is FALSE}
-
-\item{type}{both, a distribution name or a vector of integers. The distribution corresponds to  the function of 'categories (species) abundance distribution' to simulate individuals that are aggregated in frequencies or values of abundance. Use 'log-normal' for log normal distribution or 'normal' for normal distribution.  In the second case, an integer or a vector of integers of possible values of abundance to be used randomly. Default value is 'log-normal'}
+\item{category_random}{boolean argument to determine if categories should be taken randomly (TRUE) or sequentially (FALSE). Default is FALSE}
 }
 \value{
 A data frame with three columns: entity, category and value of abundance.
@@ -32,6 +32,11 @@ A data frame with three columns: entity, category and value of abundance.
 Simulates a dataset with values of variety for each entity and possible values of abundance.
 }
 \examples{
-sim_dataset(n_categ=50,  category_prefix='ctg', values=1) #equal value
+sim_dataset(n_categ=50,  category_prefix='ctg', values=1) #equal value, just one entity
+#Several entities with random values
+n_entities <- 50
+v_n_categ <- sample(1:100, size = n_entities, replace=TRUE)
+v_values <- sample(10:5000, size= n_entities, replace=TRUE)
+data_set <- sim_dataset(n_categ = v_n_categ, values= v_values, category_prefix = "C", category_random = TRUE)
 }
 

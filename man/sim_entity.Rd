@@ -10,15 +10,15 @@ sim_entity(n_categ, category_prefix = "", values = "log-normal",
 \arguments{
 \item{n_categ}{number of categories}
 
-\item{category_prefix}{a prefix for the label of the category}
+\item{category_prefix}{a prefix to be used as part of the category label}
+
+\item{values}{values of abundance. This argument can be both, a distribution name or a vector of integers. The distribution is used to simulate individuals that are aggregated in frequencies or values of abundance. In the second case, an integer or a vector of integers of possible values of abundance to be used randomly. Default value is 'log-normal'}
 
 \item{size}{number of individuals. Default value is 7 times n_categ.}
 
 \item{mean}{parameter for normal or log-normal distribution. Default value is 0.}
 
 \item{sd}{parameter for normal or log-normal distribution. Default value is 1.}
-
-\item{type}{both, a distribution name or a vector of integers. The distribution corresponds to  the function of 'categories (species) abundance distribution' to simulate indivuduals that are aggregated in frequencies or values of abundance. Use 'log-normal' for log normal distribution or 'normal' for normal distribution.  In the second case, an integer or a vector of integers of possible values of abundance to be used randomly. Default value is 'log-normal'}
 }
 \value{
 A data frame with two columns: category and value of abundance.
@@ -28,7 +28,8 @@ Simulates an entity with values of abundance for some categories.
 }
 \examples{
 sim_entity(n_categ=50,  category_prefix='ctg', values=1) #equal value
-sim_entity(n_categ=50,  category_prefix='ctg', values=sample(1:100, replace=TRUE)) #random numbers for values of abundance
+#random numbers for values of abundance
+sim_entity(n_categ=50,  category_prefix='ctg', values=sample(1:100, replace=TRUE))
 sim_entity(n_categ=50,  category_prefix='ctg', values='log-normal') #equal value
 }
 

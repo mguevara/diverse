@@ -1,11 +1,11 @@
 Package: diverse
 Title: Diversity Measures for Complex Systems
-Version: 0.1.1
+Version: 0.1.2
 Author: Miguel R. Guevara <miguel.guevara@upla.cl>, Dominik Hartmann
         <d.hartmann@uni-hohenheim.de>, Marcelo Mendoza
         <marcelo.mendoza@usm.cl>
 Maintainer: Miguel R. Guevara <miguel.guevara@upla.cl>
-Description: Computes the most common diversity measures used in social and natural sciences, and includes new measures from interdisciplinary research.
+Description: Computes the most common diversity measures used in social and other sciences, and includes new measures from interdisciplinary research.
 Depends: proxy, reshape2, foreign
 Suggests: pheatmap, igraph
 URL: https://github.com/mguevara/diverse
