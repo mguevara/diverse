@@ -8,17 +8,17 @@ diversity(data, type = "all", category_row = FALSE, dis = NULL,
   method = "euclidean", q = 0, alpha = 1, beta = 1, base = exp(1))
 }
 \arguments{
-\item{data}{A numeric matrix with entities \eqn{i} in the rows and categories \eqn{j} in the columns. Cells show the respective value (value of abundance) of entity \eqn{i} in the category \eqn{j}. It can also be a transpose of the previous matrix, that is, a matrix with categories in the rows and entities in the columns. Yet in that case, the parameter "category_row" has to be set to TRUE. The matrix must include names for the rows and the columns. The parameter "data", also accepts a dataframe with three columns in the following order: entity, category and value.}
+\item{data}{A numeric matrix with entities \eqn{i} in the rows and categories \eqn{j} in the columns. Cells show the respective value (value of abundance) of entity \eqn{i} in the category \eqn{j}. It can also be a transpose of the previous matrix, that is, a matrix with categories in the rows and entities in the columns. Yet in that case, the argument "category_row" has to be set to TRUE. The matrix must include names for the rows and the columns. The argument "data", also accepts a dataframe with three columns in the following order: entity, category and value.}
 
-\item{type}{A string or a vector of strings of nemonic strings referencing to the available diversity measures. The available measures are: "variety", (Shannon) "entropy", "blau","gini-simpson", "simpson", "true-diversity", "herfindahl-hirschman", "berger-parker", "renyi", (Pielou) "evenness", "rao", "rao-stirling". A list of short mnemonics for each measure: "v", "e", "gs", "s", "td", "hh", "bp", "re", "ev", "r", and "rs". The default for type is "all" which computes all available formulas.}
+\item{type}{A string or a vector of strings of nemonic strings referencing to the available diversity measures. The available measures are: "variety", (Shannon) "entropy", "blau","gini-simpson", "simpson", "hill-numbers", "herfindahl-hirschman", "berger-parker", "renyi", (Pielou) "evenness", "rao", "rao-stirling". A list of short mnemonics for each measure: "v", "e", "gs", "s", "td", "hh", "bp", "re", "ev", "r", and "rs". The default for type is "all" which computes all available formulas.}
 
-\item{category_row}{A flag to indicate that categories are in the rows. The analysis assumes that the categories are in the columns of the matrix. If the categories are in the rows and the entities in the columns, then the parameter "category_row" has to be set to TRUE. The default value is FALSE.}
+\item{category_row}{A flag to indicate that categories are in the rows. The analysis assumes that the categories are in the columns of the matrix. If the categories are in the rows and the entities in the columns, then the argument "category_row" has to be set to TRUE. The default value is FALSE.}
 
-\item{dis}{Optional square matrix of distances or dissimilarities between categories. It allows the user to provide her own matrix of dissimilarities between categories. The category names have to be both in the rows and in the columns, and these must be the exact same names used by the categories in the parameter "data". Only the upper triangle will be used. If  the parameter "dis" is not defined, and the user requires a measure that uses disparities (e.g. Rao), then a matrix of disparities is computed internally using the method defined by the parameter 'method'. The default value is NULL.}
+\item{dis}{Optional square matrix of distances or dissimilarities between categories. It allows the user to provide her own matrix of dissimilarities between categories. The category names have to be both in the rows and in the columns, and these must be the exact same names used by the categories in the argument "data". Only the upper triangle will be used. If  the argument "dis" is not defined, and the user requires a measure that uses disparities (e.g. Rao), then a matrix of disparities is computed internally using the method defined by the argument 'method'. The default value is NULL.}
 
-\item{method}{The "rao-stirling" and "rao"-diversity indices use a disparity function to measure the distance between objects. If the user does not provide a matrix with disparities by using the parameter 'dis', then a matrix of disparities is computed using the method especified in this parameter (method). Possible values for this parameter are distance or dissimilarity methods available in "proxy" package as for example "Euclidean", "Kullback" or "Canberra". This parameter also accepts a similarity method available in the "proxy" package, as for example: "cosine", "correlation" or "Jaccard" among others. In the latter case, a correspondent transformation to a dissimilarity measure will be retrieved. A list of available methods can be queried by using the function \code{\link[proxy]{pr_DB}}. e.g. summary(pr_DB). The default value is Euclidean distance.}
+\item{method}{The "rao-stirling" and "rao"-diversity indices use a disparity function to measure the distance between objects. If the user does not provide a matrix with disparities by using the argument 'dis', then a matrix of disparities is computed using the method specified in this argument (method). Possible values for this argument are distance or dissimilarity methods available in "proxy" package as for example "Euclidean", "Kullback" or "Canberra". This argument also accepts a similarity method available in the "proxy" package, as for example: "cosine", "correlation" or "Jaccard" among others. In the latter case, a correspondent transformation to a dissimilarity measure will be retrieved. A list of available methods can be queried by using the function \code{\link[proxy]{pr_DB}}. e.g. summary(pr_DB). The default value is Euclidean distance.}
 
-\item{q}{The parameter used for the true diversity index. This parameter is also used for the Renyi entropy. The default value is 0.}
+\item{q}{The parameter used for the hill numbers. This argument is also used for the Renyi entropy and HCDT entropy. The default value is 0.}
 
 \item{alpha}{Parameter for Rao-Stirling diversity. The default value is 1.}
 
@@ -33,9 +33,9 @@ A data frame with diversity measures as columns for each entity.
 \strong{Main} function of the package. The diversity function computes diversity measures for a dataset with entities, categories and values.
 }
 \details{
-Notation used in the following formulas: \eqn{N}, category count; \eqn{p_i}, proportion of entity comprises category \eqn{i}; \eqn{d_{ij}}, disparity between \eqn{i} and \eqn{j};  \eqn{q},\eqn{\alpha} and \eqn{\beta}, parameters.
+Notation used in the following formulas: \eqn{N}, category count; \eqn{p_i}, proportion of entity comprises category \eqn{i}; \eqn{d_{ij}}, disparity between \eqn{i} and \eqn{j};  \eqn{q},\eqn{\alpha} and \eqn{\beta}, arguments.
 
-The available diversity measures included in the package are listed above. The titles of the formulas are the possible mnemonic values that the parameter "type" might take to compute that formula (i.e. diversity(data, type='variety') or diversity(data, type='v'):
+The available diversity measures included in the package are listed above. The titles of the formulas are the possible mnemonic values that the argument "type" might take to compute that formula (i.e. diversity(data, type='variety') or diversity(data, type='v'):
 
 
 \strong{variety, v:}
@@ -57,8 +57,8 @@ Simpson index per entity [Simpson 1949].   \deqn{ D = \sum_i n_i(n_i-1) / N(N-1)
 When this measure is required, then also associated variations Simpson's Index of Diversity \eqn{1-D} and the Reciprocal Simpson \eqn{1/D} will be computed.
 
 
-\strong{true-diversity, td:}
-True diversity index per entity [Hill 1973]. This measure is \eqn{q} parameterized. When \eqn{q=1} the equation is undefined, then, an aproximation is computed. Default for \eqn{q} is 0.  \deqn{(\sum_ip_{i}^q)^{1/(1-q)}}
+\strong{hill-numbers, td,hn:}
+Hill Numbers [Hill 1973]. This measure is \eqn{q} parameterized. When \eqn{q=1}, it results in the exponential of Shannon Entropy. Default for \eqn{q} is 0, this is the variety or richness. \deqn{(\sum_ip_{i}^q)^{1/(1-q)}}
 
 
 \strong{berger-parker, bp:}
@@ -66,7 +66,7 @@ Berger-Parker index is equals to the maximum \eqn{p_i} value in the entity, i.e.
 
 
 \strong{renyi, re:}
- Renyi entropy per object. This measure is a generalization of the Shannon entropy parameterized by \eqn{q}. It corresponds to the logarithm of the true diversity index. The default value for \eqn{q} is 0. \deqn{(1-q)^{-1} \log(\sum_i p_i^q)}
+ Renyi entropy per object. This measure is a generalization of the Shannon entropy parameterized by \eqn{q}. It corresponds to the logarithm of the hill numbers. The default value for \eqn{q} is 0. \deqn{(1-q)^{-1} \log(\sum_i p_i^q)}
 
 
 \strong{evenness, ev:}
@@ -96,9 +96,9 @@ diversity(data=X, type="all", method="jaccard")
 #reading csv dataframe
 path_to_file <- system.file("extdata", "PantheonEdges.csv", package = "diverse")
 X <- read_data(path = path_to_file)
-#true diversity
+#hill numbers
 diversity(data=X, type="td", q=1)
-#rao stirling with differente parameters
+#rao stirling with differente arguments
 diversity(data=X, type="rao-stirling", method="euclidean", alpha=0, beta=1)
 #more than one diversity measure
 diversity(data=X, type=c('e','ev','bp','s'))
@@ -117,5 +117,11 @@ Shannon, C. (1948). "A Mathematical Theory of Communication". Bell entity Techni
 Simpson, A. (1949). "Measurement of Diversity". Nature 163: 41-48.
 
 Stirling, A. (2007). "A General Framework for Analysing Diversity in Science, Technology and Society". Journal of the Royal Society Interface 4: 707-719.
+
+Rafols, I., & Meyer, M. (2009). Diversity and network coherence as indicators of interdisciplinarity: case studies in bionanoscience. Scientometrics, 82(2), 263-287.
+
+Rafols, I. (2014). Knowledge Integration and Diffusion: Measures and Mapping of Diversity and Coherence. In Y. Ding, R. Rousseau, & D. Wolfram (Eds.), Measuring Scholarly Impact (pp. 169-190). Springer International Publishing.
+
+Chavarro, D., Tang, P., & Rafols, I. (2014). Interdisciplinarity and research on local issues: evidence from a developing country. Research Evaluation, 23(3), 195-209.
 }
 
