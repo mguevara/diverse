@@ -5,7 +5,8 @@
 \title{A procedure to simulate datasets}
 \usage{
 sim_dataset(n_categ, category_prefix = "", entity_prefix = "",
-  values = "log-normal", size = -1, mean = 0, sd = 1)
+  values = "log-normal", size = -1, mean = 0, sd = 1,
+  category_random = FALSE)
 }
 \arguments{
 \item{n_categ}{a vector with number of categories for each entity. The number of entities to create is defined by the length of this vector.}
@@ -20,6 +21,8 @@ sim_dataset(n_categ, category_prefix = "", entity_prefix = "",
 
 \item{sd}{parameter for normal or log-normal distribution. Default value is 1.}
 
+\item{category_random}{boolean parameter to determine if categories should be taken randomly or sequentially. Default is FALSE}
+
 \item{type}{both, a distribution name or a vector of integers. The distribution corresponds to  the function of 'categories (species) abundance distribution' to simulate individuals that are aggregated in frequencies or values of abundance. Use 'log-normal' for log normal distribution or 'normal' for normal distribution.  In the second case, an integer or a vector of integers of possible values of abundance to be used randomly. Default value is 'log-normal'}
 }
 \value{
@@ -30,7 +33,5 @@ Simulates a dataset with values of variety for each entity and possible values o
 }
 \examples{
 sim_dataset(n_categ=50,  category_prefix='ctg', values=1) #equal value
-sim_entity(n_categ=50,  category_prefix='ctg', values=sample(1:100, replace=TRUE)) #random numbers for values of abundance
-sim_entity(n_categ=50,  category_prefix='ctg', values='log-normal') #equal value
 }
 

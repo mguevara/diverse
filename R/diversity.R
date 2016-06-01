@@ -627,13 +627,12 @@ sim_entity <- function(n_categ, category_prefix='', values = 'log-normal', size=
 #' @param type both, a distribution name or a vector of integers. The distribution corresponds to  the function of 'categories (species) abundance distribution' to simulate individuals that are aggregated in frequencies or values of abundance. Use 'log-normal' for log normal distribution or 'normal' for normal distribution.  In the second case, an integer or a vector of integers of possible values of abundance to be used randomly. Default value is 'log-normal'
 #' @param mean parameter for normal or log-normal distribution. Default value is 0.
 #' @param sd parameter for normal or log-normal distribution. Default value is 1.
+#' @param category_random boolean parameter to determine if categories should be taken randomly or sequentially. Default is FALSE
 #' @return A data frame with three columns: entity, category and value of abundance. 
 #' @examples 
 #' sim_dataset(n_categ=50,  category_prefix='ctg', values=1) #equal value
-#' sim_entity(n_categ=50,  category_prefix='ctg', values=sample(1:100, replace=TRUE)) #random numbers for values of abundance
-#' sim_entity(n_categ=50,  category_prefix='ctg', values='log-normal') #equal value
 #' @export
-sim_dataset <- function(n_categ, category_prefix='', entity_prefix='', values = 'log-normal', size=-1,mean=0, sd=1) {
+sim_dataset <- function(n_categ, category_prefix='', entity_prefix='', values = 'log-normal', size=-1,mean=0, sd=1, category_random=FALSE) {
 	data_set = data.frame()
 	
 	for(i in seq(1,length(n_categ)))
@@ -652,5 +651,40 @@ sim_dataset <- function(n_categ, category_prefix='', entity_prefix='', values = 
 	} 
 	
 	colnames(data_set) <- c("Entity", "Category", "Value")
+	if(category_random == TRUE){
+		#print(data_set$Category)
+		categories <- as.vector(unique(data_set$Category))
+		#print(categories)
+		categ_vector <- vector()#new vector of categories
+		
+		for(n in n_categ)
+		{
+		  categ_vector <- c(categ_vector, sample(categories, n))	
+		}
+		#print("Random categories")
+		data_set$Category <- categ_vector
+	}
+	
 	return(data_set)
+}
+
+
+#' @title A procedure to create a meta community for Entropart package 
+#' @description Transform a dataframe used in diverse to a metacommunity used in Entropart. 
+#' @param data a dataframe used in diverse with three columns, entity, category and value of abundance.
+#' @param weights a vector of weights for each entity (community) 
+#' @return An object of type metacommunity to be used in entropart. 
+#' @examples 
+#' to_entropart(sim_dataset(c(1,2))) 
+#' @export
+to_entropart <- function(data, weights=1)
+{
+	Abundances <- data.frame(t(values(data)))
+	Species <- rownames(Abundances)
+	Communities <- colnames(Abundances)
+	#Weigths <- 1
+	#weigths <- data.frame(Communities, Weigths)
+
+	return(Abundances)
+	#return(mc)
 }
