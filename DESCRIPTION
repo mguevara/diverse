@@ -6,10 +6,10 @@ Author: Miguel R. Guevara <miguel.guevara@upla.cl>, Dominik Hartmann
         <marcelo.mendoza@usm.cl>
 Maintainer: Miguel R. Guevara <miguel.guevara@upla.cl>
 Description: Computes the most common diversity measures used in social and other sciences, and includes new measures from interdisciplinary research.
-Depends: proxy, reshape2, foreign
-Suggests: pheatmap, igraph
+Depends: proxy, reshape2, foreign, stats
+Suggests: pheatmap, igraph, entropart
 URL: https://github.com/mguevara/diverse
-Date: 2015-11-09
+Date: 2016-06-02
 BugReports: https://github.com/mguevara/diverse/issues
 License: CC BY-SA 4.0
 Repository: CRAN
