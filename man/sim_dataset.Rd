@@ -35,8 +35,8 @@ Simulates a dataset with values of variety for each entity and possible values o
 sim_dataset(n_categ=50,  category_prefix='ctg', values=1) #equal value, just one entity
 #Several entities with random values
 n_entities <- 50
-v_n_categ <- sample(1:100, size = n_entities, replace=TRUE)
-v_values <- sample(10:5000, size= n_entities, replace=TRUE)
-data_set <- sim_dataset(n_categ = v_n_categ, values= v_values, category_prefix = "C", category_random = TRUE)
+v_n_c <- sample(1:100, size = n_entities, replace=TRUE)
+v_v <- sample(10:5000, size= n_entities, replace=TRUE)
+d <- sim_dataset(n_categ = v_n_c, values= v_v, category_random = TRUE)
 }
 

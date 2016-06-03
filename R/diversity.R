@@ -550,9 +550,10 @@ disparity <- function(data, method='euclidean', category_row=FALSE) {
 #' @param type distribution name. The distribution is used to simulate how individuals are created. Use 'log-normal' for log normal distribution or 'normal' for normal distribution. Default value is 'log-normal'
 #' @param mean parameter for normal or log-normal distribution. Default value is 0.
 #' @param sd parameter for normal or log-normal distribution. Default value is 1.
+#' @importFrom stats rnorm rlnorm
 #' @return A vector of category labels. 
 #' @examples 
-#' sim_individuals(n_categ=50, size=10000, category_prefix='ctg', type='log-normal', mean=0.507, sd=1.183)
+#' sim_individuals(n_categ=50, size=10000, type='log-normal', mean=0.507, sd=1.183)
 #' @export
 sim_individuals <- function(n_categ, size,  category_prefix='', type = 'log-normal', mean=0, sd=1) {
 		probabilities <- NA
@@ -641,9 +642,9 @@ sim_entity <- function(n_categ, category_prefix='', values = 'log-normal', size=
 #' sim_dataset(n_categ=50,  category_prefix='ctg', values=1) #equal value, just one entity
 #' #Several entities with random values
 #' n_entities <- 50
-#' v_n_categ <- sample(1:100, size = n_entities, replace=TRUE)
-#' v_values <- sample(10:5000, size= n_entities, replace=TRUE)
-#' data_set <- sim_dataset(n_categ = v_n_categ, values= v_values, category_prefix = "C", category_random = TRUE)
+#' v_n_c <- sample(1:100, size = n_entities, replace=TRUE)
+#' v_v <- sample(10:5000, size= n_entities, replace=TRUE)
+#' d <- sim_dataset(n_categ = v_n_c, values= v_v, category_random = TRUE)
 #' @export
 sim_dataset <- function(n_categ, category_prefix='', entity_prefix='', values = 'log-normal', size=-1,mean=0, sd=1, category_random=FALSE) {
 	data_set = data.frame()
