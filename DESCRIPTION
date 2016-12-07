@@ -1,6 +1,6 @@
 Package: diverse
 Title: Diversity Measures for Complex Systems
-Version: 0.1.3
+Version: 0.1.4
 Author: Miguel R. Guevara <miguel.guevara@upla.cl>, Dominik Hartmann
         <d.hartmann@uni-hohenheim.de>, Marcelo Mendoza
         <marcelo.mendoza@usm.cl>
@@ -9,7 +9,7 @@ Description: Computes the most common diversity measures used in social and othe
 Depends: proxy, reshape2, foreign, stats
 Suggests: pheatmap, igraph, entropart
 URL: https://github.com/mguevara/diverse
-Date: 2016-06-02
+Date: 2016-12-07
 BugReports: https://github.com/mguevara/diverse/issues
 License: CC BY-SA 4.0
 Repository: CRAN
