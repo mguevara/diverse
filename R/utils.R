@@ -6,24 +6,20 @@ get_data <- function(data, category_row=FALSE)
 {
 	if (is.data.frame(data)) {
 		entities <- as.vector(unique(data[,1]))
-		#print(entities)
-		#str(entities)
 		categories <- as.vector(unique(data[,2]))
-		#str(categories)
 		n_ent <- length(entities)
 		n_categ <- length(categories)
+
+		data['id_ctg'] <- match(data[,2], categories) #getting numeric index for
+		data['id_ent'] <- match(data[,1], entities) #getting numeric index for
 		
 		if(category_row==TRUE) {
-			#diversity <- data.frame(row.names=levels(data[,2]))
-			#data <- droplevels(data) #delete un used levels
 			X <- matrix(0, nrow=n_categ, ncol=n_ent, dimnames=list(categories,entities))
-			X[cbind(data[,2], data[,1])] <- data[,3]
+			X[cbind(data[,4], data[,5])] <- data[,3]
 		}
 		else {
-			#diversity <- data.frame(row.names=levels(data[,1]))
-			#data <- droplevels(data) #delete un used levels
 			X <- matrix(0, nrow=n_ent, ncol=n_categ, dimnames=list(entities,categories))
-			X[cbind(data[,1], data[,2])] <- data[,3]
+			X[cbind(data[,5], data[,4])] <- data[,3]
 		}
 	}
 	else {
